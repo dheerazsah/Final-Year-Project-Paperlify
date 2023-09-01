@@ -4,6 +4,7 @@
   
     /* font sizes */
     --h1-bold-size: 32px;
+    --h2-normal-size: 24px;
     --body1-normal-size: 16px;
     --body2-normal-size: 14px;
   
@@ -40,7 +41,7 @@
   }
 
   h2{
-    font-size: var(--body1-normal-size);
+    font-size: var(--h2-normal-size);
   }
   
   a{
@@ -93,7 +94,9 @@
   width: 328px;
 }
 
-form input[type="email"], form input[type="password"] {
+form input[type="text"],
+form input[type="email"],  
+form input[type="password"]{
   display: block;
   width: 100%;
   box-sizing: border-box;
