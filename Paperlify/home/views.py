@@ -10,3 +10,8 @@ def signup(request):
 
 def dashboard(request):
     return render(request, 'dashboard.html')
+
+def mydocuments(request):
+    return render(request, 'mydocuments.html')
+
+
