@@ -14,4 +14,7 @@ def dashboard(request):
 def mydocuments(request):
     return render(request, 'mydocuments.html')
 
+def document(request):
+    return render(request, 'document.html')
+
 
