@@ -18,13 +18,14 @@
         </div>
 
         <div class="right">
-            <form>
+            <form action="" method="POST">
+            {% csrf_token %}
                 <section class="content">
                     <h1>Login</h1>
                 </section>
                 <div class="input-container email">
-                    <label for="email">Email</label>
-                    <input id="email" name="email" placeholder="name@gmail.com" type="email">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" placeholder="Enter your username" type="text">
                 </div>
                 <div class="input-container password">
                     <label for="password">Password</label>
@@ -39,7 +40,7 @@
                     </label>
                     <p><a href="#"><strong>Forgot Password?</strong></a></p>
                 </div>
-                <button class="login-btn" type="button" onclick="openDashboard()">Login</button>
+                <button class="login-btn" type="submit" href="./dashboard">Login</button>
                 <div class="login-container">
                         <p>Don’t have an account yet? <a href="./signup"><strong>Create New Account</strong></a></p>
                     </div>
