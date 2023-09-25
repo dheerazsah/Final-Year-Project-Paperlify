@@ -20,28 +20,29 @@ def signupPage(request):
             messages.error(request, 'Invalid email format. Please provide a valid email.')
 
         # Password Complexity Requirements
-        if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
-            messages.error(request, 'Password must contain at least one uppercase letter, one symbol, and one number.')
+        # if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
+        #     messages.error(request, 'Password must contain at least one uppercase letter, one symbol, and one number.')
 
-        if password != confirm_password:
-            messages.error(request, 'Password did not match.')
+        # if password != confirm_password:
+        #     messages.error(request, 'Password did not match.')
 
         # Name Validation (Alphabet with spaces)
-        if not all(char.isalpha() or char.isspace() for char in fname):
-            messages.error(request, 'Name must contain alphabetic characters with spaces.')
+        # if not all(char.isalpha() or char.isspace() for char in fname):
+        #     messages.error(request, 'Name must contain alphabetic characters with spaces.')
 
-        if User.objects.filter(username=username):
-            messages.error(request, 'Username already exists. Please try a new username.')
+        # if User.objects.filter(username=username):
+        #     messages.error(request, 'Username already exists. Please try a new username.')
 
-        if User.objects.filter(email=email):
-            messages.error(request, 'Email already exists. Please try a new email.')
+        # if User.objects.filter(email=email):
+        #     messages.error(request, 'Email already exists. Please try a new email.')
 
-        if not messages.get_messages(request):  # If there are no error messages
-            myuser = User.objects.create_user(username, email, password)
-            myuser.first_name = fname
-            myuser.save()
-            messages.success(request, 'Your account has been created successfully')
-            return redirect('login')
+        # if not messages.get_messages(request):  # If there are no error messages
+        print("here")
+        myuser = User.objects.create_user(username, email, password)
+        myuser.first_name = fname
+        myuser.save()
+        messages.success(request, 'Your account has been created successfully')
+        return redirect('login')
 
     return render(request, 'signup.html')
 
