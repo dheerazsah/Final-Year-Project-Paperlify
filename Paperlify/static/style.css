@@ -99,6 +99,23 @@ a:hover {
   width: 328px;
 }
 
+.message-box {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.message {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+
 /* Input field */
 form input[type="text"],
 form input[type="email"],  
@@ -198,6 +215,7 @@ label {
 .upload-btn:hover {
   background: var(--hover-blue);
 }
+
 
 /* Responsive screen */
 @media screen and (min-width: 900px) {

@@ -3,9 +3,12 @@ from django.shortcuts import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 import re
 
 # Create your views here.
+@login_required(login_url='login')
+
 def signupPage(request):
     #return render(request, 'signup.html')
     if request.method == 'POST':
@@ -23,8 +26,8 @@ def signupPage(request):
         # if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
         #     messages.error(request, 'Password must contain at least one uppercase letter, one symbol, and one number.')
 
-        # if password != confirm_password:
-        #     messages.error(request, 'Password did not match.')
+        if password != confirm_password:
+            messages.error(request, 'Password did not match.')
 
         # Name Validation (Alphabet with spaces)
         # if not all(char.isalpha() or char.isspace() for char in fname):
@@ -37,7 +40,7 @@ def signupPage(request):
         #     messages.error(request, 'Email already exists. Please try a new email.')
 
         # if not messages.get_messages(request):  # If there are no error messages
-        print("here")
+
         myuser = User.objects.create_user(username, email, password)
         myuser.first_name = fname
         myuser.save()
@@ -55,8 +58,8 @@ def loginPage(request):
         user = authenticate(username = username, password = password)
 
         if user is not None:
-            login(request,user)
-            return render(request, 'dashboard.html')
+            login(request, user)
+            return redirect('dashboard')
         else:
             messages.error(request, 'Invalid username or password.')
 

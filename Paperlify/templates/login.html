@@ -20,6 +20,13 @@
         <div class="right">
             <form action="" method="POST">
             {% csrf_token %}
+
+            <div class="message-box">
+                {% for message in messages %}
+                    <div class="message">{{ message }}</div>
+                {% endfor %}
+            </div>
+            
                 <section class="content">
                     <h1>Login</h1>
                 </section>
@@ -40,11 +47,10 @@
                     </label>
                     <p><a href="#"><strong>Forgot Password?</strong></a></p>
                 </div>
-                <button class="login-btn" type="submit" href="./dashboard">Login</button>
+                <button class="login-btn" type="submit">Login</button>
                 <div class="login-container">
                         <p>Don’t have an account yet? <a href="./signup"><strong>Create New Account</strong></a></p>
-                    </div>
-                    
+                    </div>  
             </form>
         </div>
     </div>
