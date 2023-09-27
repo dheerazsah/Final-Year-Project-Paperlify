@@ -24,16 +24,18 @@
         </section>
     </div>
 
-    <div class="drag-area">
+    <form method= "POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="drag-area">
         <div class="icon"><i class="uil uil-file-upload"></i></div>
         <h2>Drag & Drop to Upload file</h2>
         <h3>Or</h3>
         <button class="upload-btn"><label>
-            <input type="file" accept=".pdf, .doc, .docx" style="display: none;">
-            Upload File
+            <input type="file" accept=".pdf, .doc, .docx" style="display: none;" name="file">
+            Upload File</input>
         </label></button>
-        
     </div>
+</form>
 
     <div>
         <section class="content">

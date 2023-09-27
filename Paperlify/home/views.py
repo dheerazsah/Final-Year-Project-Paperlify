@@ -10,7 +10,6 @@ import re
 @login_required(login_url='login')
 
 def signupPage(request):
-    #return render(request, 'signup.html')
     if request.method == 'POST':
         username = request.POST.get('username')
         fname = request.POST.get('fname')
@@ -18,34 +17,40 @@ def signupPage(request):
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
-         # Email Validation
+        error_messages = []  # Create a list to collect error messages
+
+        # Email Validation
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            messages.error(request, 'Invalid email format. Please provide a valid email.')
+            error_messages.append('Invalid email format. Please provide a valid email.')
 
         # Password Complexity Requirements
-        # if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
-        #     messages.error(request, 'Password must contain at least one uppercase letter, one symbol, and one number.')
+        if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
+            error_messages.append('Password must contain at least one uppercase letter, one symbol, and one number.')
 
         if password != confirm_password:
-            messages.error(request, 'Password did not match.')
+            error_messages.append('Password did not match.')
 
         # Name Validation (Alphabet with spaces)
-        # if not all(char.isalpha() or char.isspace() for char in fname):
-        #     messages.error(request, 'Name must contain alphabetic characters with spaces.')
+        if not all(char.isalpha() or char.isspace() for char in fname):
+            error_messages.append('Name must contain alphabetic characters with spaces.')
 
-        # if User.objects.filter(username=username):
-        #     messages.error(request, 'Username already exists. Please try a new username.')
+        if User.objects.filter(username=username):
+            error_messages.append('Username already exists. Please try a new username.')
 
-        # if User.objects.filter(email=email):
-        #     messages.error(request, 'Email already exists. Please try a new email.')
+        if User.objects.filter(email=email):
+            error_messages.append('Email already exists. Please try a new email.')
 
-        # if not messages.get_messages(request):  # If there are no error messages
-
-        myuser = User.objects.create_user(username, email, password)
-        myuser.first_name = fname
-        myuser.save()
-        messages.success(request, 'Your account has been created successfully')
-        return redirect('login')
+        # Check if there are any error messages
+        if error_messages:
+            for message in error_messages:
+                messages.error(request, message)
+        else:
+            # If there are no error messages, create the user account
+            myuser = User.objects.create_user(username, email, password)
+            myuser.first_name = fname
+            myuser.save()
+            messages.success(request, 'Your account has been created successfully')
+            return redirect('login')
 
     return render(request, 'signup.html')
 
@@ -54,20 +59,31 @@ def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
-        user = authenticate(username = username, password = password)
-
-        if user is not None:
-            login(request, user)
-            return redirect('dashboard')
+        
+        if not username or not password:
+            messages.error(request, 'Both username and password are required.')
         else:
-            messages.error(request, 'Invalid username or password.')
+            user = authenticate(request, username = username, password = password)
+            if user is not None:
+                login(request, user)
+                return redirect('dashboard')
+            else:
+                messages.error(request, 'Invalid username or password.')
 
     return render(request, 'login.html')
 
 
+from .models import DocumentUpload
+
 def dashboard(request):
+    if request.method == 'POST':
+        uploadfile = request.FILES['file']
+        document = DocumentUpload.objects.create(file=uploadfile)
+        document.save()
+        return HttpResponse('Your file was uploaded')
+
     return render(request, 'dashboard.html')
+
 
 def mydocuments(request):
     return render(request, 'mydocuments.html')
