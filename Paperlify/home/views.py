@@ -72,15 +72,17 @@ def loginPage(request):
 
     return render(request, 'login.html')
 
-
-from .models import DocumentUpload
+from django.core.files.storage import FileSystemStorage
 
 def dashboard(request):
     if request.method == 'POST':
         uploadfile = request.FILES['file']
-        document = DocumentUpload.objects.create(file=uploadfile)
-        document.save()
-        return HttpResponse('Your file was uploaded')
+        print(uploadfile.name)
+        print(uploadfile.size)
+        fs = FileSystemStorage()
+        fs.save(uploadfile.name, uploadfile)
+        # document = DocumentUpload.objects.create(file=uploadfile)
+        # document.save()
 
     return render(request, 'dashboard.html')
 
@@ -90,5 +92,9 @@ def mydocuments(request):
 
 def document(request):
     return render(request, 'document.html')
+
+
+def test(request):
+    return render(request, 'test.html')
 
 

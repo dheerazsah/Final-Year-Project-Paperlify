@@ -100,6 +100,10 @@ body {
     margin: 20px 0;
 }
 
+input[type="file"] {
+    display: none; /* Hide the default file input */
+}
+
 .drag-area button.upload-btn {
     display: block;
     width: 100%;
@@ -149,11 +153,11 @@ body {
     font-size: 0.875rem;
 }
 
-
 .browse-button {
     text-align: center;
     margin-top: 20px;
 }
+
 
 .browse-button a {
     display: inline-block;
@@ -167,6 +171,8 @@ body {
 .browse-button a:hover {
     background-color: var(--hover-blue);
 }
+
+
 
 /* Responsive Styles*/
 /* Small*/

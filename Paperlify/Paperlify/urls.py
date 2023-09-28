@@ -27,7 +27,8 @@ urlpatterns = [
     path('signup', views.signupPage, name='signup'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('mydocuments', views.mydocuments, name='mydocuments'),
-    path('document', views.document, name='document')
+    path('document', views.document, name='document'),
+    path('test', views.test, name='test')
 ] 
 
 

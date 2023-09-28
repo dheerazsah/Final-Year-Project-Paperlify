@@ -19,6 +19,3 @@ class Registration(models.Model):
     def __str__(self):
         return self.username
     
-
-class DocumentUpload(models.Model):
-    file = models.FileField()
