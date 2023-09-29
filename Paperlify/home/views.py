@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import re
 
@@ -97,4 +97,9 @@ def document(request):
 def test(request):
     return render(request, 'test.html')
 
+
+def logoutUser(request):
+    logout(request)
+    messages.success(request, 'You are logged out successfully.')
+    return redirect('login')
 

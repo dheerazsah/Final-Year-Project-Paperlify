@@ -12,10 +12,21 @@ class Registration(models.Model):
     email = models.EmailField(unique=True, default='none')
     password = models.CharField(max_length=128, default='none')
     updatedOn = models.DateTimeField(default=timezone.now)
-    
+
     class Meta:
         db_table = 'user'
 
     def __str__(self):
         return self.username
+    
+class FileUpload(models.Model):
+    doc_name = models.FileField(max_length=100)
+    doc_type = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'document'
+    
+
+    
+
     

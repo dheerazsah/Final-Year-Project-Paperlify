@@ -79,6 +79,7 @@ body {
     font-size: 1rem;
 }
 
+
 /* Drag Drop */
 .drag-area {
     text-align: center;
@@ -101,7 +102,11 @@ body {
 }
 
 input[type="file"] {
-    display: none; /* Hide the default file input */
+    display: none;
+}
+
+#file-name {
+    margin-top: 10px;
 }
 
 .drag-area button.upload-btn {
@@ -141,8 +146,6 @@ input[type="file"] {
    /* width: calc(33.33% - 20px); */
     margin-bottom: 20px;
 }
-
-
 
 .document h2 {
     font-size: 1.25rem;

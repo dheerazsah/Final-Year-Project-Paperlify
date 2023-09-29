@@ -1,0 +1,185 @@
+
+/* Global Variable */
+:root {
+    font-family: "DM Sans";
+  
+    /* Font sizes */
+    --h1-bold-size: 32px;
+    --h2-normal-size: 24px;
+    --body1-normal-size: 16px;
+    --body2-normal-size: 14px;
+  
+    /* Colors */
+    --color-white: #fff;
+    --color-gray-100: #fafafa;
+    --color-gray-200: #141414;
+    --primary-blue: #5271ff;
+    --hover-blue: #4a66e6;
+    --background-blue: #f0effa;
+    --color-darkslategray: #3a3a3a;
+  
+    /* Gaps */
+    --gap: 10px;
+  
+    /* Paddings */
+    --padding: 10px;
+  
+    /* Border radiuses */
+    --br: 10px;
+  }
+
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-body {
+    font-family: "DM Sans";
+    background-color: var(--color-white);
+    color: var(--color-gray-200);
+    line-height: 2;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--primary-blue);
+    padding: 10px 0;
+}
+
+.navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.navbar ul li {
+    display: inline;
+    margin: 0 20px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: var(--color-white);
+    font-weight: 500;
+}
+
+.content {
+    text-align: center;
+    padding: 20px;
+}
+
+.content h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.content p {
+    font-size: 1rem;
+}
+
+/* Drag Drop */
+.drag-area {
+    text-align: center;
+    background-color: var(--color-white);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+.drag-area .icon {
+    font-size: 48px;
+    color: var(--primary-blue);
+}
+
+.drag-area h2 {
+    font-size: 1.5rem;
+    margin: 20px 0;
+}
+
+.drag-area button.upload-btn {
+    display: block;
+    width: 100%;
+    background: var(--primary-blue);
+    color: var(--color-white);
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.drag-area button.upload-btn:hover {
+    background: var(--primary-blue);
+}
+
+/* Docs */
+.document-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 40px;
+    padding: 20px;
+}
+
+/* Document */
+.document {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--color-white);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   /* width: calc(33.33% - 20px); */
+    margin-bottom: 20px;
+}
+
+.document h2 {
+    font-size: 1.25rem;
+    margin: 10px 0;
+}
+
+.document p {
+    font-size: 0.875rem;
+}
+
+.browse-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+.browse-button a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-blue);
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.browse-button a:hover {
+    background-color: var(--hover-blue);
+}
+
+
+
+/* Responsive Styles*/
+/* Small*/
+@media (max-width: 768px) {
+    .document {
+        width: 50%; 
+        margin-right: 20px; 
+    }
+
+    .drag-area {
+        max-width: unset;
+    }
+}
+
+
+
