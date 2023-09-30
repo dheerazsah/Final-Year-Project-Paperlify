@@ -21,10 +21,15 @@ class Registration(models.Model):
     
 class FileUpload(models.Model):
     doc_name = models.FileField(max_length=100)
+    doc_size = models.BigIntegerField() 
     doc_type = models.CharField(max_length=100)
 
     class Meta:
         db_table = 'document'
+
+    def __str__(self):
+        return self.doc_name
+
     
 
     

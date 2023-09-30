@@ -72,19 +72,31 @@ def loginPage(request):
 
     return render(request, 'login.html')
 
+
 from django.core.files.storage import FileSystemStorage
+from .models import FileUpload  # Import the model
 
 def dashboard(request):
     if request.method == 'POST':
         uploadfile = request.FILES['file']
         print(uploadfile.name)
         print(uploadfile.size)
+        print(uploadfile.content_type)
+
+        # Save the file to the file system
         fs = FileSystemStorage()
         fs.save(uploadfile.name, uploadfile)
-        # document = DocumentUpload.objects.create(file=uploadfile)
-        # document.save()
+
+        # Save upload information to the database 
+        file_info = FileUpload(
+            doc_name=uploadfile.name,
+            doc_size=uploadfile.size,
+            doc_type=uploadfile.content_type
+        )
+        file_info.save()
 
     return render(request, 'dashboard.html')
+
 
 
 def mydocuments(request):
