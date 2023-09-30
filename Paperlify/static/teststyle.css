@@ -79,6 +79,7 @@ body {
     font-size: 1rem;
 }
 
+
 /* Drag Drop */
 .drag-area {
     text-align: center;
@@ -100,6 +101,14 @@ body {
     margin: 20px 0;
 }
 
+input[type="file"] {
+    display: none;
+}
+
+#file-name {
+    margin-top: 10px;
+}
+
 .drag-area button.upload-btn {
     display: block;
     width: 100%;
@@ -116,6 +125,7 @@ body {
 .drag-area button.upload-btn:hover {
     background: var(--primary-blue);
 }
+
 
 /* Docs */
 .document-container {
@@ -166,6 +176,32 @@ body {
     background-color: var(--hover-blue);
 }
 
+/* Editor Box */
+.editor-box {
+    width: 50%; /* Set the width as desired */
+    margin: 20px auto;
+    background-color: var(--color-gray-100);
+    border: 1px solid #ccc;
+    border-radius: var(--br);
+    padding: var(--padding);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.editor-title {
+    font-size: var(--h2-normal-size);
+    margin-bottom: var(--gap);
+    text-align: center;
+    color: var(--color-darkslategray);
+}
+
+.editor-box textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: var(--br);
+    padding: var(--padding);
+    font-size: var(--body1-normal-size);
+    color: var(--color-darkslategray);
+}
 
 
 /* Responsive Styles*/
