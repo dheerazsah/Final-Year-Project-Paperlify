@@ -101,9 +101,6 @@ body {
     margin: 20px 0;
 }
 
-input[type="file"] {
-    display: none;
-}
 
 #file-name {
     margin-top: 10px;
@@ -178,30 +175,37 @@ input[type="file"] {
 
 /* Editor Box */
 .editor-box {
-    width: 50%; /* Set the width as desired */
+    width: 50%;
     margin: 20px auto;
     background-color: var(--color-gray-100);
     border: 1px solid #ccc;
     border-radius: var(--br);
     padding: var(--padding);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensure text doesn't overflow */
 }
 
+
 .editor-title {
-    font-size: 1.25rem;
+    font-size: var(--h2-normal-size);
     margin-bottom: var(--gap);
     text-align: center;
     color: var(--color-darkslategray);
 }
 
+/* Editor Textarea */
 .editor-box textarea {
     width: 100%;
+    height: 100%;
     border: 1px solid #ccc;
     border-radius: var(--br);
     padding: var(--padding);
     font-size: var(--body1-normal-size);
     color: var(--color-darkslategray);
+    resize: none; 
+    overflow: auto; /* Add scrollbars when needed */
 }
+
 
 
 /* Responsive Styles*/
