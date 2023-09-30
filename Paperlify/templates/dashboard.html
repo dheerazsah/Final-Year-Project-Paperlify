@@ -32,7 +32,7 @@
         {% csrf_token %}
         <div class="icon"><i class="uil uil-file-upload"></i></div>
         <h2>Upload a document</h2>
-        <input type="file" name="file" id="file" accept=".txt. .pdf, .doc, .docx">
+        <input type="file" name="file" id="file" accept=".txt, .pdf, .doc, .docx">
     
         <button class="upload-btn" type="submit">Upload</button>
     </form>
@@ -40,7 +40,7 @@
 
 <div class="editor-box">
     <h2>Document Content</h2>
-    <textarea rows="10" cols="80">{{ document.text_content }}</textarea>
+    <textarea rows="10" cols="80">{{ content }}</textarea>
 </div>
 
 

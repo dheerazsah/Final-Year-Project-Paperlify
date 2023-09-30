@@ -76,7 +76,7 @@ def loginPage(request):
 #from django.core.files.storage import FileSystemStorage
 from .models import FileUpload  # Import the model
 import docx2txt
-import PyPDF2
+from PyPDF2 import PdfReader
 
 def dashboard(request):
     if request.method == 'POST':
@@ -97,22 +97,20 @@ def dashboard(request):
         )
         file_info.save()
 
-        # Extract and display content for supported file types
+         # Extract and display content for supported file types
         if uploadfile.name.endswith('.txt'):
             with uploadfile.open() as file:
                 content = file.read().decode('utf-8')
                 return render(request, 'dashboard.html', {'content': content})
-            
         elif uploadfile.name.endswith(('.doc', '.docx')):
             content = docx2txt.process(uploadfile)
             return render(request, 'dashboard.html', {'content': content})
-        
         elif uploadfile.name.endswith('.pdf'):
             pdf_text = ''
-            pdf_reader = PyPDF2.PdfFileReader(uploadfile)
-            for page_num in range(pdf_reader.numPages):
-                page = pdf_reader.getPage(page_num)
-                pdf_text += page.extractText()
+            pdf_reader = PdfReader(uploadfile)
+            for page_num in range(len(pdf_reader.pages)):
+                page = pdf_reader.pages[page_num]
+                pdf_text += page.extract_text()
             return render(request, 'dashboard.html', {'content': pdf_text})
 
     return render(request, 'dashboard.html')
