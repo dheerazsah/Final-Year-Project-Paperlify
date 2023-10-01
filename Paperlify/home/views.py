@@ -55,6 +55,7 @@ def signupPage(request):
     return render(request, 'signup.html')
 
 
+
 def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')

@@ -23,9 +23,10 @@
 
             <div class="message-box">
                 {% for message in messages %}
-                    <div class="message">{{ message }}</div>
+                    <div class="message {{ message.tags }}">{{ message }}</div>
                 {% endfor %}
             </div>
+            
             
                 <section class="content">
                     <h1>Login</h1>
