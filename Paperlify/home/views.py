@@ -83,38 +83,44 @@ from PyPDF2 import PdfReader
 
 def dashboard(request):
     if request.method == 'POST':
-        uploadfile = request.FILES['file']
-        print(uploadfile.name)
-        print(uploadfile.size)
-        print(uploadfile.content_type)
+        if 'file' in request.FILES:
+            uploadfile = request.FILES['file']
+            print(uploadfile.name)
+            print(uploadfile.size)
+            print(uploadfile.content_type)
 
-        # Save the file to the file system
-        #fs = FileSystemStorage()
-        #fs.save(uploadfile.name, uploadfile)
+            # Save the file to the file system
+            # fs = FileSystemStorage()
+            # fs.save(uploadfile.name, uploadfile)
 
-        # Save upload information to the database 
-        file_info = FileUpload(
-            doc_name=uploadfile.name,
-            doc_size=uploadfile.size,
-            doc_type=uploadfile.content_type
-        )
-        file_info.save()
+            # Save upload information to the database 
+            file_info = FileUpload(
+                doc_name=uploadfile.name,
+                doc_size=uploadfile.size,
+                doc_type=uploadfile.content_type
+            )
+            file_info.save()
 
-         # Extract and display content for supported file types
-        if uploadfile.name.endswith('.txt'):
-            with uploadfile.open() as file:
-                content = file.read().decode('utf-8')
+            # Extract and display content for supported file types
+            if uploadfile.name.endswith('.txt'):
+                with uploadfile.open() as file:
+                    content = file.read().decode('utf-8')
+                    return render(request, 'dashboard.html', {'content': content})
+            
+            elif uploadfile.name.endswith(('.doc', '.docx')):
+                content = docx2txt.process(uploadfile)
                 return render(request, 'dashboard.html', {'content': content})
-        elif uploadfile.name.endswith(('.doc', '.docx')):
-            content = docx2txt.process(uploadfile)
-            return render(request, 'dashboard.html', {'content': content})
-        elif uploadfile.name.endswith('.pdf'):
-            pdf_text = ''
-            pdf_reader = PdfReader(uploadfile)
-            for page_num in range(len(pdf_reader.pages)):
-                page = pdf_reader.pages[page_num]
-                pdf_text += page.extract_text()
-            return render(request, 'dashboard.html', {'content': pdf_text})
+        
+            elif uploadfile.name.endswith('.pdf'):
+                pdf_text = ''
+                pdf_reader = PdfReader(uploadfile)
+                for page_num in range(len(pdf_reader.pages)):
+                    page = pdf_reader.pages[page_num]
+                    pdf_text += page.extract_text()
+                return render(request, 'dashboard.html', {'content': pdf_text})
+        
+        # If 'file' key is not in request.FILES, show an error message
+        return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})
 
     return render(request, 'dashboard.html')
 
