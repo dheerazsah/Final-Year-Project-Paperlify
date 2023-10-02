@@ -19,13 +19,12 @@
 
         <div class="right">
             <form action="" method="POST">
-                {% csrf_token %}
 
-                <div class="message-box">
-                    {% for message in messages %}
-                        <div class="message">{{ message }}</div>
-                    {% endfor %}
-                </div>
+                {% if error %}
+                <p class="message"> {{ error }} </p>
+                {% endif %}
+
+            {% csrf_token %}
                 
                 <section class="content">
                     <h1>Sign Up</h1>
