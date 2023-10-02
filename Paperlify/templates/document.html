@@ -6,8 +6,38 @@
     <link rel="stylesheet" href="./static/dashstyle.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM Sans:wght@400;500;700&display=swap"/>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <title>Document</title>
+    <title>Paperlify | Document</title>
 </head>
-<body>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <ul>
+            <li><a href="{% url 'dashboard' %}">Upload Document</a></li>
+            <li><a href="{% url 'mydocuments' %}">My Documents</a></li>
+            <li><a href="#">My Profile</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="back-button">
+        <a href="{% url 'dashboard' %}">Back</a>
+    </div>
+
+    <div>
+        <section class="content">
+            <h1>Document</h1>
+        </section>
+    </div>
+
+    <div class="document-container">
+        <div class="document">
+            <div class="document-info">
+                <h2>Document Title</h2>
+                <p>Date of Upload: Sept 03, 2023</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.
+                   Ut euismod libero non malesuada. Phasellus id justo eu risus tempus cursus eu a ante. Nullam a metus vel urna pulvinar vulputate. Fusce volutpat dapibus magna, nec cursus dui suscipit eget. In scelerisque, lectus a consectetur bibendum, libero turpis tincidunt purus, nec luctus neque turpis vel orci. Sed scelerisque nunc in feugiat ullamcorper. Nulla facilisi. Curabitur elementum, dolor ac bibendum cursus, justo purus euismod urna, nec vehicula libero lectus non purus. Proin gravida, libero id lacinia fermentum, sapien ipsum faucibus tellus, nec placerat neque justo vel tortor.
+                   Donec consectetur, justo eget placerat consectetur, felis est ultrices arcu, eu laoreet ligula ipsum nec sapien. Fusce id interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Duis viverra, tortor vel efficitur gravida, lectus urna hendrerit tortor, at venenatis odio dolor non nisl. Quisque dapibus rhoncus dapibus. Duis dignissim turpis non justo dictum, eu aliquet risus ullamcorper. Fusce eleifend tristique leo, ac cursus dui vulputate nec. Curabitur non turpis elit.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

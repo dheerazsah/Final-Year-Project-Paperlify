@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="./static/dashstyle.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM Sans:wght@400;500;700&display=swap"/>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <title>My Documents</title>
+    <title>Paperlify | Dashboard</title>
 </head>
 <body class="dashboard-body">
     <nav class="navbar">
@@ -53,7 +53,7 @@
     <div class="document-container">
         <!-- Document 1 -->
         <div class="document">
-            <a href="#view-doc">
+            <a href="{% url 'document' %}">
                 <div class="document-info">
                     <h2>Document 1 Name</h2>
                     <p>Date of Upload: Sept 03, 2023</p>
@@ -63,7 +63,7 @@
         </div>
         <!-- Document 2 -->
         <div class="document">
-            <a href="#">
+            <a href="{% url 'document' %}">
                 <div class="document-info">
                     <h2>Document 2 Name</h2>
                     <p>Date of Upload: Sept 03, 2023</p>
@@ -73,7 +73,7 @@
         </div>
         <!-- Document 3 -->
         <div class="document">
-            <a href="#">
+            <a href="document">
                 <div class "document-info">
                     <h2>Document 3 Name</h2>
                     <p>Date of Upload: Sept 03, 2023</p>
@@ -83,7 +83,7 @@
         </div>
         <!-- Document 4 -->
         <div class="document">
-            <a href="#">
+            <a href="document">
                 <div class="document-info">
                     <h2>Document 4 Name</h2>
                     <p>Date of Upload: Sept 03, 2023</p>

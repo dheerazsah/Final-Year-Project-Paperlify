@@ -206,6 +206,20 @@ body {
     overflow: auto; /* Add scrollbars when needed */
 }
 
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.back-button a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-blue);
+    color: var(--color-white);
+    text-decoration: none;
+    border-radius: 5px;
+}
 
 
 /* Responsive Styles*/
