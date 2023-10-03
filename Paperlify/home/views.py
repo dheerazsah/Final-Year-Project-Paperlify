@@ -132,6 +132,9 @@ def mydocuments(request):
 def document(request):
     return render(request, 'document.html')
 
+def profile(request):
+    return render(request, 'profile.html')
+
 
 def test(request):
     return render(request, 'test.html')

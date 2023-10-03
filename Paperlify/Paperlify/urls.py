@@ -28,6 +28,7 @@ urlpatterns = [
     path('dashboard', views.dashboard, name='dashboard'),
     path('mydocuments', views.mydocuments, name='mydocuments'),
     path('document', views.document, name='document'),
+    path('profile', views.profile, name='profile'),
     path('test', views.test, name='test')
 
 ] 
