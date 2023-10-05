@@ -105,18 +105,24 @@ def dashboard(request):
             if uploadfile.name.endswith('.txt'):
                 with uploadfile.open() as file:
                     content = file.read().decode('utf-8')
+                    file_info.extracted_text = content  
+                    file_info.save()  
                     return render(request, 'dashboard.html', {'content': content})
-            
+
             elif uploadfile.name.endswith(('.doc', '.docx')):
                 content = docx2txt.process(uploadfile)
+                file_info.extracted_text = content  
+                file_info.save() 
                 return render(request, 'dashboard.html', {'content': content})
-        
+
             elif uploadfile.name.endswith('.pdf'):
                 pdf_text = ''
                 pdf_reader = PdfReader(uploadfile)
                 for page_num in range(len(pdf_reader.pages)):
                     page = pdf_reader.pages[page_num]
                     pdf_text += page.extract_text()
+                file_info.extracted_text = pdf_text  
+                file_info.save()  
                 return render(request, 'dashboard.html', {'content': pdf_text})
         
         # If 'file' key is not in request.FILES, show an error message
