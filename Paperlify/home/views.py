@@ -133,7 +133,8 @@ def dashboard(request):
 
 
 def mydocuments(request):
-    return render(request, 'mydocuments.html')
+    documents = FileUpload.objects.all()  # Fetch all records from the FileUpload model
+    return render(request, 'mydocuments.html', {'mydocuments': documents})
 
 def document(request):
     return render(request, 'document.html')

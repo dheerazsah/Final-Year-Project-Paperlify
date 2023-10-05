@@ -59,14 +59,17 @@
     <div class="document-container">
         <!-- Document 1 -->
         <div class="document">
-            <a href="{% url 'document' %}">
+            {% for document in documents %}
+            <a href="{% url 'document' document.id %}">
                 <div class="document-info">
-                    <h2>Document 1 Name</h2>
-                    <p>Date of Upload: Sept 03, 2023</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.</p>
+                    <h2>{{ document.doc_name }}</h2>
+                    <p>Date of Upload: {{ document.upload_date|date:"M d, Y" }}</p>
+                    <p>{{ document.extracted_text }}</p>
                 </div>
             </a>
+            {% endfor %}
         </div>
+        
         <!-- Document 2 -->
         <div class="document">
             <a href="{% url 'document' %}">
