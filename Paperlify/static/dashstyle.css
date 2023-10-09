@@ -45,24 +45,73 @@ body {
 .navbar {
     background-color: var(--primary-blue);
     padding: 10px 0;
+    display: flex;
+    justify-content: space-between; /* To separate logo and links */
+    align-items: center;
+}
+
+.navbar .logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .logo img {
+    width: 40px; 
+    height: auto; 
+    margin-right: 10px;
+}
+
+.navbar h1 {
+    font-size: 20px; 
+    color: var(--color-white); 
+    margin: 0; 
+    font-weight: 300;
 }
 
 .navbar ul {
     list-style: none;
     margin: 0;
     padding: 0;
-    text-align: center;
+    display: flex;
+    align-items: center;
 }
 
 .navbar ul li {
-    display: inline;
     margin: 0 20px;
+    font-size: 14px;
 }
 
 .navbar ul li a {
     text-decoration: none;
     color: var(--color-white);
     font-weight: 500;
+}
+
+/* Search Bar Styles */
+.navbar form {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.navbar input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.navbar button[type="submit"] {
+    background-color: var(--color-white); 
+    color: var(--primary-blue);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.navbar button[type="submit"]:hover {
+    background-color: var(--hover-blue);
+    color: var(--color-white);
 }
 
 .content {
@@ -133,6 +182,7 @@ body {
     margin: 40px;
     padding: 20px;
 }
+
 
 /* Document */
 .document {
@@ -221,6 +271,17 @@ body {
     border-radius: 5px;
 }
 
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
 
 /* Responsive Styles*/
 /* Small*/

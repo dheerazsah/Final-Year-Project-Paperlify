@@ -10,13 +10,24 @@
 </head>
 <body class="dashboard-body">
     <nav class="navbar">
+        <div class="logo">
+            <img src="./static/images/Paperlify Logo White.png" alt="Paperlify Logo"> 
+            <h1>Paperlify</h1>
+        </div>
         <ul>
+            <li>
+                <form action="" method="GET">
+                    <input type="text" name="query" placeholder="Search documents">
+                    <button type="submit">Search</button>
+                </form>
+            </li>
             <li><a href="{% url 'dashboard' %}">Upload Document</a></li>
             <li><a href="{% url 'mydocuments' %}">My Documents</a></li>
             <li><a href="{% url 'profile' %}">My Profile</a></li>
             <li><a href="{% url 'login' %}">Logout</a></li>
         </ul>
     </nav>
+
     <div>
         <section class="content">
             <h1>Paperlify</h1>
@@ -105,4 +116,6 @@
         <a href="{% url 'mydocuments' %}">Browse All Documents</a>
     </div>
 </body>
+
+</div>
 </html>
