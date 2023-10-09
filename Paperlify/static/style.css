@@ -76,14 +76,21 @@ a:hover {
   align-items: center;
 }
 
+.logo-container img {
+  max-width: 150px;
+  height: auto;
+}
+
 .left .content {
   color: var(--color-white);
-  text-align: center;
+  text-align: left;
+  margin-left: 20px;
 }
 
 .left p {
   font-weight: 400;
 }
+
 
 .right .content {
   color: var(--color-gray-200);
