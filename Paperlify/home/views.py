@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import re
 
+from transformers import pipeline #Importing pipeline a ML model
+
 # Create your views here.
 @login_required(login_url='login')
 
@@ -82,6 +84,8 @@ import docx2txt
 from PyPDF2 import PdfReader
 
 def dashboard(request):
+    content = "" 
+
     if request.method == 'POST':
         if 'file' in request.FILES:
             uploadfile = request.FILES['file']
@@ -107,13 +111,13 @@ def dashboard(request):
                     content = file.read().decode('utf-8')
                     file_info.extracted_text = content  
                     file_info.save()  
-                    return render(request, 'dashboard.html', {'content': content})
+                    #return render(request, 'dashboard.html', {'content': content})
 
             elif uploadfile.name.endswith(('.doc', '.docx')):
                 content = docx2txt.process(uploadfile)
                 file_info.extracted_text = content  
                 file_info.save() 
-                return render(request, 'dashboard.html', {'content': content})
+                #return render(request, 'dashboard.html', {'content': content})
 
             elif uploadfile.name.endswith('.pdf'):
                 pdf_text = ''
@@ -123,7 +127,18 @@ def dashboard(request):
                     pdf_text += page.extract_text()
                 file_info.extracted_text = pdf_text  
                 file_info.save()  
-                return render(request, 'dashboard.html', {'content': pdf_text})
+                #return render(request, 'dashboard.html', {'content': pdf_text})
+            
+            # Summarize the text using the model
+            summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+            if file_info.extracted_text:
+                summary = summarizer(file_info.extracted_text, max_length=150, min_length=50, do_sample=False)[0]['summary']
+                file_info.summarized_text = summary
+                file_info.save()
+            else:
+                summary = "No text available for summarization."
+
+            return render(request, 'dashboard.html', {'content': content, 'summary': summary})
         
         # If 'file' key is not in request.FILES, show an error message
         return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})

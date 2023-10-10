@@ -24,6 +24,7 @@ class FileUpload(models.Model):
     doc_size = models.BigIntegerField() 
     doc_type = models.CharField(max_length=100)
     extracted_text = models.TextField(blank=True, null=True) 
+    summarized_text = models.TextField(blank=True, null=True) 
 
     class Meta:
         db_table = 'document'
