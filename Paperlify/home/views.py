@@ -111,39 +111,39 @@ def dashboard(request):
                     content = file.read().decode('utf-8')
                     file_info.extracted_text = content  
                     file_info.save()  
-                    #return render(request, 'dashboard.html', {'content': content})
+                    return render(request, 'dashboard.html', {'content': content})
 
             elif uploadfile.name.endswith(('.doc', '.docx')):
                 content = docx2txt.process(uploadfile)
                 file_info.extracted_text = content  
                 file_info.save() 
-                #return render(request, 'dashboard.html', {'content': content})
+                return render(request, 'dashboard.html', {'content': content})
 
             elif uploadfile.name.endswith('.pdf'):
-                pdf_text = ''
+                content = ''
                 pdf_reader = PdfReader(uploadfile)
                 for page_num in range(len(pdf_reader.pages)):
                     page = pdf_reader.pages[page_num]
-                    pdf_text += page.extract_text()
-                file_info.extracted_text = pdf_text  
+                    content += page.extract_text()
+                file_info.extracted_text = content
                 file_info.save()  
-                #return render(request, 'dashboard.html', {'content': pdf_text})
+                return render(request, 'dashboard.html', {'content': content})
             
             # Summarize the text using the model
-            summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-            if file_info.extracted_text:
-                summary = summarizer(file_info.extracted_text, max_length=150, min_length=50, do_sample=False)[0]['summary']
-                file_info.summarized_text = summary
-                file_info.save()
-            else:
-                summary = "No text available for summarization."
+            # summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+            # if file_info.extracted_text:
+            #     summary = summarizer(file_info.extracted_text, max_length=150, min_length=50, do_sample=False)[0]['summary']
+            #     file_info.summarized_text = summary
+            #     file_info.save()
+            # else:
+            #     summary = "No text available for summarization."
 
-            return render(request, 'dashboard.html', {'content': content, 'summary': summary})
+            #return render(request, 'dashboard.html', {'content': content, 'summary': summary})
+        
         
         # If 'file' key is not in request.FILES, show an error message
-        return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})
-
-    return render(request, 'dashboard.html')
+        #return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})
+        return render(request, 'dashboard.html')
 
 
 
