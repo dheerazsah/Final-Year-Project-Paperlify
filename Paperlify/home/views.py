@@ -84,7 +84,8 @@ import docx2txt
 from PyPDF2 import PdfReader
 
 def dashboard(request):
-    content = "" 
+    content = ''
+    summary = ''
 
     if request.method == 'POST':
         if 'file' in request.FILES:
@@ -129,6 +130,15 @@ def dashboard(request):
                 file_info.save()  
                 return render(request, 'dashboard.html', {'content': content})
             
+            if content:
+                summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+                summary = summarizer(content, max_length=150, min_length=50, do_sample=False)[0]['summary']
+                file_info.summarized_text = summary
+                file_info.save()
+
+            else:
+                return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})
+            
             # Summarize the text using the model
             # summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
             # if file_info.extracted_text:
@@ -143,7 +153,10 @@ def dashboard(request):
         
         # If 'file' key is not in request.FILES, show an error message
         #return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})
-        return render(request, 'dashboard.html')
+        # If 'file' key is not in request.FILES, show an error message
+        return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})
+
+    return render(request, 'dashboard.html')
 
 
 

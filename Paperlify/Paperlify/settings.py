@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'home',
 ]
 
@@ -143,3 +144,10 @@ MEDIA_URL = '/media/'
 
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
+
+

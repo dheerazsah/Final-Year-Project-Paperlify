@@ -171,6 +171,24 @@ body {
     background: var(--primary-blue);
 }
 
+.summarize-btn {
+    text-align: center;
+}
+
+.summarize-btn input[type="submit"] {
+    padding: 10px 20px;
+    background-color: var(--primary-blue);
+    color: var(--color-white);
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.summarize-btn input[type="submit"]:hover {
+    background-color: var(--hover-blue);
+}
+
 
 /* Docs */
 .document-container {
