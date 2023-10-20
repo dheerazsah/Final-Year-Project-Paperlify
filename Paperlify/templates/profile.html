@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./static/dashstyle.css"/>
+    <link rel="stylesheet" href="./static/mainstyle.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM Sans:wght@400;500;700&display=swap"/>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="icon" type="image/x-icon" href="./static/images/Paperlify Logo Blue.png">
@@ -32,8 +32,43 @@
 
     <section class="content">
         <h1>My Profile</h1>
-    </section>
+        <div class="profile-info">
+            <form action="#" method="POST">
+                <div class="input-field">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="YourUsername" required>
+                </div>
+                <div class="input-field">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="fullname" value="Your Full Name" required>
+                </div>
+                <div class="input-field">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="youremail@example.com" required>
+                </div>
+                <button type="submit" class="update-button">Update Profile</button>
+            </form>
+        </div>
 
+        <div class="password-change">
+            <h1>Password</h1>
+            <form action="#" method="POST">
+                <div class="input-field">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" name="current-password" required>
+                </div>
+                <div class="input-field">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" name="new-password" required>
+                </div>
+                <div class="input-field">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                </div>
+                <button type="submit" class="change-password-button">Change Password</button>
+            </form>
+        </div>
+    </section>
 
 </body>
 </html>
