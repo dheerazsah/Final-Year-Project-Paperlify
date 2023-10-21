@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
 -- Dumping data for table paperlify.auth_user: ~4 rows (approximately)
 INSERT INTO `auth_user` (`id`, `username`, `first_name`, `last_name`, `email`, `password`, `last_login`, `date_joined`, `is_staff`, `is_active`, `is_superuser`) VALUES
 	(3, 'dheerazsah', 'Dhiraj', '', 'dhiraj@gmail.com', 'pbkdf2_sha256$600000$4UuqePZScLpivSRnzJT7ws$8sIQ1yXdXW0LUxCWpLcaCfpmEmt7x6WPeTNaG3C1K0E=', NULL, '2023-09-25 12:31:44.214951', 0, 1, 0),
-	(4, 'niraj', 'Niraj Sah', '', 'niraj@gmail.com', 'pbkdf2_sha256$600000$PJMOMx12HVZtWRpwtp0pdu$HO6p3vfolRkalBNuf3uJRnXMQSyw4eSnE4xNkpaTSoc=', '2023-10-13 02:54:04.534198', '2023-09-26 16:13:30.611963', 0, 1, 0),
+	(4, 'niraj', 'Niraj Sah', '', 'niraj@gmail.com', 'pbkdf2_sha256$600000$PJMOMx12HVZtWRpwtp0pdu$HO6p3vfolRkalBNuf3uJRnXMQSyw4eSnE4xNkpaTSoc=', '2023-10-21 17:46:25.025166', '2023-09-26 16:13:30.611963', 0, 1, 0),
 	(5, 'madan', 'Madan Khanal', '', 'madan@gmail.com', 'pbkdf2_sha256$600000$FEwBgvzUbkVkWHMuLZlVRd$rprBKg1IJEOOPD7WdYaPCNCaSbkHOhj9eWRPTzpf2tA=', '2023-09-26 18:03:42.002039', '2023-09-26 18:03:30.017027', 0, 1, 0),
 	(6, 'manoj', 'Manoj Karki', '', 'manoj@gmail.com', 'pbkdf2_sha256$600000$7fxvYYcjHIAwJTuBMmOvvt$pPaO4piC7TWNn7B6BgoNucINWMySLY1zC8gznkwcToc=', '2023-09-26 18:06:16.045015', '2023-09-26 18:05:58.798476', 0, 1, 0);
 
@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `django_session` (
 
 -- Dumping data for table paperlify.django_session: ~4 rows (approximately)
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-	('4unj6kov0oxym1an99d0dcd50x8uv1n4', '.eJy1j01vgzAMhv-KlTNCfCSk7NjbDpN6LxUyiWnpIEFJ6DRN--8jqJO6y7TLDj748avH9gdrcQmXdvHk2kGzJ8ZZ8sg6VK9k4kBf0ZxtqqwJbujSGEnvU5--WE3j_p79Ibigv0Rt3e9KkQmuhSqqPMOC80JIlZWi2Ik-l1Wd9VLyWtZ5r1VXdDrPS91ziVWu5HbVRN7jmfyqOx4b1rZXb803bVgCWQJ8rYYd0Ps36zRMiw8QT8bBAAYYCVdgDcEyz-QUelpZCOSSjfr3qbNjAmj01ptl6silUd6whp0S-H3xs7nhOGigCYcReusmDCkc4lqC2dnboAkQHkJ_d__bUyf2-QXNKqs7:1qr8JQ:GOI9RCx5elUUjqLTCVgUyP6Xi2i-09Z4IpMhCTbzFaI', '2023-10-27 02:54:04.579863'),
+	('4unj6kov0oxym1an99d0dcd50x8uv1n4', '.eJzFkT1rwzAQhv_KodkY25GjuGO3DoWsJQ7mJJ1ip7YU9JESSv977ZCWdCndOmjQc6-eu0PvrMMU-y4F8t2g2QPjLLtnEtUr2aWgj2gPLlfORj_IfInkt2rIn52m8fGW_SHoMfSLtjGbVV3UXNeqWpcFVpxXtVDFqq42tSnFuimMELwRTWm0kpXUZbnShgtcl0pcp5ooBDxQmHW7Xcu67hic_aIty6DIgM-nZVsM4c15DVMKEZaRcbCAEUbCGThLkE4n8goDzSxG8tmVhssk3ZgBWn292zRJ8vkib1nL9hn83vjJnnEcNNCEwwjG-QljDtulLcHJu_OgCRDuQn93_8NSVb1EXlzygEq5ZCPM_wmSyILyhJE0hKTU_Mikcbx8K_fs4xPG1sbF:1quG3N:biv-ex2DgkYwO-vXM5pj8RhupVPOYurn79uf1s78jfQ', '2023-11-04 17:46:25.038448'),
 	('782v36g3da4gomfblvotfotf6s6mpxyx', '.eJxVjEEOwiAQAP_C2RCgC1s8eu8bCLAgVQNJaU_GvxuSHvQ6M5k3c_7Yizt62txK7MqAXX5Z8PGZ6hD08PXeeGx139bAR8JP2_nSKL1uZ_s3KL6XsbV5nrTQQDoqI4VXAEpjFJNWs84SjRUZESxamSkGFUjKiTKgNzIisM8Xo_E2ig:1qqt7q:5lulrwtQrQiBbq-zyubLaNH8uUcxnhmOUE0oLM2oDWk', '2023-10-26 10:41:06.327713'),
 	('s9aaqgmextk5gvdbjeumnng0dc8jz0ct', '.eJxVjEEOwiAQAP_C2RCgC1s8eu8bCLAgVQNJaU_GvxuSHvQ6M5k3c_7Yizt62txK7MqAXX5Z8PGZ6hD08PXeeGx139bAR8JP2_nSKL1uZ_s3KL6XsbV5nrTQQDoqI4VXAEpjFJNWs84SjRUZESxamSkGFUjKiTKgNzIisM8Xo_E2ig:1qptxq:fJbUD9pVOXUA9VLsGU_FjB39OT5tIF8B7zlCqUk7p40', '2023-10-23 17:22:42.929277'),
 	('z9ihe7578x814t0nacy9fmgk4x35z17u', '.eJxVjEEOwiAQAP_C2RCgC1s8eu8bCLAgVQNJaU_GvxuSHvQ6M5k3c_7Yizt62txK7MqAXX5Z8PGZ6hD08PXeeGx139bAR8JP2_nSKL1uZ_s3KL6XsbV5nrTQQDoqI4VXAEpjFJNWs84SjRUZESxamSkGFUjKiTKgNzIisM8Xo_E2ig:1qpvKH:rVXxVn0VWlHN6vejEZMMmi2OOkqp911uBLgH6ECfXWI', '2023-10-23 18:49:57.045561');
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `document` (
   KEY `FK_document_user` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table paperlify.document: ~86 rows (approximately)
+-- Dumping data for table paperlify.document: ~81 rows (approximately)
 INSERT INTO `document` (`id`, `user_id`, `doc_name`, `doc_size`, `doc_type`, `extracted_text`, `summarized_text`, `updated_on`) VALUES
 	(11, 0, 'Weekly Log 04.docx', 21529, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', NULL, NULL, '2023-09-30 17:35:52'),
 	(12, 0, 'Weekly Log 04.docx', 21529, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', NULL, NULL, '2023-09-30 17:35:58'),
@@ -381,6 +381,21 @@ CREATE TABLE IF NOT EXISTS `process` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table paperlify.process: ~0 rows (approximately)
+
+-- Dumping structure for table paperlify.user
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(150) NOT NULL,
+  `fname` varchar(150) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `password` varchar(128) NOT NULL,
+  `date_joined` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table paperlify.user: ~0 rows (approximately)
+INSERT INTO `user` (`id`, `username`, `fname`, `email`, `password`, `date_joined`) VALUES
+	(1, 'dhiraj', 'Dhiraj Sah', 'dhiraj@gmail.com', 'Dhiraj@123', '2023-10-13 13:34:02');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
