@@ -1,3 +1,4 @@
+from django.db import connection
 from django.shortcuts import render, redirect
 from django.shortcuts import HttpResponse
 from django.contrib.auth.models import User
@@ -161,8 +162,24 @@ def dashboard(request):
 
 
 def mydocuments(request):
-    documents = FileUpload.objects.all()  # Fetch all records from the FileUpload model
-    return render(request, 'mydocuments.html', {'mydocuments': documents})
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM document')
+        data = cursor.fetchall()
+
+    myDocs = []
+    for row in data:
+        doc = {
+            'title': row[2],  # Assuming the title is in the third column (index 2)
+            'time': row[7],   # Assuming the time is in the eighth column (index 7)
+            'text': row[5],   # Assuming the text is in the sixth column (index 5)
+        }
+        myDocs.append(doc)
+
+    context = {
+        'documents': myDocs,
+    }
+
+    return render(request, 'mydocuments.html', context)
 
 def document(request):
     return render(request, 'document.html')
