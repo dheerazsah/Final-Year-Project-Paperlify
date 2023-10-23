@@ -91,6 +91,7 @@ HEADERS = {"Authorization": "Bearer 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"}
 def dashboard(request):
     content = ''
     summary = None
+    file_info = None
 
     if request.method == 'POST':
         if 'file' in request.FILES:
@@ -144,10 +145,18 @@ def dashboard(request):
             }
             response = requests.post(API_URL, headers=HEADERS, json=payload)
             summary = response.json()
-
+            
+            if file_info:
+                summarized_text = summary[0].get('summary_text', '')
+                file_info.summarized_text = summarized_text
+                file_info.save()
             #return render(request, 'dashboard.html', {'content': content, 'summary': summary})
     
     return render(request, 'dashboard.html', {'content': content, 'summary': summary})
+
+
+
+
 
 
 def mydocuments(request):
@@ -155,12 +164,22 @@ def mydocuments(request):
         cursor.execute('SELECT * FROM document')
         data = cursor.fetchall()
 
+    
+
     myDocs = []
     for row in data:
+        text = row[6]
+        if text is not None:
+            words = text.split()
+            if len(words) > 25:
+                text = ' '.join(words[:25]) + '... See more'
+        else:
+            text = row[6]
+
         doc = {
             'title': row[2],  # Assuming the title is in the third column (index 2)
             'time': row[7],   # Assuming the time is in the eighth column (index 7)
-            'text': row[5],   # Assuming the text is in the sixth column (index 5)
+            'text': text, 
         }
         myDocs.append(doc)
 
