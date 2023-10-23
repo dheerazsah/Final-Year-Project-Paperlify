@@ -35,6 +35,7 @@
             <p>Document to Text Summarization AI</p>
         </section>
     </div>
+    
     <div class="drag-area">
         <form method="POST" action="" enctype="multipart/form-data">
             {% csrf_token %}
@@ -50,20 +51,28 @@
     </div>
     
 
-
     <!-- Show Document -->
     <div class="editor-box">
-        <div class="editor-title">Document Content</div>
-        <textarea rows="10" cols="80">{{ content }}</textarea>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="editor-title">Document Content</div>
+            <textarea name="input_text" rows="10" cols="80">{{ content }}</textarea>
+            <input class="summarize-btn" type="submit" name="summarize" value="Summarize"> 
+        </form>
     </div>
+    
 
-    <input class="summarize-btn" type="submit" value="Summarize">
 
     <!-- Add the Summarized Document Editor -->
     <div class="editor-box">
         <div class="editor-title">Summarized Document</div>
-        <textarea rows="10" cols="80"></textarea>
+        {% if summary %}
+            <textarea rows="10" cols="80">{{ summary.0.summary_text }}</textarea>
+        {% else %}
+            <textarea rows="10" cols="80">No summary available</textarea>
+        {% endif %}
     </div>
+
 
         <div>
             <section class="content">

@@ -7,7 +7,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import re
 
-from transformers import pipeline #Importing pipeline a ML model
 
 # Create your views here.
 @login_required(login_url='login')
@@ -83,10 +82,15 @@ def loginPage(request):
 from .models import FileUpload  # Import the model
 import docx2txt
 from PyPDF2 import PdfReader
+from django.shortcuts import render
+import requests
+
+API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+HEADERS = {"Authorization": "Bearer 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"}
 
 def dashboard(request):
     content = ''
-    summary = ''
+    summary = None
 
     if request.method == 'POST':
         if 'file' in request.FILES:
@@ -113,13 +117,13 @@ def dashboard(request):
                     content = file.read().decode('utf-8')
                     file_info.extracted_text = content  
                     file_info.save()  
-                    return render(request, 'dashboard.html', {'content': content})
+                    #return render(request, 'dashboard.html', {'content': content})
 
             elif uploadfile.name.endswith(('.doc', '.docx')):
                 content = docx2txt.process(uploadfile)
                 file_info.extracted_text = content  
                 file_info.save() 
-                return render(request, 'dashboard.html', {'content': content})
+                #return render(request, 'dashboard.html', {'content': content})
 
             elif uploadfile.name.endswith('.pdf'):
                 content = ''
@@ -129,36 +133,21 @@ def dashboard(request):
                     content += page.extract_text()
                 file_info.extracted_text = content
                 file_info.save()  
-                return render(request, 'dashboard.html', {'content': content})
+                #return render(request, 'dashboard.html', {'content': content})
             
-            if content:
-                summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-                summary = summarizer(content, max_length=150, min_length=50, do_sample=False)[0]['summary']
-                file_info.summarized_text = summary
-                file_info.save()
+        if 'summarize' in request.POST:  # Check if the "Summarize" button was clicked
+            input_text = request.POST.get('input_text', '')
 
-            else:
-                return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})
-            
-            # Summarize the text using the model
-            # summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-            # if file_info.extracted_text:
-            #     summary = summarizer(file_info.extracted_text, max_length=150, min_length=50, do_sample=False)[0]['summary']
-            #     file_info.summarized_text = summary
-            #     file_info.save()
-            # else:
-            #     summary = "No text available for summarization."
+            # Summarize the content using the Hugging Face model
+            payload = {
+                "inputs": input_text,
+            }
+            response = requests.post(API_URL, headers=HEADERS, json=payload)
+            summary = response.json()
 
             #return render(request, 'dashboard.html', {'content': content, 'summary': summary})
-        
-        
-        # If 'file' key is not in request.FILES, show an error message
-        #return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})
-        # If 'file' key is not in request.FILES, show an error message
-        return render(request, 'dashboard.html', {'error': 'Please select a file to upload.'})
-
-    return render(request, 'dashboard.html')
-
+    
+    return render(request, 'dashboard.html', {'content': content, 'summary': summary})
 
 
 def mydocuments(request):
