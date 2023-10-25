@@ -33,18 +33,19 @@
     <section class="content">
         <h1>My Profile</h1>
         <div class="profile-info">
-            <form action="#" method="POST">
+            <form action="" method="POST">
+                {% csrf_token %}
                 <div class="input-field">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" value="YourUsername" required>
+                    <input type="text" id="username" name="username" value="{{ user.username }}" required>
                 </div>
                 <div class="input-field">
                     <label for="fullname">Full Name</label>
-                    <input type="text" id="fullname" name="fullname" value="Your Full Name" required>
+                    <input type="text" id="fullname" name="fullname" value="{{ user.first_name}}" required>
                 </div>
                 <div class="input-field">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="youremail@example.com" required>
+                    <input type="email" id="email" name="email" value="{{ user.email}}" required>
                 </div>
                 <button type="submit" class="update-button">Update Profile</button>
             </form>

@@ -193,6 +193,24 @@ def document(request):
     return render(request, 'document.html')
 
 def profile(request):
+    if request.method == 'POST':
+
+        user = request.user
+        #user.username = request.POST.get('username')
+        user.first_name = request.POST.get('fullname')
+        user.email = request.POST.get('email')
+        user.save()
+
+    try:
+        user = User.objects.get(username='username')
+        context = {
+            'user': user
+        }
+        return render(request, 'profile.html', context)
+    
+    except User.DoesNotExist:
+        pass
+    
     return render(request, 'profile.html')
 
 

@@ -193,7 +193,7 @@ body {
 /* Docs */
 .document-container {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
     margin: 40px;
@@ -208,9 +208,12 @@ body {
     border-radius: 10px;
     background-color: var(--color-white);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-   /* width: calc(33.33% - 20px); */
+    width: calc(33.33% - 20px);
     margin-bottom: 20px;
 }
+
+.document:nth-child(3n) {
+    margin-right: 0;
 
 .document h2 {
     font-size: 1.25rem;
@@ -219,6 +222,18 @@ body {
 
 .document p {
     font-size: 0.875rem;
+}
+
+.see-more-btn {
+    background-color: var(--primary-blue); 
+    color: var(--color-white); 
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.see-more-btn:hover {
+    background-color: #0056b3;
 }
 
 .browse-button {
