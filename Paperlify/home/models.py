@@ -27,6 +27,15 @@ class FileUpload(models.Model):
     def __str__(self):
         return self.doc_name
 
+
+from django.contrib.auth.models import User 
+class UserActivityLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    activity = models.CharField(max_length=100)
+    ip_address = models.GenericIPAddressField()
+    updated_on = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"{self.user.username} - {self.activity} - {self.updated_on}"
     
 
     

@@ -190,7 +190,16 @@ def mydocuments(request):
     return render(request, 'mydocuments.html', context)
 
 def document(request):
-    return render(request, 'document.html')
+    query = request.GET.get('query', '')
+
+    documents = FileUpload.objects.filter(doc_name__icontains=query)
+
+    context = {
+        'documents': documents,
+        'query': query,
+    }
+
+    return render(request, 'search_documents.html', context)
 
 def profile(request):
     if request.method == 'POST':
