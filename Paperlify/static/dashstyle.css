@@ -214,6 +214,7 @@ body {
 
 .document:nth-child(3n) {
     margin-right: 0;
+}
 
 .document h2 {
     font-size: 1.25rem;
@@ -327,6 +328,3 @@ body {
         max-width: unset;
     }
 }
-
-
-

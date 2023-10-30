@@ -53,7 +53,8 @@
 
         <div class="password-change">
             <h1>Password</h1>
-            <form action="#" method="POST">
+            <form method="POST">
+                {% csrf_token %}
                 <div class="input-field">
                     <label for="current-password">Current Password</label>
                     <input type="password" id="current-password" name="current-password" required>

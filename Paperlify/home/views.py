@@ -234,6 +234,7 @@ def document(request):
 
     return render(request, 'search_documents.html', context)
 
+from django.contrib.auth import update_session_auth_hash
 def profile(request):
     if request.method == 'POST':
 
@@ -252,6 +253,24 @@ def profile(request):
     
     except User.DoesNotExist:
         pass
+
+    # Password change handling
+        if 'current_password' in request.POST:
+            current_password = request.POST.get('current_password')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+
+            # Validate the current password
+            if user.check_password(current_password):
+                if new_password == confirm_password:
+                    user.set_password(new_password)
+                    user.save()
+                    update_session_auth_hash(request, user)  # Update the user's session
+                    messages.success(request, 'Password changed successfully')
+                else:
+                    messages.error(request, 'New password and confirmation do not match')
+            else:
+                messages.error(request, 'Current password is incorrect')
     
     return render(request, 'profile.html')
 
