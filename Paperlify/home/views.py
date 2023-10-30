@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import re
+from .models import UserActivityLog
 
 
 # Create your views here.
@@ -54,10 +55,20 @@ def signupPage(request):
             myuser = User.objects.create_user(username, email, password)
             myuser.first_name = fname
             myuser.save()
+
+            # Log the user's activity
+            UserActivityLog.objects.create(
+                user=myuser,  
+                activity='signup',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+
             messages.success(request, 'Your account has been created successfully')
             return redirect('login')
+        
 
     return render(request, 'signup.html')
+
 
 
 
@@ -72,6 +83,14 @@ def loginPage(request):
             user = authenticate(request, username = username, password = password)
             if user is not None:
                 login(request, user)
+
+                # Log the user's activity
+                UserActivityLog.objects.create(
+                    user=user, 
+                    activity='login',
+                    ip_address=request.META.get('REMOTE_ADDR')
+                )
+
                 return redirect('dashboard')
             else:
                 return render(request, 'login.html', {'error': 'Invalid username or password'})
@@ -112,6 +131,13 @@ def dashboard(request):
             )
             file_info.save()
 
+            # Log the user's activity
+            UserActivityLog.objects.create(
+                user=request.user,
+                activity='upload document',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+
             # Extract and display content for supported file types
             if uploadfile.name.endswith('.txt'):
                 with uploadfile.open() as file:
@@ -151,6 +177,13 @@ def dashboard(request):
                 file_info.summarized_text = summarized_text
                 file_info.save()
             #return render(request, 'dashboard.html', {'content': content, 'summary': summary})
+
+             # Log the user's activity
+            UserActivityLog.objects.create(
+                user=request.user,
+                activity='summarize',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
     
     return render(request, 'dashboard.html', {'content': content, 'summary': summary})
 
@@ -229,6 +262,14 @@ def test(request):
 
 def logoutUser(request):
     logout(request)
+    
+    # Log the user's activity
+    UserActivityLog.objects.create(
+        user=request.user,
+        activity='logout',
+        ip_address=request.META.get('REMOTE_ADDR')
+    )
+
     messages.success(request, 'You are logged out successfully.')
     return redirect('login')
 

@@ -17,12 +17,12 @@
             <h1>Paperlify</h1>
         </div>
         <ul>
-            <li>
+            {% comment %} <li>
                 <form action="" method="GET">
                     <input type="text" name="query" placeholder="Search documents">
                     <button type="submit">Search</button>
                 </form>
-            </li>
+            </li> {% endcomment %}
             <li><a href="{% url 'dashboard' %}">Upload Document</a></li>
             <li><a href="{% url 'mydocuments' %}">My Documents</a></li>
             <li><a href="{% url 'profile' %}">My Profile</a></li>
@@ -44,7 +44,7 @@
                     <input type="text" id="fullname" name="fullname" value="{{ user.first_name}}" required>
                 </div>
                 <div class="input-field">
-                    <label for="email">Email:</label>
+                    <label for="email">Email</label>
                     <input type="email" id="email" name="email" value="{{ user.email}}" required>
                 </div>
                 <button type="submit" class="update-button">Update Profile</button>
