@@ -47,7 +47,7 @@
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" value="{{ user.email}}" required>
                 </div>
-                <button type="submit" class="update-button">Update Profile</button>
+                <button type="submit" class="update-button" name="update_profile">Update Profile</button>
             </form>
         </div>
 
@@ -57,17 +57,17 @@
                 {% csrf_token %}
                 <div class="input-field">
                     <label for="current-password">Current Password</label>
-                    <input type="password" id="current-password" name="current-password" required>
+                    <input type="password" id="current-password" name="current_password" required>
                 </div>
                 <div class="input-field">
                     <label for="new-password">New Password</label>
-                    <input type="password" id="new-password" name="new-password" required>
+                    <input type="password" id="new-password" name="new_password" required>
                 </div>
                 <div class="input-field">
                     <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm-password" required>
+                    <input type="password" id="confirm-password" name="confirm_password" required>
                 </div>
-                <button type="submit" class="change-password-button">Change Password</button>
+                <button type="submit" class="change-password-button" name="change_password">Change Password</button>
             </form>
         </div>
     </section>

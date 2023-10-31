@@ -236,26 +236,18 @@ def document(request):
 
 from django.contrib.auth import update_session_auth_hash
 def profile(request):
-    if request.method == 'POST':
-
-        user = request.user
-        #user.username = request.POST.get('username')
-        user.first_name = request.POST.get('fullname')
-        user.email = request.POST.get('email')
-        user.save()
-
-    try:
-        user = User.objects.get(username='username')
-        context = {
-            'user': user
-        }
-        return render(request, 'profile.html', context)
+    user = request.user
     
-    except User.DoesNotExist:
-        pass
+    if request.method == 'POST':
+        if 'update_profile' in request.POST:
+            #user.username = request.POST.get('username')
+            user.first_name = request.POST.get('fullname')
+            user.email = request.POST.get('email')
+            user.save()
+            messages.success(request, 'Profile updated successfully')
 
-    # Password change handling
-        if 'current_password' in request.POST:
+        if 'change_password' in request.POST:
+            # Password change handling
             current_password = request.POST.get('current_password')
             new_password = request.POST.get('new_password')
             confirm_password = request.POST.get('confirm_password')
@@ -271,8 +263,13 @@ def profile(request):
                     messages.error(request, 'New password and confirmation do not match')
             else:
                 messages.error(request, 'Current password is incorrect')
+
+            return redirect('profile')
     
-    return render(request, 'profile.html')
+    context = {
+        'user': user
+    }
+    return render(request, 'profile.html', context)
 
 
 def test(request):
