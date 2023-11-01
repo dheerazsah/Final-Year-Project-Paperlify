@@ -246,6 +246,13 @@ def profile(request):
             user.save()
             messages.success(request, 'Profile updated successfully')
 
+            # Log the user's activity for profile update
+            UserActivityLog.objects.create(
+                user=user,
+                activity='update_profile',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+
         if 'change_password' in request.POST:
             # Password change handling
             current_password = request.POST.get('current_password')
@@ -259,6 +266,14 @@ def profile(request):
                     user.save()
                     update_session_auth_hash(request, user)  # Update the user's session
                     messages.success(request, 'Password changed successfully')
+
+                    # Log the user's activity for password change
+                    UserActivityLog.objects.create(
+                        user=user,
+                        activity='change_password',
+                        ip_address=request.META.get('REMOTE_ADDR')
+                    )
+                    
                 else:
                     messages.error(request, 'New password and confirmation do not match')
             else:

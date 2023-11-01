@@ -81,17 +81,18 @@
         </div>
     <div class="document-container">
         <!-- Document 1 -->
+        {% for document in documents %}
         <div class="document">
-            {% for document in documents %}
-            <a href="{% url 'document' document.id %}">
-                <div class="document-info">
-                    <h2>{{ document.doc_name }}</h2>
-                    <p>Date of Upload: {{ document.upload_date|date:"M d, Y" }}</p>
-                    <p>{{ document.extracted_text }}</p>
-                </div>
-            </a>
-            {% endfor %}
+            <div class="document-info">
+                <h2>{{ document.title }}</h2>
+                <p>Date of Upload: {{ document.time }}</p>
+                <p>{{ document.text }}</p>
+                <button class= "see-more-btn" type="submit">See More</button>
+            </div>
         </div>
+        {% empty %}
+        <p>No documents available.</p>
+        {% endfor %}
         
         <!-- Document 2 -->
         <div class="document">
