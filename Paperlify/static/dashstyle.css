@@ -316,6 +316,112 @@ body {
     z-index: 1;
 }
 
+
+/* Profile Section */
+.profile-info {
+    background-color: var(--color-white);
+    padding: var(--padding);
+    border-radius: var(--br);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-info h1 {
+    font-size: var(--h1-bold-size);
+    color: var(--color-gray-200);
+    margin: var(--gap) 0;
+}
+
+.profile-info form {
+    text-align: center;
+}
+
+.input-field {
+    margin: var(--gap) 0;
+}
+
+.input-field label {
+    font-size: var(--body2-normal-size);
+    color: var(--color-darkslategray);
+}
+
+.input-field input {
+    width: 100%;
+    padding: var(--padding);
+    border: 1px solid #ccc;
+    border-radius: var(--br);
+    font-size: var(--body1-normal-size);
+    color: var(--color-darkslategray);
+}
+
+.update-button {
+    background-color: var(--primary-blue);
+    color: var(--color-white);
+    padding: var(--padding) var(--gap);
+    border: none;
+    border-radius: var(--br);
+    font-size: var(--body1-normal-size);
+    cursor: pointer;
+}
+
+.update-button:hover {
+    background-color: var(--hover-blue);
+}
+
+/* Password Change Section */
+.password-change {
+    background-color: var(--color-white);
+    padding: var(--padding);
+    border-radius: var(--br);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.password-change h1 {
+    font-size: var(--h1-bold-size);
+    color: var(--color-gray-200);
+    margin: var(--gap) 0;
+}
+
+.password-change form {
+    text-align: center;
+}
+
+.password-change .input-field label {
+    font-size: var(--body2-normal-size);
+    color: var(--color-darkslategray);
+}
+
+.password-change .input-field input {
+    width: 100%;
+    padding: var(--padding);
+    border: 1px solid #ccc;
+    border-radius: var(--br);
+    font-size: var(--body1-normal-size);
+    color: var(--color-darkslategray);
+}
+
+.change-password-button {
+    background-color: var(--primary-blue);
+    color: var(--color-white);
+    padding: var(--padding) var(--gap);
+    border: none;
+    border-radius: var(--br);
+    font-size: var(--body1-normal-size);
+    cursor: pointer;
+}
+
+.change-password-button:hover {
+    background-color: var(--hover-blue);
+}
+
+
 /* Responsive Styles*/
 /* Small*/
 @media (max-width: 768px) {
