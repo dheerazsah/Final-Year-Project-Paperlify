@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM Sans:wght@400;500;700&display=swap"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#chooseAIModal").modal('show');
+        });
+    </script>
+
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="icon" type="image/x-icon" href="./static/images/Paperlify Logo Blue.png">
     <title>Paperlify | Dashboard</title>
@@ -34,7 +41,6 @@
         </ul>
     </nav>
 
-    
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -44,7 +50,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            Are you are you want to logout?
+            Are you are you want to logout? This cannot be undone.
             </div>
             <div class="modal-footer">
             <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
@@ -53,6 +59,24 @@
         </div>
         </div>
     </div>
+
+    <!-- Choose AI Model Modal -->
+    <div class="modal fade" id="chooseAIModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Choose Your AI Model</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            Choose which AI model you want to select for Summarization.
+            </div>
+            <button type="button" class="btn btn-secondary">Hugging Face Model</button>
+            <button type="button" class="btn btn-primary">Pegasus Model</button>
+        </div>
+        </div>
+    </div>
+
 
     <div>
         <section class="content">
