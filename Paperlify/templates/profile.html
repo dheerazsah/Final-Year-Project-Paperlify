@@ -1,76 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./static/dashstyle.css"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM Sans:wght@400;500;700&display=swap"/>
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <link rel="icon" type="image/x-icon" href="./static/images/Paperlify Logo Blue.png">
-    <title>Paperlify | Profile</title>
-</head>
+{% extends "./base.html"%}
+{% block title %}Profile{% endblock %}
 
-<body class="dashboard-body">
-    <nav class="navbar">
-        <div class="logo">
-            <img src="./static/images/Paperlify Logo White.png" alt="Paperlify Logo"> 
-            <h1>Paperlify</h1>
-        </div>
-        <ul>
-            {% comment %} <li>
-                <form action="" method="GET">
-                    <input type="text" name="query" placeholder="Search documents">
-                    <button type="submit">Search</button>
-                </form>
-            </li> {% endcomment %}
-            <li><a href="{% url 'dashboard' %}">Upload Document</a></li>
-            <li><a href="{% url 'mydocuments' %}">My Documents</a></li>
-            <li><a href="{% url 'profile' %}">My Profile</a></li>
-            <li><a href="{% url 'login' %}">Logout</a></li>
-        </ul>
-    </nav>
+{% block template %}
+<section class="content">
+    <h1>My Profile</h1>
+    <div class="profile-info">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="input-field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+            </div>
+            <div class="input-field">
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" name="fullname" value="{{ user.first_name}}" required>
+            </div>
+            <div class="input-field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email}}" required>
+            </div>
+            <button type="submit" class="update-button" name="update_profile">Update Profile</button>
+        </form>
+    </div>
 
-    <section class="content">
-        <h1>My Profile</h1>
-        <div class="profile-info">
-            <form action="" method="POST">
-                {% csrf_token %}
-                <div class="input-field">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" value="{{ user.username }}" required>
-                </div>
-                <div class="input-field">
-                    <label for="fullname">Full Name</label>
-                    <input type="text" id="fullname" name="fullname" value="{{ user.first_name}}" required>
-                </div>
-                <div class="input-field">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" value="{{ user.email}}" required>
-                </div>
-                <button type="submit" class="update-button" name="update_profile">Update Profile</button>
-            </form>
-        </div>
-
-        <div class="password-change">
-            <h1>Password</h1>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="input-field">
-                    <label for="current-password">Current Password</label>
-                    <input type="password" id="current-password" name="current_password" required>
-                </div>
-                <div class="input-field">
-                    <label for="new-password">New Password</label>
-                    <input type="password" id="new-password" name="new_password" required>
-                </div>
-                <div class="input-field">
-                    <label for="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm_password" required>
-                </div>
-                <button type="submit" class="change-password-button" name="change_password">Change Password</button>
-            </form>
-        </div>
-    </section>
-
-</body>
-</html>
+    <div class="password-change">
+        <h1>Password</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-field">
+                <label for="current-password">Current Password</label>
+                <input type="password" id="current-password" name="current_password" required>
+            </div>
+            <div class="input-field">
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" name="new_password" required>
+            </div>
+            <div class="input-field">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="change-password-button" name="change_password">Change Password</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
