@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 # class Registration(models.Model):
@@ -15,6 +16,7 @@ from django.utils import timezone
 #         return self.username
     
 class FileUpload(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     doc_name = models.FileField(max_length=100)
     doc_size = models.BigIntegerField() 
     doc_type = models.CharField(max_length=100)

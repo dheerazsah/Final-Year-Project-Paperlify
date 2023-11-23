@@ -91,10 +91,13 @@ def loginPage(request):
                     ip_address=request.META.get('REMOTE_ADDR')
                 )
 
-                return redirect('dashboard')
+                return redirect('homepage')
             else:
                 return render(request, 'login.html', {'error': 'Invalid username or password'})
     return render(request, 'login.html')
+
+def homepage(request):
+    return render(request, 'homepage.html')
 
 
 #from django.core.files.storage import FileSystemStorage
@@ -113,6 +116,7 @@ def dashboard(request):
     file_info = None
 
     if request.method == 'POST':
+        user = request.user
         if 'file' in request.FILES:
             uploadfile = request.FILES['file']
             print(uploadfile.name)
@@ -125,6 +129,7 @@ def dashboard(request):
 
             # Save upload information to the database 
             file_info = FileUpload(
+                user= request.user,
                 doc_name=uploadfile.name,
                 doc_size=uploadfile.size,
                 doc_type=uploadfile.content_type
@@ -193,8 +198,9 @@ def dashboard(request):
 
 
 def mydocuments(request):
+    user = request.user 
     with connection.cursor() as cursor:
-        cursor.execute('SELECT * FROM document')
+        cursor.execute("SELECT * FROM document WHERE user_id = '" + str(user.id) + "'") #str(user.id) = typecast
         data = cursor.fetchall()
 
     
@@ -233,6 +239,12 @@ def document(request):
     }
 
     return render(request, 'search_documents.html', context)
+
+
+def dashboard2nd(request):
+    return render(request, 'dashboard2nd.html')
+
+
 
 from django.contrib.auth import update_session_auth_hash
 def profile(request):
