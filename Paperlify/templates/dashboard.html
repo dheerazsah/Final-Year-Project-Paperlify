@@ -3,31 +3,6 @@
 
 {% block template %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $("#chooseAIModal").modal('show');
-    });
-</script>
-
-<!-- Choose AI Model Modal -->
-<div class="modal fade" id="chooseAIModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-  <div class="modal-content">
-      <div class="modal-header">
-      <h1 class="modal-title fs-5" id="exampleModalLabel">Choose Your AI Model</h1>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      Choose which AI model you want to select for Summarization.
-      </div>
-      <button type="button" class="btn btn-secondary">Hugging Face Model</button>
-      <button type="button" class="btn btn-primary">Pegasus Model</button>
-  </div>
-  </div>
-</div>
-
-
 <div>
   <section class="content">
       <h1>Paperlify</h1>
@@ -127,5 +102,4 @@
 <div class="browse-button">
   <a href="{% url 'mydocuments' %}">Browse All Documents</a>
 </div>
-
 {% endblock %}
