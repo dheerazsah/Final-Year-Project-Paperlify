@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/style.css"/>
+    <link rel="stylesheet" href="static/dashstyle.css"/>
     <script src="/static/script.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM Sans:wght@400;500;700&display=swap"/>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="icon" type="image/x-icon" href="./static/images/Paperlify Logo Blue.png">
     <title>Paperlify | Login</title>
 </head>
-<body>
+<body class="login-body">
     <div class="split-screen">
         <div class="left">
             <div class="logo-container">
@@ -23,7 +23,7 @@
         </div>
 
         <div class="right">
-            <form action="" method="POST">
+            <form action="" method="POST" class="login-form">
                 {% if error %}
                 <p class="message"> {{ error }} </p>
                 {% endif %}
@@ -56,11 +56,11 @@
                         <span class="checkmark"></span>
                         Remember me
                     </label>
-                    <p><a href="#"><strong>Forgot Password?</strong></a></p>
+                    <p><a href="#" class="hyper-link"><strong>Forgot Password?</strong></a></p>
                 </div>
                 <button class="login-btn" type="submit">Login</button>
                 <div class="login-container">
-                        <p>Don’t have an account yet? <a href="./signup"><strong>Create New Account</strong></a></p>
+                        <p>Don’t have an account yet? <a href="./signup" class="hyper-link"><strong>Create New Account</strong></a></p>
                     </div>  
             </form>
         </div>
