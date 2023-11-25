@@ -1,0 +1,134 @@
+{% extends "./base.html"%}
+{% block title %}Homepage{% endblock %}
+
+{% block template %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#chooseAIModal").modal('show');
+    });
+</script>
+
+<!-- Choose AI Model Modal -->
+<div class="modal fade" id="chooseAIModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+      <h1 class="modal-title fs-5" id="exampleModalLabel">Choose Your AI Model</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      Choose which AI model you want to select for Summarization.
+      </div>
+      <a href="{% url 'dashboard' %}" type="button" class="btn btn-secondary">API Summarization</a>
+      <a href="{% url 'dashboard2nd' %}" type="button" class="btn btn-primary">Model Summarization</a>
+  </div>
+  </div>
+</div>
+
+{% comment %} <div class="space">
+</div> {% endcomment %}
+
+
+<div>
+  <section class="content">
+      <h1>Paperlify</h1>
+      <p>Document to Text Summarization AI</p>
+  </section>
+</div>
+
+<div class="drag-area">
+  <form method="POST" action="" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="icon"><i class="uil uil-file-upload"></i></div>
+      <h2>Upload a document</h2>
+      <input type="file" name="file" id="file" accept=".txt, .pdf, .doc, .docx">
+      {% if error %}
+          <p class="message"> {{ error }} </p>
+          {% endif %}
+          
+      <button class="upload-btn" type="submit">Upload</button>
+  </form>
+</div>
+
+
+<!-- Show Document -->
+<div class="editor-box">
+  <form action="" method="post">
+      {% csrf_token %}
+      <div class="editor-title">Document Content</div>
+      <textarea name="input_text" rows="10" cols="80">{{ content }}</textarea>
+      <input class="summarize-btn" type="submit" name="summarize" value="Summarize"> 
+  </form>
+</div>
+
+
+
+<!-- Add the Summarized Document Editor -->
+<div class="editor-box">
+  <div class="editor-title">Summarized Document</div>
+  {% if summary %}
+      <textarea rows="10" cols="80">{{ summary.0.summary_text }}</textarea>
+  {% else %}
+      <textarea rows="10" cols="80">No summary available</textarea>
+  {% endif %}
+</div>
+
+
+  <div>
+      <section class="content">
+          <h1>Recent Documents</h1>
+      </section>
+  </div>
+<div class="document-container">
+  <!-- Document 1 -->
+  {% for document in documents %}
+  <div class="document">
+      <div class="document-info">
+          <h2>{{ document.title }}</h2>
+          <p>Date of Upload: {{ document.time }}</p>
+          <p>{{ document.text }}</p>
+          <button class= "see-more-btn" type="submit">See More</button>
+      </div>
+  </div>
+  {% empty %}
+  <p>No documents available.</p>
+  {% endfor %}
+  
+  <!-- Document 2 -->
+  <div class="document">
+      <a href="{% url 'document' %}">
+          <div class="document-info">
+              <h2>Document 2 Name</h2>
+              <p>Date of Upload: Sept 03, 2023</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.</p>
+          </div>
+      </a>
+  </div>
+  <!-- Document 3 -->
+  <div class="document">
+      <a href="document">
+          <div class "document-info">
+              <h2>Document 3 Name</h2>
+              <p>Date of Upload: Sept 03, 2023</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.</p>
+          </div>
+      </a>
+  </div>
+  <!-- Document 4 -->
+  <div class="document">
+      <a href="document">
+          <div class="document-info">
+              <h2>Document 4 Name</h2>
+              <p>Date of Upload: Sept 03, 2023</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.</p>
+          </div>
+      </a>
+  </div>
+</div>
+<div class="browse-button">
+  <a href="{% url 'mydocuments' %}">Browse All Documents</a>
+</div>
+
+{% endblock %}

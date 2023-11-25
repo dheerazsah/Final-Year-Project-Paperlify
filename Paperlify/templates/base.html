@@ -11,22 +11,21 @@
     <link rel="icon" type="image/x-icon" href="./static/images/Paperlify Logo Blue.png">
     <title>{% block title %}Paperlify{% endblock %}</title>
 </head>
-<body class="dashboard-body">
+<body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-
-          <a class="navbar-brand logo" href="#"><img src="./static/images/Paperlify Logo White.png" alt="Paperlify Logo">Paperlify</a>
+          <a class="navbar-brand logo" href="{% url 'homepage' %}"><img src="./static/images/Paperlify Logo White.png" alt="Paperlify Logo">Paperlify</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li>
+              <li class="nav-item">
                 <form action="" method="GET">
                     <input type="text" name="query" placeholder="Search documents">
                     <button type="submit">Search</button>
                 </form>
-            </li>
+              </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Upload Document</a>
               </li>
@@ -36,7 +35,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'profile' %}">Profile</a>
               </li>
-              <li>
+              <li class="nav-item">
               <button type="submit" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                  Logout
               </button>
