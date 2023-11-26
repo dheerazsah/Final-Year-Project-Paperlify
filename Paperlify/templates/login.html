@@ -56,11 +56,11 @@
                         <span class="checkmark"></span>
                         Remember me
                     </label>
-                    <p><a href="#" class="hyper-link"><strong>Forgot Password?</strong></a></p>
+                    <p><a href="{% url 'forgotpassword' %}" class="hyper-link"><strong>Forgot Password?</strong></a></p>
                 </div>
                 <button class="login-btn" type="submit">Login</button>
                 <div class="login-container">
-                        <p>Don’t have an account yet? <a href="./signup" class="hyper-link"><strong>Create New Account</strong></a></p>
+                        <p>Don’t have an account yet? <a href="{% url 'signup' %}" class="hyper-link"><strong>Create New Account</strong></a></p>
                     </div>  
             </form>
         </div>

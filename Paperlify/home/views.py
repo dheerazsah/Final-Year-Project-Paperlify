@@ -96,6 +96,9 @@ def loginPage(request):
                 return render(request, 'login.html', {'error': 'Invalid username or password'})
     return render(request, 'login.html')
 
+def forgotpassword(request):
+    return render(request, 'forgotpassword.html')
+
 def homepage(request):
     return render(request, 'homepage.html')
 
