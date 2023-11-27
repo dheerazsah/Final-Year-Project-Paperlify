@@ -179,11 +179,22 @@ def dashboard(request):
             }
             response = requests.post(API_URL, headers=HEADERS, json=payload)
             summary = response.json()
-            
-            if file_info:
+
+            # Initialize file_info if not created before
+            if not file_info:
+                file_info = FileUpload(user=request.user)
+
+            if summary and len(summary) > 0:
                 summarized_text = summary[0].get('summary_text', '')
+                file_info.extracted_text = content
                 file_info.summarized_text = summarized_text
                 file_info.save()
+            
+            # if file_info:
+            #     summarized_text = summary[0].get('summary_text', '')
+            #     file_info.document_text = input_text
+            #     file_info.summarized_text = summarized_text
+            #     file_info.save()
             #return render(request, 'dashboard.html', {'content': content, 'summary': summary})
 
              # Log the user's activity
