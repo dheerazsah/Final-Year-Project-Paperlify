@@ -120,12 +120,19 @@ def dashboard(request):
 
     if request.method == 'POST':
         user = request.user
+        fileName = ''
+        fileSize = 0
+        contentType = ''
+
         if 'file' in request.FILES:
             uploadfile = request.FILES['file']
-            print(uploadfile.name)
-            print(uploadfile.size)
-            print(uploadfile.content_type)
+            # print(uploadfile.name)
+            # print(uploadfile.size)
+            # print(uploadfile.content_type)
 
+            fileName = uploadfile.name
+            fileSize = uploadfile.size
+            contentType = uploadfile.content_type
             # Save the file to the file system
             # fs = FileSystemStorage()
             # fs.save(uploadfile.name, uploadfile)
@@ -170,7 +177,7 @@ def dashboard(request):
                 file_info.save()  
                 #return render(request, 'dashboard.html', {'content': content})
             
-        if 'summarize' in request.POST:  # Check if the "Summarize" button was clicked
+        if 'summarize' in request.POST:
             input_text = request.POST.get('input_text', '')
 
             # Summarize the content using the Hugging Face model
@@ -181,23 +188,21 @@ def dashboard(request):
             summary = response.json()
 
             # Initialize file_info if not created before
-            if not file_info:
-                file_info = FileUpload(user=request.user)
+            # if not file_info:
+            #     #file_info = FileUpload(user=request.user, doc_name=fileName, doc_size=fileSize, doc_type=contentType)
+            #     file_info = FileUpload(user=request.user)
 
             if summary and len(summary) > 0:
                 summarized_text = summary[0].get('summary_text', '')
-                file_info.extracted_text = content
+                file_info = FileUpload(user=request.user)
+                file_info.doc_name = fileName
+                file_info.doc_size = fileSize
+                file_info.doc_type = contentType
+                file_info.extracted_text = input_text
                 file_info.summarized_text = summarized_text
                 file_info.save()
-            
-            # if file_info:
-            #     summarized_text = summary[0].get('summary_text', '')
-            #     file_info.document_text = input_text
-            #     file_info.summarized_text = summarized_text
-            #     file_info.save()
-            #return render(request, 'dashboard.html', {'content': content, 'summary': summary})
 
-             # Log the user's activity
+            # Log the user's activity
             UserActivityLog.objects.create(
                 user=request.user,
                 activity='summarize',
