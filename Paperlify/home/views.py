@@ -7,6 +7,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import re
 from .models import UserActivityLog
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+from django.utils import timezone
+from datetime import timedelta
 
 
 # Create your views here.
@@ -70,8 +74,6 @@ def signupPage(request):
     return render(request, 'signup.html')
 
 
-
-
 def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -97,7 +99,62 @@ def loginPage(request):
     return render(request, 'login.html')
 
 def forgotpassword(request):
-    return render(request, 'forgotpassword.html')
+    if request.method == 'POST':
+        email = request.POST['email']
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return render(request, 'forgotpassword.html', {'user_not_found': True, 'error': 'Email not found!'})
+
+        # Generate OTP
+        otp = get_random_string(length=6, allowed_chars='1234567890')
+
+        # Store OTP in the session
+        request.session['otp'] = otp
+        request.session['email'] = user.email
+
+        # Store OTP in the database
+        # user.otp = otp
+        # user.otp_created_at = timezone.now()
+        # user.save()
+
+        # Send OTP via Email
+        subject = 'OTP to Change Password'
+        message = f'Hello {user.username},<br><br>'
+        message += 'You requested a password reset. Please use the following OTP to proceed:<br><br>'
+        message += f'<strong>OTP: {otp}</strong><br><br>'
+        message += 'This OTP is valid for 15 minutes.<br>'
+        message += 'If you did not request a password reset, please ignore this email.<br><br>'
+        message += 'Thank You!'
+
+        from_email = 'Paperlify'
+        recipient_list = [user.email]
+
+        send_mail(subject, message, from_email, recipient_list)
+
+        return render(request, 'forgotpassword.html', {'otp_sent': True, 'email': user.email})
+    else:
+        return render(request, 'forgotpassword.html', {'otp_sent': False, 'otp_verified': False})
+    
+def verify_otp(request):
+    if request.method == 'POST':
+        try:
+            email = request.session.get('email')
+            otp_entered = request.POST.get('otp')
+
+            if 'otp' in request.session and 'email' in request.session:
+                if request.session['otp'] == otp_entered and request.session['otp_timestamp'] >= timezone.now() - timedelta(minutes=15):
+                    # Store OTP verification status in the session
+                    request.session['otp_verified'] = True
+                    return render(request, 'reset_password.html', {'email': email})
+            return render(request, 'forgotpassword.html', {'otp_verified': False, 'email': email})
+        except User.DoesNotExist:
+            return render(request, 'forgotpassword.html', {'otp_verified': False, 'email_not_found': True})
+    else:
+        return render(request, 'forgotpassword.html', {'otp_verified': False, 'otp_sent': False})
+
+def resetpassword(request):
+    return render(request, 'resetpassword.html')
 
 def homepage(request):
     return render(request, 'homepage.html')
@@ -177,6 +234,7 @@ def dashboard(request):
                 file_info.save()  
                 #return render(request, 'dashboard.html', {'content': content})
             
+        
         if 'summarize' in request.POST:
             input_text = request.POST.get('input_text', '')
 

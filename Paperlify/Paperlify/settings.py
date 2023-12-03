@@ -75,6 +75,8 @@ WSGI_APPLICATION = 'Paperlify.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -89,7 +91,6 @@ DATABASES = {
         },
     },
 }
-
 
 
 # Password validation
@@ -110,6 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#AUTH_USER_MODEL = 'home.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
