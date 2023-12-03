@@ -257,9 +257,14 @@
     margin: var(--gap) 0;
 }
 
-.message {
+.success-message {
     color: green;
     margin-bottom: 10px;
+}
+
+.error-message {
+  color: rgb(128, 0, 0);
+  margin-bottom: 10px;
 }
 
 .input-field,

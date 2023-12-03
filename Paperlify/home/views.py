@@ -99,6 +99,9 @@ def loginPage(request):
     return render(request, 'login.html')
 
 def forgotpassword(request):
+    return render(request, 'forgotpassword.html')
+
+def send_otp(request):
     if request.method == 'POST':
         email = request.POST['email']
         try:
@@ -111,6 +114,7 @@ def forgotpassword(request):
 
         # Store OTP in the session
         request.session['otp'] = otp
+        request.session['otp_timestamp'] = timezone.now().isoformat()
         request.session['email'] = user.email
 
         # Store OTP in the database
@@ -142,6 +146,10 @@ def verify_otp(request):
             email = request.session.get('email')
             otp_entered = request.POST.get('otp')
 
+            if 'otp' in request.session and 'email' in request.session and 'otp_timestamp' in request.session:
+                otp_timestamp_str = request.session['otp_timestamp']
+                otp_timestamp = dateparse.parse_datetime(otp_timestamp_str)
+            
             if 'otp' in request.session and 'email' in request.session:
                 if request.session['otp'] == otp_entered and request.session['otp_timestamp'] >= timezone.now() - timedelta(minutes=15):
                     # Store OTP verification status in the session
