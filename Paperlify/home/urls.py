@@ -28,5 +28,5 @@ urlpatterns = [
     path('dashboard2nd', views.dashboard2nd, name='dashboard2nd'),
     path('mydocuments', views.mydocuments, name='mydocuments'),
     path('document', views.document, name='document'),
-    path('test', views.test, name='test')
+    path('test', views.test, name='test'),
 ]

@@ -11,10 +11,11 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.utils import timezone
 from datetime import timedelta
-
+from django.utils import dateparse
+from django.utils.datastructures import MultiValueDictKeyError
 
 # Create your views here.
-@login_required(login_url='login')
+#@login_required(login_url='login')
 
 def signupPage(request):
     if request.method == 'POST':
@@ -104,59 +105,65 @@ def forgotpassword(request):
 def send_otp(request):
     if request.method == 'POST':
         email = request.POST['email']
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM auth_user WHERE email = %s", [email])
+            row = cursor.fetchone()
+
+        if row:
+            user_id = row[0]
+            username = row[1]
+            db_email = row[4]
+
+            otp = get_random_string(length=6, allowed_chars='1234567890')
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "UPDATE auth_user SET otp = %s, otp_created_at = %s WHERE id = %s",
+                    [otp, timezone.now(), user_id]
+                )
+
+            subject = 'OFS Forget Password'
+            
+            message = f'Hello {username},<br><br>'
+            message += 'You requested a password reset. Please use the following OTP to proceed:<br><br>'
+            message += f'<strong>OTP: {otp}</strong><br><br>'
+            message += 'This OTP is valid for 15 minutes.<br>'
+            message += 'If you did not request a password reset, please ignore this email.<br><br>'
+            message += 'Thank You!'
+
+            from_email = 'noreply'
+            recipient_list = [db_email]
+
+            send_mail(subject, message, from_email, recipient_list, html_message=message)
+
+            return render(request, 'forgotpassword.html', {'otp_sent': True, 'email': db_email})
+        else:
             return render(request, 'forgotpassword.html', {'user_not_found': True, 'error': 'Email not found!'})
-
-        # Generate OTP
-        otp = get_random_string(length=6, allowed_chars='1234567890')
-
-        # Store OTP in the session
-        request.session['otp'] = otp
-        request.session['otp_timestamp'] = timezone.now().isoformat()
-        request.session['email'] = user.email
-
-        # Store OTP in the database
-        # user.otp = otp
-        # user.otp_created_at = timezone.now()
-        # user.save()
-
-        # Send OTP via Email
-        subject = 'OTP to Change Password'
-        message = f'Hello {user.username},<br><br>'
-        message += 'You requested a password reset. Please use the following OTP to proceed:<br><br>'
-        message += f'<strong>OTP: {otp}</strong><br><br>'
-        message += 'This OTP is valid for 15 minutes.<br>'
-        message += 'If you did not request a password reset, please ignore this email.<br><br>'
-        message += 'Thank You!'
-
-        from_email = 'Paperlify'
-        recipient_list = [user.email]
-
-        send_mail(subject, message, from_email, recipient_list)
-
-        return render(request, 'forgotpassword.html', {'otp_sent': True, 'email': user.email})
     else:
         return render(request, 'forgotpassword.html', {'otp_sent': False, 'otp_verified': False})
     
 def verify_otp(request):
     if request.method == 'POST':
         try:
-            email = request.session.get('email')
-            otp_entered = request.POST.get('otp')
+            email = request.POST['email']
+            otp_entered = request.POST['otp']
 
-            if 'otp' in request.session and 'email' in request.session and 'otp_timestamp' in request.session:
-                otp_timestamp_str = request.session['otp_timestamp']
-                otp_timestamp = dateparse.parse_datetime(otp_timestamp_str)
-            
-            if 'otp' in request.session and 'email' in request.session:
-                if request.session['otp'] == otp_entered and request.session['otp_timestamp'] >= timezone.now() - timedelta(minutes=15):
-                    # Store OTP verification status in the session
-                    request.session['otp_verified'] = True
-                    return render(request, 'reset_password.html', {'email': email})
-            return render(request, 'forgotpassword.html', {'otp_verified': False, 'email': email})
-        except User.DoesNotExist:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT * FROM auth_user WHERE email = %s AND otp = %s AND otp_created_at >= %s",
+                    [email, otp_entered, timezone.now() - timezone.timedelta(minutes=15)]
+                )
+                row = cursor.fetchone()
+
+            if row:
+                user_id = row[0]
+                with connection.cursor() as cursor:
+                    cursor.execute("UPDATE auth_user SET otp_verified = TRUE WHERE id = %s", [user_id])
+
+                print("Reset PASSWORD NOW!!!!!")
+            else:
+                return render(request, 'forgotpassword.html', {'otp_verified': False, 'email': email})
+        except MultiValueDictKeyError:
             return render(request, 'forgotpassword.html', {'otp_verified': False, 'email_not_found': True})
     else:
         return render(request, 'forgotpassword.html', {'otp_verified': False, 'otp_sent': False})
