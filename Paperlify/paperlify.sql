@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               10.11.4-MariaDB - mariadb.org binary distribution
+-- Server version:               10.11.6-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
--- HeidiSQL Version:             12.3.0.6589
+-- HeidiSQL Version:             12.6.0.6765
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table paperlify.auth_permission: ~32 rows (approximately)
+-- Dumping data for table paperlify.auth_permission: ~36 rows (approximately)
 INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
 	(1, 'Can add log entry', 1, 'add_logentry'),
 	(2, 'Can change log entry', 1, 'change_logentry'),
@@ -106,16 +106,18 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
   `is_staff` tinyint(1) NOT NULL,
   `is_active` tinyint(1) NOT NULL,
   `is_superuser` tinyint(1) NOT NULL,
+  `otp` varchar(50) DEFAULT NULL,
+  `otp_created_at` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table paperlify.auth_user: ~4 rows (approximately)
-INSERT INTO `auth_user` (`id`, `username`, `first_name`, `last_name`, `email`, `password`, `last_login`, `date_joined`, `is_staff`, `is_active`, `is_superuser`) VALUES
-	(3, 'dheerazsah', 'Dhiraj', '', 'dhiraj@gmail.com', 'pbkdf2_sha256$600000$4UuqePZScLpivSRnzJT7ws$8sIQ1yXdXW0LUxCWpLcaCfpmEmt7x6WPeTNaG3C1K0E=', NULL, '2023-09-25 12:31:44.214951', 0, 1, 0),
-	(4, 'niraj', 'Niraj Sah', '', 'niraj@gmail.com', 'pbkdf2_sha256$600000$PJMOMx12HVZtWRpwtp0pdu$HO6p3vfolRkalBNuf3uJRnXMQSyw4eSnE4xNkpaTSoc=', '2023-10-21 17:46:25.025166', '2023-09-26 16:13:30.611963', 0, 1, 0),
-	(5, 'madan', 'Madan Khanal', '', 'madan@gmail.com', 'pbkdf2_sha256$600000$FEwBgvzUbkVkWHMuLZlVRd$rprBKg1IJEOOPD7WdYaPCNCaSbkHOhj9eWRPTzpf2tA=', '2023-09-26 18:03:42.002039', '2023-09-26 18:03:30.017027', 0, 1, 0),
-	(6, 'manoj', 'Manoj Karki', '', 'manoj@gmail.com', 'pbkdf2_sha256$600000$7fxvYYcjHIAwJTuBMmOvvt$pPaO4piC7TWNn7B6BgoNucINWMySLY1zC8gznkwcToc=', '2023-09-26 18:06:16.045015', '2023-09-26 18:05:58.798476', 0, 1, 0);
+INSERT INTO `auth_user` (`id`, `username`, `first_name`, `last_name`, `email`, `password`, `last_login`, `date_joined`, `is_staff`, `is_active`, `is_superuser`, `otp`, `otp_created_at`) VALUES
+	(3, 'dheerazsah', 'Dhiraj', '', 'dhiraj@gmail.com', 'pbkdf2_sha256$600000$4UuqePZScLpivSRnzJT7ws$8sIQ1yXdXW0LUxCWpLcaCfpmEmt7x6WPeTNaG3C1K0E=', NULL, '2023-09-25 12:31:44.214951', 0, 1, 0, NULL, NULL),
+	(4, 'niraj', 'Niraj Sah', '', 'niraj@gmail.com', 'pbkdf2_sha256$600000$PJMOMx12HVZtWRpwtp0pdu$HO6p3vfolRkalBNuf3uJRnXMQSyw4eSnE4xNkpaTSoc=', '2023-10-21 17:46:25.025166', '2023-09-26 16:13:30.611963', 0, 1, 0, NULL, NULL),
+	(5, 'madan', 'Madan Khanal', '', 'madan@gmail.com', 'pbkdf2_sha256$600000$FEwBgvzUbkVkWHMuLZlVRd$rprBKg1IJEOOPD7WdYaPCNCaSbkHOhj9eWRPTzpf2tA=', '2023-09-26 18:03:42.002039', '2023-09-26 18:03:30.017027', 0, 1, 0, NULL, NULL),
+	(6, 'manoj', 'Manoj Karki', '', 'manojgamer99@gmail.com', 'pbkdf2_sha256$600000$7fxvYYcjHIAwJTuBMmOvvt$pPaO4piC7TWNn7B6BgoNucINWMySLY1zC8gznkwcToc=', '2023-09-26 18:06:16.045015', '2023-09-26 18:05:58.798476', 0, 1, 0, '651853', '2023-12-06 15:11:45.588148');
 
 -- Dumping structure for table paperlify.auth_user_groups
 CREATE TABLE IF NOT EXISTS `auth_user_groups` (
@@ -173,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table paperlify.django_content_type: ~8 rows (approximately)
+-- Dumping data for table paperlify.django_content_type: ~9 rows (approximately)
 INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 	(1, 'admin', 'logentry'),
 	(3, 'auth', 'group'),
@@ -194,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table paperlify.django_migrations: ~19 rows (approximately)
+-- Dumping data for table paperlify.django_migrations: ~20 rows (approximately)
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(1, 'contenttypes', '0001_initial', '2023-09-25 12:20:23.759291'),
 	(2, 'auth', '0001_initial', '2023-09-25 12:20:24.327165'),
@@ -247,7 +249,7 @@ CREATE TABLE IF NOT EXISTS `document` (
   KEY `FK_document_user` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table paperlify.document: ~81 rows (approximately)
+-- Dumping data for table paperlify.document: ~87 rows (approximately)
 INSERT INTO `document` (`id`, `user_id`, `doc_name`, `doc_size`, `doc_type`, `extracted_text`, `summarized_text`, `updated_on`) VALUES
 	(11, 0, 'Weekly Log 04.docx', 21529, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', NULL, NULL, '2023-09-30 17:35:52'),
 	(12, 0, 'Weekly Log 04.docx', 21529, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', NULL, NULL, '2023-09-30 17:35:58'),
@@ -393,7 +395,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table paperlify.user: ~0 rows (approximately)
+-- Dumping data for table paperlify.user: ~1 rows (approximately)
 INSERT INTO `user` (`id`, `username`, `fname`, `email`, `password`, `date_joined`) VALUES
 	(1, 'dhiraj', 'Dhiraj Sah', 'dhiraj@gmail.com', 'Dhiraj@123', '2023-10-13 13:34:02');
 
