@@ -546,11 +546,12 @@
     color: var(--color-white); 
     padding: 10px 20px;
     text-decoration: none;
+    border: none;
     border-radius: 5px;
   }
   
   .see-more-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--hover-blue);
   }
   
   .browse-button {
