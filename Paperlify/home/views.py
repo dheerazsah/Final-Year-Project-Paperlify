@@ -1,77 +1,93 @@
+
+#Import necessary modules and classes from Django
+
+#Database conncetion handling in Django 
 from django.db import connection
-from django.shortcuts import render, redirect
-from django.shortcuts import HttpResponse
+#Function and classes for rendering views and handling HTTP responses
+from django.shortcuts import render, redirect, HttpResponse
+#User model for managing user related information
 from django.contrib.auth.models import User
+#Message framework for displaying information to the user
 from django.contrib import messages
+#Function and classes for user authentication
 from django.contrib.auth import authenticate, login, logout
+#Decorator for requring login to access certain views
 from django.contrib.auth.decorators import login_required
+#Importing expression module for pattern matching and validation
 import re
+
+#Import UserActivityLog model from the current app
 from .models import UserActivityLog
+#Module for sending email in Django
 from django.core.mail import send_mail
+#Utility functions for generating random strings
 from django.utils.crypto import get_random_string
+#Module for worrking wiht time and time zones in Django
 from django.utils import timezone
-from datetime import timedelta
-from django.utils import dateparse
+#Exception handling for MultiVlaueDictKeyError
 from django.utils.datastructures import MultiValueDictKeyError
+
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 #@login_required(login_url='login')
 
+#View function for handling user signup requests 
 def signupPage(request):
+    #Check if the request method is POST 
     if request.method == 'POST':
+        #Extract the user input from the POST data
         username = request.POST.get('username')
         fname = request.POST.get('fname')
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
-        #error_messages = []  # Create a list to collect error messages
-
+        #Check if any required field is empty and display an error message 
         if not username or not fname or not password or not password:
             return render(request, 'signup.html', {'error': 'Enter your username, first name, email, and password.'})
 
-        # Email Validation
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            return render(request, 'signup.html', {'error': 'Invalid email format. Please provide a valid email.'})
-
-        # Password Complexity Requirements
+        #Password Complexity Requirements to check if th passowrd mee
         if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
             return render(request, 'signup.html', {'error': 'Password must contain at least one uppercase letter, one symbol, and one number.'})
-
+        
+        #Check if the entered password and confirm password matches 
         if password != confirm_password:
             return render(request, 'signup.html', {'error': 'Password did not match.'})
 
-        # Name Validation (Alphabet with spaces)
+        #Check if the name contains only alphanumeric characters and spaces
         if not all(char.isalpha() or char.isspace() for char in fname):
             return render(request, 'signup.html', {'error': 'Name must contain alphabetic characters with spaces.'})
-
+        
+        #Check if the username already exists
         if User.objects.filter(username=username):
             return render(request, 'signup.html', {'error': 'Username already exists. Please try a new username.'})
 
+        #Check if the email address already exists 
         if User.objects.filter(email=email):
             return render(request, 'signup.html', {'error': 'Email already exists. Please try a new email.'})
 
-        # Check if there are any error messages
-        # if error_messages:
-        #     for message in error_messages:
-        #         messages.error(request, message)
+        # Email Validation
+        #Check if the email format is valid using a regular expression
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            return render(request, 'signup.html', {'error': 'Invalid email format. Please provide a valid email.'})
+
         else:
             # If there are no error messages, create the user account
             myuser = User.objects.create_user(username, email, password)
             myuser.first_name = fname
             myuser.save()
 
-            # Log the user's activity
+            # Log the user's signup activity
             UserActivityLog.objects.create(
                 user=myuser,  
                 activity='signup',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
-
+            #Display a success message and redirect to the login page
             messages.success(request, 'Your account has been created successfully')
             return redirect('login')
-        
-
+    #Render the signup.html template if the request method is not POST
     return render(request, 'signup.html')
 
 
@@ -122,7 +138,7 @@ def send_otp(request):
                     [otp, timezone.now(), user_id]
                 )
 
-            subject = 'OFS Forget Password'
+            subject = 'Forget Password'
             
             message = f'Hello {username},<br><br>'
             message += 'You requested a password reset. Please use the following OTP to proceed:<br><br>'
@@ -160,7 +176,7 @@ def verify_otp(request):
                 with connection.cursor() as cursor:
                     cursor.execute("UPDATE auth_user SET otp_verified = TRUE WHERE id = %s", [user_id])
 
-                print("Reset PASSWORD NOW!!!!!")
+                return render(request, 'resetpassword.html', {'otp_verified': True, 'email': email})
             else:
                 return render(request, 'forgotpassword.html', {'otp_verified': False, 'email': email})
         except MultiValueDictKeyError:
@@ -169,6 +185,20 @@ def verify_otp(request):
         return render(request, 'forgotpassword.html', {'otp_verified': False, 'otp_sent': False})
 
 def resetpassword(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if new_password == confirm_password:
+            hashed_password = make_password(new_password)
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE auth_user SET password = %s WHERE email = %s", [hashed_password, email])
+
+            return redirect('/login')
+        else:
+            error = "Passwords do not match."
+            return render(request, 'resetpassword.html', {'otp_verified': True, 'error': error, 'email': email})
     return render(request, 'resetpassword.html')
 
 def homepage(request):
