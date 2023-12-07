@@ -26,13 +26,16 @@ urlpatterns = [
     path('login', views.loginPage, name='login'),
     path('signup', views.signupPage, name='signup'),
     path('forgotpassword', views.forgotpassword, name='forgotpassword'),
+    path('send_otp', views.send_otp, name='send_otp'),
+    path('verify_otp', views.verify_otp, name='verify_otp'),
+    path('resetpassword', views.resetpassword, name='resetpassword'),
     path('homepage', views.homepage, name='homepage'),
     path('dashboard2nd', views.dashboard2nd, name='dashboard2nd'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('mydocuments', views.mydocuments, name='mydocuments'),
     path('document', views.document, name='document'),
     path('profile', views.profile, name='profile'),
-    path('test', views.test, name='test')
+    path('test', views.test, name='test'),
 ] 
 
 
