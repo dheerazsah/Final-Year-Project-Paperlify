@@ -84,9 +84,7 @@ def signupPage(request):
                 activity='signup',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
-            #Display a success message and redirect to the login page
-            messages.success(request, 'Your account has been created successfully')
-            return redirect('login')
+            return render(request, 'login.html', {'success': 'Your account has been created successfully.'})
     #Render the signup.html template if the request method is not POST
     return render(request, 'signup.html')
 
@@ -97,7 +95,7 @@ def loginPage(request):
         password = request.POST.get('password')
         
         if not username or not password:
-            return render(request, 'login.html', {'error': 'Enter your username and password'})
+            return render(request, 'login.html', {'error': 'Enter your username and password.'})
         else:
             user = authenticate(request, username = username, password = password)
             if user is not None:
@@ -112,7 +110,7 @@ def loginPage(request):
 
                 return redirect('homepage')
             else:
-                return render(request, 'login.html', {'error': 'Invalid username or password'})
+                return render(request, 'login.html', {'error': 'Invalid username or password.'})
     return render(request, 'login.html')
 
 def forgotpassword(request):
@@ -315,17 +313,11 @@ def dashboard(request):
     return render(request, 'dashboard.html', {'content': content, 'summary': summary})
 
 
-
-
-
-
 def mydocuments(request):
     user = request.user 
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM document WHERE user_id = '" + str(user.id) + "'") #str(user.id) = typecast
         data = cursor.fetchall()
-
-    
 
     myDocs = []
     for row in data:
@@ -367,14 +359,13 @@ def dashboard2nd(request):
     return render(request, 'dashboard2nd.html')
 
 
-
 from django.contrib.auth import update_session_auth_hash
 def profile(request):
     user = request.user
     
     if request.method == 'POST':
         if 'update_profile' in request.POST:
-            #user.username = request.POST.get('username')
+            # user.username = request.POST.get('username')
             user.first_name = request.POST.get('fullname')
             user.email = request.POST.get('email')
             user.save()
@@ -413,12 +404,11 @@ def profile(request):
             else:
                 messages.error(request, 'Current password is incorrect')
 
-            return redirect('profile')
-    
     context = {
         'user': user
     }
     return render(request, 'profile.html', context)
+
 
 
 def test(request):

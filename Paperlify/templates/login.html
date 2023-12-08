@@ -25,7 +25,9 @@
         <div class="right">
             <form action="" method="POST" class="login-form">
                 {% if error %}
-                <p class="message"> {{ error }} </p>
+                <p class="error-message"> {{ error }} </p>
+                {% elif success %}
+                <p class="success-message"> {{ success }} </p>
                 {% endif %}
             
                 {% csrf_token %}

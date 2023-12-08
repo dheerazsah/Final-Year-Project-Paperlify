@@ -6,6 +6,16 @@
     <h1>My Profile</h1>
     <div class="profile-info">
         <form action="" method="POST">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <p class="error-message">{{ message }}</p>
+                    {% elif message.tags == 'success' %}
+                        <p class="success-message">{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
             {% csrf_token %}
             <div class="input-field">
                 <label for="username">Username</label>
