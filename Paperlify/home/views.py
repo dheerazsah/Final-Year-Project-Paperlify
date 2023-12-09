@@ -342,17 +342,8 @@ def mydocuments(request):
 
     return render(request, 'mydocuments.html', context)
 
-def document(request):
-    query = request.GET.get('query', '')
-
-    documents = FileUpload.objects.filter(doc_name__icontains=query)
-
-    context = {
-        'documents': documents,
-        'query': query,
-    }
-
-    return render(request, 'search_documents.html', context)
+def document(request, slug):
+    return render(request, 'document.html')
 
 
 def dashboard2nd(request):

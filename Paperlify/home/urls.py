@@ -30,7 +30,8 @@ urlpatterns = [
     path('dashboard2nd', views.dashboard2nd, name='dashboard2nd'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('mydocuments', views.mydocuments, name='mydocuments'),
-    path('document', views.document, name='document'),
+    path('<str:slug>', views.document, name='document'), 
+    #path('document', views.document, name='document'),
     path('profile', views.profile, name='profile'),
     path('test', views.test, name='test'),
 ]

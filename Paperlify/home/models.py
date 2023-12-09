@@ -44,6 +44,8 @@ class FileUpload(models.Model):
     doc_type = models.CharField(max_length=100)
     extracted_text = models.TextField(blank=True, null=True) 
     summarized_text = models.TextField(blank=True, null=True) 
+    slug = models.CharField(max_length=130)
+    timeStamp = models.DateTimeField(blank=True)
 
     class Meta:
         db_table = 'document'
