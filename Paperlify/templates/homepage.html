@@ -10,28 +10,60 @@
     });
 </script>
 
+<style>
+    .btn-square {
+      width: 100%;
+      height: 100%;
+    }
+
+    .btn-primary1,
+    .btn-secondary1 {
+        background-color: #5271ff;
+        border-color: #5271ff;
+        color: #fff;
+    }
+    
+    .btn-primary1:hover,
+    .btn-secondary1:hover {
+    background-color: #4a66e6;
+    border-color: #4a66e6;
+    color: #fff;
+    }
+
+    .icon {
+        font-size: 2em;
+        vertical-align: middle;
+      }
+</style>
+
 <!-- Choose AI Model Modal -->
 <div class="modal fade" id="chooseAIModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-  <div class="modal-content">
-      <div class="modal-header">
-      <h1 class="modal-title fs-5" id="exampleModalLabel">Choose Your AI Model</h1>
-      {% comment %} <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> {% endcomment %}
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Choose Your AI Model</h1>
+          {% comment %} <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> {% endcomment %}
+        </div>
+        <div class="modal-body">
+          Choose which AI model you want to select for Summarization.
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-5">
+            <a href="{% url 'dashboard' %}" type="button" class="btn btn-secondary1 btn-square">
+                <i class="uil uil-smile icon fa-4x d-block"></i>
+                {% comment %} <i class="uil uil-rocket"></i> {% endcomment %}
+                HuggingFace API Summarization</a>
+          </div>
+          <div class="col-5">
+            <a href="{% url 'dashboard2nd' %}" type="button" class="btn btn-primary1 btn-square">
+                <i class="uil uil-bolt icon fa-4x d-block"></i>
+                Model Summarization</a>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-      Choose which AI model you want to select for Summarization.
-      </div>
-      <div>
-        <a href="{% url 'dashboard' %}" type="button" class="btn btn-secondary">API Summarization</a>
-
-      </div>
-      <div class="pt-3">
-        <a href="{% url 'dashboard2nd' %}" type="button" class="btn btn-primary">Model Summarization</a>
-
-      </div>
+    </div>
   </div>
-  </div>
-</div>
+  
 
 {% comment %} <div class="space">
 </div> {% endcomment %}
@@ -104,7 +136,7 @@
   
   <!-- Document 2 -->
   <div class="document">
-      <a href="{% url 'document' %}">
+      <a href="">
           <div class="document-info">
               <h2>Document 2 Name</h2>
               <p>Date of Upload: Sept 03, 2023</p>
@@ -134,7 +166,7 @@
   </div>
 </div>
 <div class="browse-button">
-  <a href="{% url 'mydocuments' %}">Browse All Documents</a>
+  <a href="">Browse All Documents</a>
 </div>
 
 {% endblock %}
