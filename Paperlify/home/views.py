@@ -22,7 +22,7 @@ from .models import UserActivityLog
 from django.core.mail import send_mail
 #Utility functions for generating random strings
 from django.utils.crypto import get_random_string
-#Module for worrking wiht time and time zones in Django
+#Module for working wiht time and time zones in Django
 from django.utils import timezone
 #Exception handling for MultiVlaueDictKeyError
 from django.utils.datastructures import MultiValueDictKeyError
