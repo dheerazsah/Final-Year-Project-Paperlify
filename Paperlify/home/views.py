@@ -29,6 +29,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 from django.contrib.auth.hashers import make_password
 
+
 # Create your views here.
 #@login_required(login_url='login')
 
@@ -342,7 +343,7 @@ def mydocuments(request):
 
     return render(request, 'mydocuments.html', context)
 
-def document(request, slug):
+def document_detail(request, slug):
     return render(request, 'document.html')
 
 
@@ -403,7 +404,8 @@ def profile(request):
 
 
 def test(request):
-    return render(request, 'test.html')
+    context = {'documents': FileUpload.objects.all()}
+    return render(request, 'test.html', context)
 
 
 def logoutUser(request):
