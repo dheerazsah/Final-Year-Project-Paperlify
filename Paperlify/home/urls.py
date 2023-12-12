@@ -32,7 +32,8 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('test', views.test, name='test'),
     path('mydocuments', views.mydocuments, name='mydocuments'),
-    path('mydocuments/<slug>', views.document_detail, name='document_detail')
+    path('mydocuments/<slug>', views.document_detail, name='document_detail'),
+    path('search', views.search, name='search'),
     #path('<str:slug>', views.document, name='document'), 
     #path('document', views.document, name='document'),
 ]

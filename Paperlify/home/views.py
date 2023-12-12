@@ -367,6 +367,14 @@ def document_detail(request, slug):
         print(e)
     return render(request, 'document.html', context)
 
+def search(request):
+    # return HttpResponse('This is a search')
+    user_id = request.user.id
+    query = request.GET.get('query')
+    # Filter documents based on the user_id and the correct field name ('doc_name' in this case)
+    context = {'documents': FileUpload.objects.filter(user_id=user_id, doc_name__icontains=query)}
+    return render(request, 'search.html', context)
+
 
 def dashboard2nd(request):
     return render(request, 'dashboard2nd.html')
