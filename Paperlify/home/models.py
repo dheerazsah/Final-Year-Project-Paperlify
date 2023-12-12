@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 
 from django.utils.text import slugify
+from django.utils import timezone
 
 #Generating ramdom settings 
 #Using random.choices()
@@ -63,7 +64,9 @@ class FileUpload(models.Model):
     extracted_text = models.TextField(blank=True, null=True) 
     summarized_text = models.TextField(blank=True, null=True) 
     slug = models.SlugField(max_length=1000, null=True, blank=True)
-    timeStamp = models.DateTimeField(blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    #created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'document'

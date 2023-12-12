@@ -219,6 +219,11 @@ def dashboard(request):
     summary = None
     file_info = None
 
+    # user_id = request.user.id
+    # # Filter documents based on the user_id
+    # documents = FileUpload.objects.filter(user_id=user_id).order_by('-upload_time')[:3]
+    # context = {'documents': documents}
+
     if request.method == 'POST':
         user = request.user
         fileName = ''
@@ -310,41 +315,57 @@ def dashboard(request):
                 activity='summarize',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
+
+    # user_id = request.user.id
+    #  # Filter documents based on the user_id
+    # documents = FileUpload.objects.filter(user_id=user_id).order_by('-upload_time')[:3]
+    # context = {'documents': documents}
     
     return render(request, 'dashboard.html', {'content': content, 'summary': summary})
 
 
 def mydocuments(request):
-    user = request.user 
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM document WHERE user_id = '" + str(user.id) + "'") #str(user.id) = typecast
-        data = cursor.fetchall()
-
-    myDocs = []
-    for row in data:
-        text = row[6]
-        if text is not None:
-            words = text.split()
-            if len(words) > 25:
-                text = ' '.join(words[:25]) + '... See more'
-        else:
-            text = row[6]
-
-        doc = {
-            'title': row[2],  # Assuming the title is in the third column (index 2)
-            'time': row[7],   # Assuming the time is in the eighth column (index 7)
-            'text': text, 
-        }
-        myDocs.append(doc)
-
-    context = {
-        'documents': myDocs,
-    }
-
+    user_id = request.user.id
+    # Filter documents based on the user_id
+    context = {'documents': FileUpload.objects.filter(user_id=user_id).order_by('-created_at')}
     return render(request, 'mydocuments.html', context)
+    # user = request.user 
+    # with connection.cursor() as cursor:
+    #     cursor.execute("SELECT * FROM document WHERE user_id = '" + str(user.id) + "'") #str(user.id) = typecast
+    #     data = cursor.fetchall()
+
+    # myDocs = []
+    # for row in data:
+    #     text = row[6]
+    #     if text is not None:
+    #         words = text.split()
+    #         if len(words) > 25:
+    #             text = ' '.join(words[:25]) + '... See more'
+    #     else:
+    #         text = row[6]
+
+    #     doc = {
+    #         'title': row[2],  # Assuming the title is in the third column (index 2)
+    #         'time': row[7],   # Assuming the time is in the eighth column (index 7)
+    #         'text': text, 
+    #     }
+    #     myDocs.append(doc)
+
+    # context = {
+    #     'documents': myDocs,
+    # }
+
+    # return render(request, 'mydocuments.html', context)
 
 def document_detail(request, slug):
-    return render(request, 'document.html')
+    context={}
+    try:
+        document_obj = FileUpload.objects.filter(slug = slug).first()
+        context['document_obj'] = document_obj
+
+    except Exception as e:
+        print(e)
+    return render(request, 'document.html', context)
 
 
 def dashboard2nd(request):
@@ -404,7 +425,9 @@ def profile(request):
 
 
 def test(request):
-    context = {'documents': FileUpload.objects.all()}
+    user_id = request.user.id
+    # Filter documents based on the user_id
+    context = {'documents': FileUpload.objects.filter(user_id=user_id)}
     return render(request, 'test.html', context)
 
 
