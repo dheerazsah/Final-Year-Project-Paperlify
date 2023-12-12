@@ -1,0 +1,29 @@
+{% extends "./base.html"%}
+{% block title %}Search Results{% endblock %}
+
+{% block template %}
+<div>
+    <section class="content">
+        <h1>Search Results</h1>
+    </section>
+</div>
+
+<div class="document-container">
+    <!-- Document 1 -->
+    {% for document in documents %}
+    <div class="document">
+        <div class="document-info">
+            <h2>{{ document.doc_name }}</h2>
+            <p>Upload Time: {{ document.created_at }}</p>
+            <p>{{ document.extracted_text|truncatewords:50 }}</p>
+            <div class="browse-button">
+                <a href="{% url 'document_detail' document.slug %}">View More</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No documents available.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
