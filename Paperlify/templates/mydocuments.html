@@ -13,39 +13,17 @@
     {% for document in documents %}
     <div class="document">
         <div class="document-info">
-            <h2>{{ document.title }}</h2>
-            <p>Date of Upload: {{ document.time }}</p>
-            <p>{{ document.text }}</p>
-            <button class= "see-more-btn" type="submit">See More</button>
+            <h2>{{ document.doc_name }}</h2>
+            <p>Upload Time: {{ document.created_at }}</p>
+            <p>{{ document.extracted_text|truncatewords:50 }}</p>
+            <div class="browse-button">
+                <a href="{% url 'document_detail' document.slug %}">View More</a>
+            </div>
         </div>
     </div>
     {% empty %}
     <p>No documents available.</p>
     {% endfor %}
-
-
-    <!-- Document 2 -->
-    <div class="document">
-        <a href="#">
-            <div class="document-info">
-                <h2>Document 2 Name</h2>
-                <p>Date of Upload: Sept 03, 2023</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.</p>
-            </div>
-        </a>
-    </div>
-
-    <!-- Document 3 -->
-    <div class="document">
-        <a href="#">
-            <div class="document-info">
-                <h2>Document 3 Name</h2>
-                <p>Date of Upload: Sept 03, 2023</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.</p>
-            </div>
-        </a>
-    </div>
-
 </div>
 
 {% endblock %}
