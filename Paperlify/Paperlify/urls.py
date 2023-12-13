@@ -14,19 +14,19 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include, re_path
-from django.conf import settings
-from django.conf.urls.static import static
-from home import views
+#Importing necessary modules from Django
+from django.contrib import admin #Importing the admin module for Django admin functionality
+from django.urls import path, include #Importing functions for defining URL patterns of the app
+from django.conf import settings #Importing the settings module to access project settings
+from django.conf.urls.static import static #Importing static function to serve static files
 
+#URL patterns for the entire project
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('home.urls')),
+    path('admin/', admin.site.urls), #Mapping '/admin/' to the Django admin site
+    path('', include('home.urls')), #Including URLs defined in home app
 ] 
 
-
-# Serve static files during development
+#Conditionally adding URL patterns for serving static files during development
 if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) #Adding patterns for serving static files
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #Adding patterns for serving media files
