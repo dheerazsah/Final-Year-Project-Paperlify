@@ -252,6 +252,13 @@ def dashboard(request):
             )
             file_info.save()
 
+            request.session['file_info'] = {
+                'id': file_info.id,
+                'doc_name': file_info.doc_name,
+                'doc_size': file_info.doc_size,
+                'doc_type': file_info.doc_type,
+            }
+
             # Log the user's activity
             UserActivityLog.objects.create(
                 user=request.user,
@@ -301,13 +308,23 @@ def dashboard(request):
 
             if summary and len(summary) > 0:
                 summarized_text = summary[0].get('summary_text', '')
-                file_info = FileUpload(user=request.user)
-                file_info.doc_name = fileName
-                file_info.doc_size = fileSize
-                file_info.doc_type = contentType
-                file_info.extracted_text = input_text
-                file_info.summarized_text = summarized_text
-                file_info.save()
+                # file_info = FileUpload(user=request.user)
+                # file_info.doc_name = fileName
+                # file_info.doc_size = fileSize
+                # file_info.doc_type = contentType
+                # file_info.extracted_text = input_text
+                # file_info.summarized_text = summarized_text
+                # file_info.save()
+
+                # Retrieve the existing record using the stored file_info ID
+                file_info_id = request.session.get('file_info', {}).get('id')
+                if file_info_id:
+                    file_info = FileUpload.objects.get(id=file_info_id)
+
+                    # Update the existing record with summarized text
+                    file_info.extracted_text = input_text
+                    file_info.summarized_text = summarized_text
+                    file_info.save()
 
             # Log the user's activity
             UserActivityLog.objects.create(
@@ -326,7 +343,7 @@ def dashboard(request):
 
 def mydocuments(request):
     user_id = request.user.id
-    # Filter documents based on the user_id
+    # Filter documents based on the user_id 
     context = {'documents': FileUpload.objects.filter(user_id=user_id).order_by('-created_at')}
     return render(request, 'mydocuments.html', context)
     # user = request.user 
