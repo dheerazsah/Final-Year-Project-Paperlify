@@ -343,8 +343,8 @@ def dashboard(request):
 
 def mydocuments(request):
     user_id = request.user.id
-    # Filter documents based on the user_id 
-    context = {'documents': FileUpload.objects.filter(user_id=user_id).order_by('-created_at')}
+    # Filter documents based on the user_id and summarized_text__isnull=False
+    context = {'documents': FileUpload.objects.filter(user_id=user_id, summarized_text__isnull=False).order_by('-created_at')}
     return render(request, 'mydocuments.html', context)
     # user = request.user 
     # with connection.cursor() as cursor:
