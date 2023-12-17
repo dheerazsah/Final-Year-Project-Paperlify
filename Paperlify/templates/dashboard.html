@@ -53,52 +53,71 @@
           <h1>Recent Documents</h1>
       </section>
   </div>
-<div class="document-container">
-  <!-- Document 1 -->
-  {% for document in documents %}
-  <div class="document">
-      <div class="document-info">
-          <h2>{{ document.title }}</h2>
-          <p>Date of Upload: {{ document.time }}</p>
-          <p>{{ document.text }}</p>
-          <button class= "see-more-btn" type="submit">See More</button>
+
+<!------------------------------------>
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-primary-emphasis">World</strong>
+          <h3 class="mb-0">Featured post</h3>
+          <div class="mb-1 text-body-secondary">Nov 12</div>
+          <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+          <a href="" class="icon-link gap-1 icon-link-hover stretched-link">
+            Continue reading
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-success-emphasis">Design</strong>
+          <h3 class="mb-0">Post title</h3>
+          <div class="mb-1 text-body-secondary">Nov 11</div>
+          <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+            Continue reading
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+          <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-success-emphasis">Design</strong>
+            <h3 class="mb-0">Post title</h3>
+            <div class="mb-1 text-body-secondary">Nov 11</div>
+            <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+              Continue reading
+            </a>
+          </div>
+        </div>
       </div>
   </div>
-  {% empty %}
-  <p>No documents available.</p>
-  {% endfor %}
-  
-  <!-- Document 2 -->
-  <div class="document">
-      <a href="{% url 'document' %}">
-          <div class="document-info">
-              <h2>Document 2 Name</h2>
-              <p>Date of Upload: Sept 03, 2023</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.</p>
-          </div>
-      </a>
-  </div>
-  <!-- Document 3 -->
-  <div class="document">
-      <a href="document">
-          <div class "document-info">
-              <h2>Document 3 Name</h2>
-              <p>Date of Upload: Sept 03, 2023</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.</p>
-          </div>
-      </a>
-  </div>
-  <!-- Document 4 -->
-  <div class="document">
-      <a href="document">
-          <div class="document-info">
-              <h2>Document 4 Name</h2>
-              <p>Date of Upload: Sept 03, 2023</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.</p>
-          </div>
-      </a>
-  </div>
+<!------------------------------------>
+
+<div class="document-container">
+    <!-- Document 1 -->
+    {% for document in documents %}
+    <div class="document">
+        <div class="document-info">
+            <h2>{{ document.doc_name }}</h2>
+            {% comment %} <p>Upload Time: {{ document.created_at }}</p> {% endcomment %}
+            <p>{{ document.extracted_text|truncatewords:50 }}</p>
+            <div class="browse-button">
+                <a href="{% url 'document_detail' document.slug %}">View More</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No documents available.</p>
+    {% endfor %}
 </div>
+
 <div class="browse-button">
   <a href="{% url 'mydocuments' %}">Browse All Documents</a>
 </div>

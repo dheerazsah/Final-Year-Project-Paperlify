@@ -154,10 +154,14 @@ GRAPH_MODELS = {
   'group_models': True,
 }
 
-
+#Django email configuration settings for using the SMTP email backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+#SMTP server configuration
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
+
+#Authentication credentials for the SMTP server
 EMAIL_HOST_USER = 'paperlify@gmail.com'
 EMAIL_HOST_PASSWORD = 'bykpbrnienuyazew'
 EMAIL_USE_TLS = True
