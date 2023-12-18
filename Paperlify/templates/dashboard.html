@@ -47,6 +47,7 @@
             <p>Drag and drop files here or click to select files</p>
             <input type="file" class="fileInput" id="file" name="file" accept=".txt, .pdf, .doc, .docx" onchange="displayFileName()">
         </div>
+        <p id="file-name"></p>
       {% if error %}
           <p class="message"> {{ error }} </p>
           {% endif %}
