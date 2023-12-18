@@ -10,12 +10,43 @@
   </section>
 </div>
 
+<style>
+  .upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px;
+  }
+
+  .upload-area input {
+      display: none;
+  }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      background: var(--primary-blue);
+      color: var(--color-white);
+      font-weight: bold;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+</style>
+
 <div class="drag-area">
   <form method="POST" action="" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="icon"><i class="uil uil-file-upload"></i></div>
       <h2>Upload a document</h2>
-      <input type="file" name="file" id="file" accept=".txt, .pdf, .doc, .docx">
+      <div class="upload-area" onclick="document.getElementsByClassName('fileInput')[0].click()">
+            <p>Drag and drop files here or click to select files</p>
+            <input type="file" class="fileInput" id="file" name="file" accept=".txt, .pdf, .doc, .docx" onchange="displayFileName()">
+        </div>
       {% if error %}
           <p class="message"> {{ error }} </p>
           {% endif %}
@@ -23,6 +54,34 @@
       <button class="upload-btn" type="submit">Upload</button>
   </form>
 </div>
+
+<script>
+    function displayFileName() {
+        var input = document.getElementsByClassName('fileInput')[0];
+        var fileName = input.files[0].name;
+        document.getElementById('file-name').innerHTML = 'Selected file: ' + fileName;
+    }
+
+    var uploadArea = document.getElementsByClassName('upload-area')[0];
+
+    uploadArea.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        uploadArea.style.border = '2px dashed #4caf50';
+    });
+
+    uploadArea.addEventListener('dragleave', function () {
+        uploadArea.style.border = '2px dashed #ccc';
+    });
+
+    uploadArea.addEventListener('drop', function (e) {
+        e.preventDefault();
+        uploadArea.style.border = '2px dashed #ccc';
+
+        var fileInput = document.getElementsByClassName('fileInput')[0];
+        fileInput.files = e.dataTransfer.files;
+        displayFileName();
+    });
+</script>
 
 
 <!-- Show Document -->
