@@ -1,1 +1,10 @@
 [2023-12-20 20:38:36,890: INFO: main: Welcome to our custom logging]
+[2023-12-21 00:27:18,707: INFO: main: >>>>>> stage Data Ingestion stage started <<<<<<]
+[2023-12-21 00:27:18,724: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2023-12-21 00:27:18,725: INFO: common: yaml file: params.yaml loaded successfully]
+[2023-12-21 00:27:18,725: INFO: common: created directory at: artifacts]
+[2023-12-21 00:27:18,726: INFO: common: created directory at: artifacts/data_ingestion]
+[2023-12-21 00:27:18,726: INFO: data_ingestion: File already exists of size: ~ 7718 KB]
+[2023-12-21 00:27:18,889: INFO: main: >>>>>> stage Data Ingestion stage completed <<<<<<
+
+x==========x]
