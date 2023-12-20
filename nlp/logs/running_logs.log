@@ -8,3 +8,106 @@
 [2023-12-21 00:27:18,889: INFO: main: >>>>>> stage Data Ingestion stage completed <<<<<<
 
 x==========x]
+[2023-12-21 00:33:14,160: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2023-12-21 00:33:14,165: INFO: common: yaml file: params.yaml loaded successfully]
+[2023-12-21 00:33:14,169: INFO: common: created directory at: artifacts]
+[2023-12-21 00:33:14,170: INFO: common: created directory at: artifacts/data_validation]
+[2023-12-21 00:50:14,577: INFO: main: >>>>>> stage Data Ingestion stage started <<<<<<]
+[2023-12-21 00:50:14,583: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2023-12-21 00:50:14,585: INFO: common: yaml file: params.yaml loaded successfully]
+[2023-12-21 00:50:14,586: INFO: common: created directory at: artifacts]
+[2023-12-21 00:50:14,586: ERROR: main: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config']
+Traceback (most recent call last):
+  File "C:\Users\Dhiraj\Documents\GitHub\Final-Year-Project-Paperlify\nlp\main.py", line 12, in <module>
+    data_ingestion.main()
+  File "c:\users\dhiraj\documents\github\final-year-project-paperlify\nlp\src\secondaryTextSummarizer\pipeline\stage01_data_ingestion.py", line 12, in main
+    data_ingestion_config = config.get_data_ingestion_config()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config'
+[2023-12-21 00:53:04,713: INFO: main: >>>>>> stage Data Ingestion stage started <<<<<<]
+[2023-12-21 00:53:04,721: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2023-12-21 00:53:04,722: INFO: common: yaml file: params.yaml loaded successfully]
+[2023-12-21 00:53:04,722: INFO: common: created directory at: artifacts]
+[2023-12-21 00:53:04,722: ERROR: main: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config']
+Traceback (most recent call last):
+  File "C:\Users\Dhiraj\Documents\GitHub\Final-Year-Project-Paperlify\nlp\main.py", line 12, in <module>
+    data_ingestion.main()
+  File "c:\users\dhiraj\documents\github\final-year-project-paperlify\nlp\src\secondaryTextSummarizer\pipeline\stage01_data_ingestion.py", line 12, in main
+    data_ingestion_config = config.get_data_ingestion_config()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config'
+[2023-12-21 00:54:57,500: INFO: main: >>>>>> stage Data Ingestion stage started <<<<<<]
+[2023-12-21 00:54:57,503: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2023-12-21 00:54:57,504: INFO: common: yaml file: params.yaml loaded successfully]
+[2023-12-21 00:54:57,504: INFO: common: created directory at: artifacts]
+[2023-12-21 00:54:57,504: ERROR: main: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config']
+Traceback (most recent call last):
+  File "C:\Users\Dhiraj\Documents\GitHub\Final-Year-Project-Paperlify\nlp\main.py", line 12, in <module>
+    data_ingestion.main()
+  File "c:\users\dhiraj\documents\github\final-year-project-paperlify\nlp\src\secondaryTextSummarizer\pipeline\stage01_data_ingestion.py", line 12, in main
+    data_ingestion_config = config.get_data_ingestion_config()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config'
+[2023-12-21 01:02:26,655: INFO: main: >>>>>> stage Data Ingestion stage started <<<<<<]
+[2023-12-21 01:02:26,661: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2023-12-21 01:02:26,662: INFO: common: yaml file: params.yaml loaded successfully]
+[2023-12-21 01:02:26,663: INFO: common: created directory at: artifacts]
+[2023-12-21 01:02:26,663: ERROR: main: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config']
+Traceback (most recent call last):
+  File "C:\Users\Dhiraj\Documents\GitHub\Final-Year-Project-Paperlify\nlp\main.py", line 12, in <module>
+    data_ingestion.main()
+  File "c:\users\dhiraj\documents\github\final-year-project-paperlify\nlp\src\secondaryTextSummarizer\pipeline\stage01_data_ingestion.py", line 12, in main
+    data_ingestion_config = config.get_data_ingestion_config()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config'
+[2023-12-21 01:09:22,189: INFO: main: >>>>>> stage Data Ingestion stage started <<<<<<]
+[2023-12-21 01:09:22,192: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2023-12-21 01:09:22,193: INFO: common: yaml file: params.yaml loaded successfully]
+[2023-12-21 01:09:22,193: INFO: common: created directory at: artifacts]
+[2023-12-21 01:09:22,194: INFO: common: created directory at: artifacts/data_ingestion]
+[2023-12-21 01:09:24,875: INFO: data_ingestion: artifacts/data_ingestion/data.zip download! with following info: 
+Connection: close
+Content-Length: 7903594
+Cache-Control: max-age=300
+Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+Content-Type: application/zip
+ETag: "dbc016a060da18070593b83afff580c9b300f0b6ea4147a7988433e04df246ca"
+Strict-Transport-Security: max-age=31536000
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+X-XSS-Protection: 1; mode=block
+X-GitHub-Request-Id: 6F16:3BE8:60E510:751E10:65830E45
+Accept-Ranges: bytes
+Date: Wed, 20 Dec 2023 19:24:25 GMT
+Via: 1.1 varnish
+X-Served-By: cache-maa10231-MAA
+X-Cache: HIT
+X-Cache-Hits: 0
+X-Timer: S1703100265.004333,VS0,VE294
+Vary: Authorization,Accept-Encoding,Origin
+Access-Control-Allow-Origin: *
+Cross-Origin-Resource-Policy: cross-origin
+X-Fastly-Request-ID: bd117442f45c857a594fbd9d3ba928edd126a699
+Expires: Wed, 20 Dec 2023 19:29:25 GMT
+Source-Age: 0
+
+]
+[2023-12-21 01:09:25,059: INFO: main: >>>>>> stage Data Ingestion stage completed <<<<<<
+
+x==========x]
+[2023-12-21 01:19:53,297: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2023-12-21 01:19:53,302: INFO: common: yaml file: params.yaml loaded successfully]
+[2023-12-21 01:19:53,304: INFO: common: created directory at: artifacts]
+[2023-12-21 01:19:53,306: INFO: common: created directory at: artifacts/data_validation]
+[2023-12-21 01:25:42,948: INFO: main: >>>>>> stage Data Ingestion stage started <<<<<<]
+[2023-12-21 01:25:42,954: INFO: common: yaml file: config\config.yaml loaded successfully]
+[2023-12-21 01:25:42,955: INFO: common: yaml file: params.yaml loaded successfully]
+[2023-12-21 01:25:42,956: INFO: common: created directory at: artifacts]
+[2023-12-21 01:25:42,956: ERROR: main: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config']
+Traceback (most recent call last):
+  File "C:\Users\Dhiraj\Documents\GitHub\Final-Year-Project-Paperlify\nlp\main.py", line 12, in <module>
+    data_ingestion.main()
+  File "c:\users\dhiraj\documents\github\final-year-project-paperlify\nlp\src\secondaryTextSummarizer\pipeline\stage01_data_ingestion.py", line 12, in main
+    data_ingestion_config = config.get_data_ingestion_config()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConfigurationManager' object has no attribute 'get_data_ingestion_config'
