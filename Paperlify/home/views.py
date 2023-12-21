@@ -16,6 +16,9 @@ from django.contrib.auth.decorators import login_required
 #Importing expression module for pattern matching and validation
 import re
 
+import nltk
+nltk.download('punkt')
+
 #Import UserActivityLog model from the current app
 from .models import UserActivityLog
 #Module for sending email in Django
@@ -394,7 +397,123 @@ def search(request):
 
 
 def dashboard2nd(request):
-    return render(request, 'dashboard2nd.html')
+    content = ''
+    summary = None
+    file_info = None
+
+    if request.method == 'POST':
+        user = request.user
+        fileName = ''
+        fileSize = 0
+        contentType = ''
+
+        if 'file' in request.FILES:
+            uploadfile = request.FILES['file']
+            fileName = uploadfile.name
+            fileSize = uploadfile.size
+            contentType = uploadfile.content_type
+
+            # Save upload information to the database
+            file_info = FileUpload(
+                user=request.user,
+                doc_name=uploadfile.name,
+                doc_size=uploadfile.size,
+                doc_type=uploadfile.content_type
+            )
+            file_info.save()
+
+            request.session['file_info'] = {
+                'id': file_info.id,
+                'doc_name': file_info.doc_name,
+                'doc_size': file_info.doc_size,
+                'doc_type': file_info.doc_type,
+            }
+
+            # Log the user's activity
+            UserActivityLog.objects.create(
+                user=request.user,
+                activity='upload document',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+
+            # Extract and display content for supported file types
+            if uploadfile.name.endswith('.txt'):
+                with uploadfile.open() as file:
+                    content = file.read().decode('utf-8')
+                    file_info.extracted_text = content
+                    file_info.save()
+
+            elif uploadfile.name.endswith(('.doc', '.docx')):
+                content = docx2txt.process(uploadfile)
+                file_info.extracted_text = content
+                file_info.save()
+
+            elif uploadfile.name.endswith('.pdf'):
+                content = ''
+                pdf_reader = PdfReader(uploadfile)
+                for page_num in range(len(pdf_reader.pages)):
+                    page = pdf_reader.pages[page_num]
+                    content += page.extract_text()
+                file_info.extracted_text = content
+                file_info.save()
+
+        if 'summarize' in request.POST:
+            input_text = request.POST.get('input_text', '')
+
+            stringText = input_text  # Use input_text instead of request.GET['newText']
+            formattedStringText = re.sub('[^a-zA-Z]', ' ', stringText)
+            formattedStringText = re.sub('\s+', ' ', formattedStringText)
+
+            sentences = nltk.sent_tokenize(stringText)
+
+            frequencyDictionary = {}
+            stopwords = nltk.corpus.stopwords.words('english')
+
+            for word in nltk.word_tokenize(formattedStringText):
+                if word not in stopwords and word not in frequencyDictionary:
+                    frequencyDictionary.update({word: 1})
+                elif word not in stopwords and word in frequencyDictionary:
+                    frequencyDictionary[word] += 1
+
+            maxFrequencyValue = max(frequencyDictionary.values())
+            for word in frequencyDictionary:
+                frequencyDictionary[word] = frequencyDictionary[word] / maxFrequencyValue
+
+            scores = {}
+            for sentence in sentences:
+                for word in nltk.word_tokenize(sentence.lower()):
+                    if word in frequencyDictionary.keys() and sentence not in scores:
+                        scores.update({sentence: frequencyDictionary[word]})
+                    elif word not in frequencyDictionary.keys():
+                        continue
+                    else:
+                        scores[sentence] += frequencyDictionary[word]
+
+            sortedSentences = sorted(scores, key=scores.get, reverse=True)
+
+            summary = ''
+            for i in range(0, len(sortedSentences) // 10 + 1):
+                summary += sortedSentences[i]
+
+            if summary and len(summary) > 0:
+                # Retrieve the existing record using the stored file_info ID
+                file_info_id = request.session.get('file_info', {}).get('id')
+                if file_info_id:
+                    file_info = FileUpload.objects.get(id=file_info_id)
+
+                    # Update the existing record with summarized text
+                    file_info.extracted_text = input_text
+                    file_info.summarized_text = summary
+                    file_info.save()
+
+            # Log the user's activity
+            UserActivityLog.objects.create(
+                user=request.user,
+                activity='summarize',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+
+    return render(request, 'dashboard2nd.html', {'content': content, 'summary': summary})
 
 
 from django.contrib.auth import update_session_auth_hash
