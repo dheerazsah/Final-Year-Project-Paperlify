@@ -15,3 +15,4 @@ class DataIngestionTrainingPipeline:
         data_ingestion.extract_zip_file()
 
 #2:18:59
+        
