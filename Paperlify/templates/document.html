@@ -150,13 +150,17 @@
     border-radius: 10px;
     background-color: var(--color-white);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: calc(33.33% - 20px);
+    width: calc(50% - 20px);
     margin-bottom: 20px;
   }
   
   .document:nth-child(3n) {
     margin-right: 0;
   }
+
+  .document-info {
+    text-align: left; /* Align text to the left */
+}
   
   .document h2 {
     font-size: 1.25rem;
@@ -233,18 +237,13 @@
   }
   
   
-  /* Responsive Styles*/
-  /* Small*/
-  @media (max-width: 768px) {
+/* Responsive Styles for Document */
+@media (max-width: 768px) {
     .document {
-        width: 50%; 
-        margin-right: 20px; 
+        width: 100%; /* Full width on smaller screens */
+        margin-right: 0;
     }
-  
-    .drag-area {
-        max-width: unset;
-    }
-  }
+}
   
 </style>
 <body class="dashboard-body">
@@ -261,6 +260,15 @@
     <div class="document-container">
         <div class="document">
             <div class="document-info">
+                <h3>Original Document</h3>
+                <h2>{{document_obj.doc_name|safe}}</h2>
+                <p>{{document_obj.extracted_text|safe}}</P>
+              
+            </div>
+        </div>
+        <div class="document">
+            <div class="document-info">
+                <h3>Summarized Document</h3>
                 <h2>{{document_obj.doc_name|safe}}</h2>
                 <p>{{document_obj.summarized_text|safe}}</P>
                 {% comment %} <h2>Document Title</h2>
