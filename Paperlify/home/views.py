@@ -555,11 +555,13 @@ def profile(request):
                         activity='change_password',
                         ip_address=request.META.get('REMOTE_ADDR')
                     )
+                    return redirect('login')
                     
                 else:
                     messages.error(request, 'New password and confirmation do not match')
             else:
                 messages.error(request, 'Current password is incorrect')
+
 
     context = {
         'user': user
