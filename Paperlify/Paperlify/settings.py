@@ -148,7 +148,7 @@ MEDIA_URL = '/media/'
 
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
-
+#For Class Diagram
 GRAPH_MODELS = {
   'all_applications': True,
   'group_models': True,
