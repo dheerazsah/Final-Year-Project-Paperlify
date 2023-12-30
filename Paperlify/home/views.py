@@ -222,6 +222,11 @@ def dashboard(request):
     summary = None
     file_info = None
 
+    # Fetch recent documents
+    user_id = request.user.id
+    recent_documents = FileUpload.objects.filter(user_id=user_id, summarized_text__isnull=False).order_by('-created_at')[:3]
+
+
     # user_id = request.user.id
     # # Filter documents based on the user_id
     # documents = FileUpload.objects.filter(user_id=user_id).order_by('-upload_time')[:3]
@@ -297,6 +302,12 @@ def dashboard(request):
         if 'summarize' in request.POST:
             input_text = request.POST.get('input_text', '')
 
+            # Check if input_text is empty
+            if not input_text.strip():
+                error_message = "Please upload a file or enter text before summarizing."
+                return render(request, 'dashboard.html', {'error_message': error_message})
+
+
             # Summarize the content using the Hugging Face model
             payload = {
                 "inputs": input_text,
@@ -341,7 +352,7 @@ def dashboard(request):
     # documents = FileUpload.objects.filter(user_id=user_id).order_by('-upload_time')[:3]
     # context = {'documents': documents}
     
-    return render(request, 'dashboard.html', {'content': content, 'summary': summary})
+    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'recent_documents': recent_documents})
 
 
 def mydocuments(request):
