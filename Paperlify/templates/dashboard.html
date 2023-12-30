@@ -39,7 +39,14 @@
     }
 </style>
 
+
 <div class="drag-area">
+{% if error_message %}
+    <div class="error-message">
+        {{ error_message }}
+    </div>
+{% endif %}
+
   <form method="POST" action="" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="icon"><i class="uil uil-file-upload"></i></div>
@@ -121,8 +128,8 @@
     <div class="document">
         <div class="document-info">
             <h2>{{ document.doc_name }}</h2>
-            {% comment %} <p>Upload Time: {{ document.created_at }}</p> {% endcomment %}
-            <p>{{ document.extracted_text|truncatewords:50 }}</p>
+            <p>Upload Time: {{ document.created_at }}</p>
+            <p>{{ document.summarized_text|truncatewords:20 }}</p>
             <div class="browse-button">
                 <a href="{% url 'document_detail' document.slug %}">View More</a>
             </div>
