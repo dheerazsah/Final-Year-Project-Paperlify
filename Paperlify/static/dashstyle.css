@@ -444,15 +444,41 @@
   .content p {
     font-size: 1rem;
   }
+
+  .main-content {
+    text-align: center;
+    margin: 20px;
+  padding: 20px;
+  }
+
+  .main-content h1 {
+    font-size: 60px;
+    font-weight: bold;
+    color: #333;
+    display: inline-block;
+  }
+  
+  .main-content h1 .gradient-text {
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+.main-content p {
+  font-size: 20px;
+  line-height: 1.5;
+  color: #555; 
+}
   
   /* Drag Drop */
   .drag-area {
     text-align: center;
     background-color: var(--color-white);
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
+    border-radius: 6px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    max-width: 80%;
     margin: 20px auto;
   }
   
@@ -466,9 +492,34 @@
     margin: 20px 0;
   }
   
+  .upload-area {
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px;
+  }
+
+  .upload-area input {
+    display: none;
+}
   
   #file-name {
     margin-top: 10px;
+  }
+
+  .submit-btn {
+    display: block;
+    width: 100%;
+    background: var(--primary-blue);
+    color: var(--color-white);
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
   }
   
   .drag-area button.upload-btn {
@@ -488,6 +539,7 @@
     background: var(--primary-blue);
   }
   
+
   .summarize-btn {
     text-align: center;
   }
@@ -504,6 +556,38 @@
   
   .summarize-btn input[type="submit"]:hover {
     background-color: var(--hover-blue);
+  }
+  
+  .summary-box {
+    text-align: left;
+    max-width: 80%;
+    margin: 20px auto;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+  
+  .summary-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 10px;
+    margin-bottom: 10px;
+  }
+
+  .gradient-text {
+    background: linear-gradient(to right, #5271ff, #00a1e9); 
+    -webkit-background-clip: text;
+    color: transparent; 
+    padding: 5px; 
+  }
+  
+  .summary-content {
+    border-radius: 6px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    padding: 20px; 
+    margin: 10px;
+    /* padding-top: 10px; */
+    font-size: 1.1em;
+    color: #555;
   }
   
   
@@ -738,6 +822,23 @@
   .change-password-button:hover {
     background-color: var(--hover-blue);
   }
+
+  .delete-account-button {
+    background-color: #FF0000;
+    color: var(--color-white);
+    width: 350px;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .delete-account-button:hover {
+    background-color: #CC0000;
+  }
+  
   
   footer {
     background-color: var(--primary-blue);
