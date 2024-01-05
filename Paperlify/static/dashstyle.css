@@ -459,6 +459,7 @@
   }
   
   .main-content h1 .gradient-text {
+    /* background: linear-gradient(to right, #5271ff, #00a1e9); */
     background: linear-gradient(to right, #ff7e5f, #feb47b);
     -webkit-background-clip: text;
     background-clip: text;
@@ -601,17 +602,20 @@
     padding: 20px;
   }
   
-  
   /* Document */
   .document {
-    border: 1px solid #ccc;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 6px;
     background-color: var(--color-white);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
     width: calc(33.33% - 20px);
     margin-bottom: 20px;
   }
+
+  .document:hover {
+    background-color: #f0f8ff;
+    backdrop-filter: blur(8px);
+}
   
   .document:nth-child(3n) {
     margin-right: 0;
@@ -626,10 +630,9 @@
     font-size: 0.875rem;
   }
   
-  .see-more-btn {
+  /* .see-more-btn {
     background-color: var(--primary-blue); 
     color: var(--color-white); 
-    padding: 10px 20px;
     text-decoration: none;
     border: none;
     border-radius: 5px;
@@ -637,6 +640,10 @@
   
   .see-more-btn:hover {
     background-color: var(--hover-blue);
+  } */
+  .see-more-btn {
+    text-align: left;
+    margin-top: 20px;
   }
   
   .browse-button {
@@ -645,7 +652,7 @@
     margin-bottom: 20px;
   }
   
-  .browse-button a {
+  .browse-button a , .see-more-btn a{
     display: inline-block;
     padding: 10px 20px;
     background-color: var(--primary-blue);
@@ -654,7 +661,7 @@
     border-radius: 5px;
   }
   
-  .browse-button a:hover {
+  .browse-button a:hover , .see-more-btn a:hover{
     background-color: var(--hover-blue);
   }
   
@@ -883,12 +890,16 @@
   /* Small*/
   @media (max-width: 768px) {
     .document {
-        width: 50%; 
-        margin-right: 20px; 
+        width: 100%; 
+        margin-right: 0px; 
     }
   
     .drag-area {
-        max-width: unset;
+        max-width: 80%;
+    }
+    .editor-box {
+      width: 80%;
+      margin: 20px auto;
     }
   }
   
@@ -897,10 +908,13 @@
     .split-screen {
         flex-direction: row;
         height: 100vh;
+        overflow-y: auto; 
     }
     .left, .right {
-        display: flex;
+        /* display: flex; */
         width: 50%;
-        height: auto;
+        height: 100%;
+        overflow-y: auto; 
+        padding: 60px;
     }
   }
