@@ -70,18 +70,73 @@
 
 
 <div>
-  <section class="content">
-      <h1>Paperlify</h1>
-      <p>Document to Text Summarization AI</p>
+  <section class="main-content">
+      <h1>Summarize article with <br><span class="gradient-text">Hugging Face</span></h1>
+      <p>Simplify your reading with Paperlify, an AI based document summarizer that <br> transforms lengthy articles into clear and concise summaries </p>
   </section>
 </div>
+
+<style>
+  {% comment %} .upload-area {
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px;
+  } {% endcomment %}
+
+  {% comment %} .upload-area input {
+      display: none;
+  } {% endcomment %}
+
+    {% comment %} .submit-btn {
+      display: block;
+      width: 100%;
+      background: var(--primary-blue);
+      color: var(--color-white);
+      font-weight: bold;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    } {% endcomment %}
+    textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+  }
+
+  .summarize-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--primary-blue);
+  color: var(--color-white);
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.summarize-btn:hover {
+  background-color: var(--hover-blue);
+}
+
+</style>
+
 
 <div class="drag-area">
   <form method="POST" action="" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="icon"><i class="uil uil-file-upload"></i></div>
       <h2>Upload a document</h2>
-      <input type="file" name="file" id="file" accept=".txt, .pdf, .doc, .docx">
+      <div class="upload-area" onclick="document.getElementsByClassName('fileInput')[0].click()">
+            <p>Drag and drop files here or click to select files</p>
+            <input type="file" class="fileInput" id="file" name="file" accept=".txt, .pdf, .doc, .docx" onchange="displayFileName()">
+        </div>
+        <p id="file-name"></p>
       {% if error %}
           <p class="message"> {{ error }} </p>
           {% endif %}

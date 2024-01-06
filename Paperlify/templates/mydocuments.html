@@ -16,7 +16,7 @@
             <h2>{{ document.doc_name }}</h2>
             <p>Upload Time: {{ document.created_at }}</p>
             <p>{{ document.summarized_text|truncatewords:20 }}</p>
-            <div class="browse-button">
+            <div class="see-more-btn">
                 <a href="{% url 'document_detail' document.slug %}">View More</a>
             </div>
         </div>
