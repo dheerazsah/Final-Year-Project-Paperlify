@@ -577,14 +577,27 @@ def profile(request):
                 messages.error(request, 'Current password is incorrect')
 
         if 'delete_account' in request.POST:
+            # Generate a unique token for reactivation link
+            reactivation_token = User.objects.make_random_password()
+
+            # Save the token and set the account as inactive
+            user.reactivation_token = reactivation_token
+            user.is_active = False # Deactivate the user account
+            user.save()
+
+            subject = 'Account Deleted Confirmation'
+            message = f'Your account has been deleted. To reactivate it, click on the link below:\n\n'\
+                      f'{request.build_absolute_uri("/reactivate-account/")}?token={reactivation_token}'
+            from_email = 'paperlify@gmail.com'
+            recipient_list = [user.email]
+            send_mail(subject, message, from_email, recipient_list, fail_silently = False)
+
             # Log the user's activity for account deletion
             UserActivityLog.objects.create(
                 user=user,
                 activity='delete_account',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
-            user.is_active = False  # Deactivate the user account
-            user.save()
             messages.success(request, 'Account deleted successfully')
             return redirect('login')
 
