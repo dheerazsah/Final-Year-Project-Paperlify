@@ -352,7 +352,9 @@ def dashboard(request):
     # documents = FileUpload.objects.filter(user_id=user_id).order_by('-upload_time')[:3]
     # context = {'documents': documents}
     
-    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'recent_documents': recent_documents})
+    #return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'recent_documents': recent_documents})
+    return render(request, 'dashboard.html', {'content': content, 'summary': summary})
+
 
 
 def mydocuments(request):
@@ -528,6 +530,7 @@ def dashboard2nd(request):
 
 
 from django.contrib.auth import update_session_auth_hash
+@login_required
 def profile(request):
     user = request.user
     
@@ -572,6 +575,17 @@ def profile(request):
                     messages.error(request, 'New password and confirmation do not match')
             else:
                 messages.error(request, 'Current password is incorrect')
+
+        if 'delete_account' in request.POST:
+            # Log the user's activity for account deletion
+            UserActivityLog.objects.create(
+                user=user,
+                activity='delete_account',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            user.delete()  # Delete the user account
+            messages.success(request, 'Account deleted successfully')
+            return redirect('login')
 
 
     context = {
