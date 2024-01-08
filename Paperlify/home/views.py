@@ -88,7 +88,16 @@ def signupPage(request):
                 activity='signup',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
+
+            # Send a welcome email to the user
+            subject = 'Welcome to Paperlify'
+            message = f'Thank you for signing up, {fname}!\n\nYour account has been created successfully.'
+            from_email = 'paperlify@gmail.com'
+            recipient_list = [db_email]
+            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+            
             return render(request, 'login.html', {'success': 'Your account has been created successfully.'})
+
     #Render the signup.html template if the request method is not POST
     return render(request, 'signup.html')
 
@@ -357,11 +366,73 @@ def dashboard(request):
 
 
 
+# def mydocuments(request):
+#     user_id = request.user.id
+#     # Filter documents based on the user_id and summarized_text__isnull=False
+#     context = {'documents': FileUpload.objects.filter(user_id=user_id, summarized_text__isnull=False).order_by('-created_at')}
+#     return render(request, 'mydocuments.html', context)
+
+
+from datetime import datetime, timedelta
+from django.db.models import Q
+
 def mydocuments(request):
     user_id = request.user.id
-    # Filter documents based on the user_id and summarized_text__isnull=False
-    context = {'documents': FileUpload.objects.filter(user_id=user_id, summarized_text__isnull=False).order_by('-created_at')}
+
+    today = datetime.now().date()
+    yesterday = today - timedelta(days=1)
+    last_week = today - timedelta(weeks=1)
+    last_month = today - timedelta(weeks=4)
+
+    today_documents = FileUpload.objects.filter(
+        user_id=user_id,
+        summarized_text__isnull=False,
+        created_at__date=today
+    ).order_by('-created_at')
+
+    yesterday_documents = FileUpload.objects.filter(
+        user_id=user_id,
+        summarized_text__isnull=False,
+        created_at__date=yesterday
+    ).order_by('-created_at')
+
+    last_week_documents = FileUpload.objects.filter(
+        user_id=user_id,
+        summarized_text__isnull=False,
+        created_at__date__range=[last_week, today]
+    ).order_by('-created_at')
+
+    last_month_documents = FileUpload.objects.filter(
+        user_id=user_id,
+        summarized_text__isnull=False,
+        created_at__date__range=[last_month, today]
+    ).order_by('-created_at')
+
+    previous_documents = FileUpload.objects.filter(
+        user_id=user_id,
+        summarized_text__isnull=False
+    ).exclude(
+        Q(created_at__date=today) |
+        Q(created_at__date=yesterday) |
+        Q(created_at__date__range=[last_week, today]) |
+        Q(created_at__date__range=[last_month, today])
+    ).order_by('-created_at')
+
+    context = {
+        'today_documents': today_documents,
+        'yesterday_documents': yesterday_documents,
+        'last_week_documents': last_week_documents,
+        'last_month_documents': last_month_documents,
+        'previous_documents': previous_documents,
+        'today_documents_available': bool(today_documents),
+        'yesterday_documents_available': bool(yesterday_documents),
+        'last_week_documents_available': bool(last_week_documents),
+        'last_month_documents_available': bool(last_month_documents),
+        'previous_documents_available': bool(previous_documents),
+    }
+
     return render(request, 'mydocuments.html', context)
+
     # user = request.user 
     # with connection.cursor() as cursor:
     #     cursor.execute("SELECT * FROM document WHERE user_id = '" + str(user.id) + "'") #str(user.id) = typecast
@@ -607,7 +678,9 @@ def profile(request):
     }
     return render(request, 'profile.html', context)
 
+def reactivate_account(request, token):
 
+    return render(request, 'reactivateaccount.html')
 
 def test(request):
     user_id = request.user.id

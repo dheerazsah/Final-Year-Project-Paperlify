@@ -1,29 +1,119 @@
-{% extends "./base.html"%}
+{% extends "./base.html" %}
 {% block title %}My Documents{% endblock %}
 
 {% block template %}
 <div>
-    <section class="content">
+    <section class="main-content">
         <h1>My Documents</h1>
+        <!-- <p>Every document you summarized is saved here</p> -->
     </section>
 </div>
 
 <div class="document-container">
-    <!-- Document 1 -->
-    {% for document in documents %}
-    <div class="document">
-        <div class="document-info">
-            <h2>{{ document.doc_name }}</h2>
-            <p>Upload Time: {{ document.created_at }}</p>
-            <p>{{ document.summarized_text|truncatewords:20 }}</p>
-            <div class="see-more-btn">
-                <a href="{% url 'document_detail' document.slug %}">View More</a>
+    {% if today_documents %}
+    <!-- Today's Documents -->
+    <div class="document-section">
+        <h2>Today</h2>
+        {% for document in today_documents %}
+        <div class="document">
+            <div class="document-info">
+                <h2>{{ document.doc_name }}</h2>
+                <p>Upload Time: {{ document.created_at }}</p>
+                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <div class="see-more-btn">
+                    <a href="{% url 'document_detail' document.slug %}">View More</a>
+                </div>
             </div>
         </div>
+        {% empty %}
+        <p>No documents available.</p>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>No documents available.</p>
-    {% endfor %}
+    {% endif %}
+
+    {% if yesterday_documents %}
+    <!-- Yesterday's Documents -->
+    <div class="document-section">
+        <h2>Yesterday</h2>
+        {% for document in yesterday_documents %}
+        <div class="document">
+            <div class="document-info">
+                <h2>{{ document.doc_name }}</h2>
+                <p>Upload Time: {{ document.created_at }}</p>
+                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <div class="see-more-btn">
+                    <a href="{% url 'document_detail' document.slug %}">View More</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No documents available.</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if last_week_documents %}
+    <!-- Last Week's Documents -->
+    <div class="document-section">
+        <h2>Last Week</h2>
+        {% for document in last_week_documents %}
+        <div class="document">
+            <div class="document-info">
+                <h2>{{ document.doc_name }}</h2>
+                <p>Upload Time: {{ document.created_at }}</p>
+                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <div class="see-more-btn">
+                    <a href="{% url 'document_detail' document.slug %}">View More</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No documents available.</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if last_month_documents %}
+    <!-- Last Month's Documents -->
+    <div class="document-section">
+        <h2>Last Month</h2>
+        {% for document in last_month_documents %}
+        <div class="document">
+            <div class="document-info">
+                <h2>{{ document.doc_name }}</h2>
+                <p>Upload Time: {{ document.created_at }}</p>
+                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <div class="see-more-btn">
+                    <a href="{% url 'document_detail' document.slug %}">View More</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No documents available.</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if previous_documents %}
+    <!-- Previous Documents -->
+    <div class="document-section">
+        <h2>Previous</h2>
+        {% for document in previous_documents %}
+        <div class="document">
+            <div class="document-info">
+                <h2>{{ document.doc_name }}</h2>
+                <p>Upload Time: {{ document.created_at }}</p>
+                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <div class="see-more-btn">
+                    <a href="{% url 'document_detail' document.slug %}">View More</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No documents available.</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
 
 {% endblock %}

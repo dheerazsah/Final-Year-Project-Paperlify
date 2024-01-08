@@ -564,6 +564,10 @@
     margin: 40px;
     padding: 20px;
   }
+
+  .document-section {
+    width: 100%;
+}
   
   /* Document */
   .document {
@@ -593,6 +597,11 @@
     font-size: 0.875rem;
   }
   
+  .document-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
   /* .see-more-btn {
     background-color: var(--primary-blue); 
     color: var(--color-white); 
