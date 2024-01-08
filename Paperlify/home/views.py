@@ -583,7 +583,8 @@ def profile(request):
                 activity='delete_account',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
-            user.delete()  # Delete the user account
+            user.is_active = False  # Deactivate the user account
+            user.save()
             messages.success(request, 'Account deleted successfully')
             return redirect('login')
 
