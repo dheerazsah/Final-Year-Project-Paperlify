@@ -117,6 +117,18 @@
     color: var(--color-white);
   }
 
+  .main-content {
+    text-align: center;
+    margin: 20px;
+  padding: 20px;
+  }
+
+  .main-content h1 {
+    font-size: 40px;
+    font-weight: bold;
+    color: #333;
+    display: inline-block;
+  }
   
   .content {
     text-align: center;
@@ -248,12 +260,12 @@
 </style>
 <body class="dashboard-body">
     <div class="back-button">
-        <a href="{% url 'dashboard' %}">Back</a>
+        <a href="{% url 'mydocuments' %}">Back</a>
     </div>
 
     <div>
-        <section class="content">
-            <h1>Document</h1>
+        <section class="main-content">
+            <h1>{{document_obj.doc_name|safe}}</h1>
         </section>
     </div>
 
@@ -261,7 +273,7 @@
         <div class="document">
             <div class="document-info">
                 <h3>Original Document</h3>
-                <h2>{{document_obj.doc_name|safe}}</h2>
+                <!-- <h2>{{document_obj.doc_name|safe}}</h2> -->
                 <p>{{document_obj.extracted_text|safe}}</P>
               
             </div>
@@ -269,13 +281,13 @@
         <div class="document">
             <div class="document-info">
                 <h3>Summarized Document</h3>
-                <h2>{{document_obj.doc_name|safe}}</h2>
+                <!-- <h2>{{document_obj.doc_name|safe}}</h2> -->
                 <p>{{document_obj.summarized_text|safe}}</P>
-                {% comment %} <h2>Document Title</h2>
+                <!-- {% comment %} <h2>Document Title</h2>
                 <p>Date of Upload: Sept 03, 2023</p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel arcu nec justo dignissim euismod.
                    Ut euismod libero non malesuada. Phasellus id justo eu risus tempus cursus eu a ante. Nullam a metus vel urna pulvinar vulputate. Fusce volutpat dapibus magna, nec cursus dui suscipit eget. In scelerisque, lectus a consectetur bibendum, libero turpis tincidunt purus, nec luctus neque turpis vel orci. Sed scelerisque nunc in feugiat ullamcorper. Nulla facilisi. Curabitur elementum, dolor ac bibendum cursus, justo purus euismod urna, nec vehicula libero lectus non purus. Proin gravida, libero id lacinia fermentum, sapien ipsum faucibus tellus, nec placerat neque justo vel tortor.
-                   Donec consectetur, justo eget placerat consectetur, felis est ultrices arcu, eu laoreet ligula ipsum nec sapien. Fusce id interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Duis viverra, tortor vel efficitur gravida, lectus urna hendrerit tortor, at venenatis odio dolor non nisl. Quisque dapibus rhoncus dapibus. Duis dignissim turpis non justo dictum, eu aliquet risus ullamcorper. Fusce eleifend tristique leo, ac cursus dui vulputate nec. Curabitur non turpis elit.</p> {% endcomment %}
+                   Donec consectetur, justo eget placerat consectetur, felis est ultrices arcu, eu laoreet ligula ipsum nec sapien. Fusce id interdum justo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla facilisi. Duis viverra, tortor vel efficitur gravida, lectus urna hendrerit tortor, at venenatis odio dolor non nisl. Quisque dapibus rhoncus dapibus. Duis dignissim turpis non justo dictum, eu aliquet risus ullamcorper. Fusce eleifend tristique leo, ac cursus dui vulputate nec. Curabitur non turpis elit.</p> {% endcomment %} -->
             </div>
         </div>
     </div>
