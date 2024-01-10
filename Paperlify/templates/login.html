@@ -9,6 +9,22 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="icon" type="image/x-icon" href="./static/images/Paperlify Logo Blue.png">
     <title>Paperlify | Login</title>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var passwordInput = document.getElementById('password');
+            var showPasswordCheckbox = document.querySelector('input[type="checkbox"]');
+
+            showPasswordCheckbox.addEventListener('change', function () {
+                if (showPasswordCheckbox.checked) {
+                    passwordInput.type = 'text';
+                } else {
+                    passwordInput.type = 'password';
+                }
+            });
+        });
+    </script>
+    
 </head>
 <body class="login-body">
     <div class="split-screen">

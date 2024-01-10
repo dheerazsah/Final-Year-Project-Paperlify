@@ -9,6 +9,25 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="icon" type="image/x-icon" href="./static/images/Paperlify Logo Blue.png">
     <title>Paperlify | Signup</title>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var passwordInput = document.getElementById('password');
+            var confirmPasswordInput = document.getElementById('confirm-password');
+            var showPasswordCheckbox = document.querySelector('input[type="checkbox"]');
+
+            showPasswordCheckbox.addEventListener('change', function () {
+                if (showPasswordCheckbox.checked) {
+                    passwordInput.type = 'text';
+                    confirmPasswordInput.type = 'text';
+                } else {
+                    passwordInput.type = 'password';
+                    confirmPasswordInput.type = 'password';
+                }
+            });
+        });
+    </script>
+
 </head>
 <body class="login-body">
     <div class="split-screen">
@@ -62,6 +81,13 @@
                     <label for="confirm-password">Confirm Password</label>
                     <input id="confirm-password" name="confirm_password" placeholder="Re-enter your password" type="password">
                     {% comment %} <i class="uil uil-eye-slash"></i> {% endcomment %}
+                </div>
+
+                <div class="input-container" cta>
+                    <label class="checkbox-container">
+                        <input type="checkbox">
+                        <span class="checkmark"></span> Show Password
+                    </label>
                 </div>
 
                 <button class="login-btn" type="submit">Sign Up</button>
