@@ -394,18 +394,24 @@ def mydocuments(request):
         user_id=user_id,
         summarized_text__isnull=False,
         created_at__date=yesterday
+    ).exclude(id__in=today_documents.values_list('id', flat=True)
     ).order_by('-created_at')
 
     last_week_documents = FileUpload.objects.filter(
         user_id=user_id,
         summarized_text__isnull=False,
-        created_at__date__range=[last_week, today]
+        created_at__date__range=[last_week, yesterday]
+    ).exclude(id__in=today_documents.values_list('id', flat=True)
+    ).exclude(id__in=yesterday_documents.values_list('id', flat=True)
     ).order_by('-created_at')
 
     last_month_documents = FileUpload.objects.filter(
         user_id=user_id,
         summarized_text__isnull=False,
-        created_at__date__range=[last_month, today]
+        created_at__date__range=[last_month, yesterday]
+    ).exclude(id__in=today_documents.values_list('id', flat=True)
+    ).exclude(id__in=yesterday_documents.values_list('id', flat=True)
+    ).exclude(id__in=last_week_documents.values_list('id', flat=True)
     ).order_by('-created_at')
 
     previous_documents = FileUpload.objects.filter(

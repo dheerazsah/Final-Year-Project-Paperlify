@@ -17,7 +17,7 @@
         {% for document in today_documents %}
         <div class="document">
             <div class="document-info">
-                <h2>{{ document.doc_name }}</h2>
+                <h2>{{ document.doc_name}}</h2>
                 <p>Upload Time: {{ document.created_at }}</p>
                 <p>{{ document.summarized_text|truncatewords:20 }}</p>
                 <div class="see-more-btn">
@@ -114,6 +114,6 @@
         {% endfor %}
     </div>
     {% endif %}
-</div>
 
+</div>
 {% endblock %}
