@@ -22,6 +22,8 @@ from django.urls import path
 #Importing views from home app
 from home import views
 
+from home.views import profile, reactivate_account
+
 #URL patterns for the application
 urlpatterns = [
     path('', views.signupPage, name='signup'), #Mapping the root URL to the signupPage view
@@ -31,6 +33,7 @@ urlpatterns = [
     path('send_otp', views.send_otp, name='send_otp'), #Mapping '/send_otp' to the send_otp view
     path('verify_otp', views.verify_otp, name='verify_otp'), #Mapping '/verify_otp' to the verify_otp view
     path('resetpassword', views.resetpassword, name='resetpassword'), #Mapping '/resetpassword' to the resetpassword view
+    path('confirmpassword', views.confirmpassword, name='confirmpassword'),
     path('homepage', views.homepage, name='homepage'), #Mapping '/homepage' to the homepage view
     path('dashboard2nd', views.dashboard2nd, name='dashboard2nd'), #Mapping '/dashboard2nd' to the dashboard2nd view
     path('dashboard', views.dashboard, name='dashboard'), #Mapping '/dashboard' to the dashboard view
@@ -39,6 +42,7 @@ urlpatterns = [
     path('mydocuments', views.mydocuments, name='mydocuments'), #Mapping '/mydocuments' to the mydocuments view
     path('mydocuments/<slug>', views.document_detail, name='document_detail'), #Mapping '/mydocuments/<slug>' to the document_detail view
     path('search', views.search, name='search'), #Mapping '/search' to the search view
+    path('reactivate-account/<str:token>/', reactivate_account, name='reactivate_account'),
     #path('<str:slug>', views.document, name='document'), 
     #path('document', views.document, name='document'),
 ]
