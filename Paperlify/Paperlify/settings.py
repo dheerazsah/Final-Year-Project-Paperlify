@@ -165,3 +165,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'paperlify@gmail.com'
 EMAIL_HOST_PASSWORD = 'bykpbrnienuyazew'
 EMAIL_USE_TLS = True
+
+LOGIN_URL = '/accounts/login/'

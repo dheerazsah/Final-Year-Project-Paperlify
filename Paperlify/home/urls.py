@@ -42,7 +42,7 @@ urlpatterns = [
     path('mydocuments', views.mydocuments, name='mydocuments'), #Mapping '/mydocuments' to the mydocuments view
     path('mydocuments/<slug>', views.document_detail, name='document_detail'), #Mapping '/mydocuments/<slug>' to the document_detail view
     path('search', views.search, name='search'), #Mapping '/search' to the search view
-    path('reactivate-account/<str:token>/', reactivate_account, name='reactivate_account'),
+    path('reactivate_account/<str:token>/', views.reactivate_account, name='reactivate_account'),
     #path('<str:slug>', views.document, name='document'), 
     #path('document', views.document, name='document'),
 ]
