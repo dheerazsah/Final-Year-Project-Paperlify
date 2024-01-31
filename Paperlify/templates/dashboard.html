@@ -10,8 +10,16 @@
   </section>
 </div>
 
+<div class="switch-box">
+  <div class="button-box">
+    <div id="t-btn"></div>
+    <button type="button" class="toggle-btn" onclick="leftClick()"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</button>
+    <button type="button" class="toggle-btn" onclick="rightClick()"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</button>
+  </div>
+</div>
+
 <style>
-  /* {% comment %} .upload-area {
+  {% comment %} .upload-area {
     border: 1px dashed #ccc;
     border-radius: 6px;
     padding: 20px;
@@ -35,7 +43,7 @@
       border-radius: 5px;
       font-size: 1rem;
       cursor: pointer;
-    } {% endcomment %} */
+    } {% endcomment %}
 
     textarea {
     width: 100%;
@@ -87,6 +95,16 @@
 </div>
 
 <script>
+  var tbtn = document.getElementById('t-btn')
+
+  function leftClick() {
+    tbtn.style.left = '0'
+  }
+  
+  function rightClick() {
+    tbtn.style.left = '130px'
+  }
+
     function displayFileName() {
         var input = document.getElementsByClassName('fileInput')[0];
         var fileName = input.files[0].name;
@@ -151,7 +169,7 @@
 </div>
 
 
-  <div>
+  {% comment %} <div>
       <section class="main-content">
           <h1>Recent Documents</h1>
       </section>
@@ -177,5 +195,5 @@
 
 <div class="browse-button">
   <a href="{% url 'mydocuments' %}">Browse All Documents</a>
-</div>
+</div> {% endcomment %}
 {% endblock %}
