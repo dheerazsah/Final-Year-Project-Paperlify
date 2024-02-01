@@ -10,6 +10,15 @@
   </div>
 </div>
 </div> {% endcomment %}
+{% if messages %}
+  <div class="error-message">
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
 
 <div>
   <section class="main-content">
@@ -74,6 +83,46 @@
 .summarize-btn:hover {
   background-color: var(--hover-blue);
 }
+
+#file-name-container {
+  position: relative;
+  display: none;
+  align-items: center;
+  background-color: #f0effa; /* Adjust background color as needed */
+  padding: 10px;
+  border-radius: 8px;
+  margin: 10px;
+  max-width: 100%;
+}
+
+#file-icon {
+  font-size: 24px; /* Adjust icon size as needed */
+  margin-right: 10px;
+}
+
+#file-name {
+  margin-top: 10px;
+  margin: 0;
+  color: #333; /* Adjust text color as needed */
+  font-size: 16px; /* Adjust text size as needed */
+}
+
+#remove-file {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 3px;
+}
+
+#remove-file:hover {
+  background-color: darkred;
+}
 </style>
 
 
@@ -92,11 +141,17 @@
             <p>Drag and drop files here or click to select files</p>
             <input type="file" class="fileInput" id="file" name="file" accept=".txt, .pdf, .doc, .docx" onchange="displayFileName()">
         </div>
-        <p id="file-name"></p>
+        <div id="file-name-container">
+          <span id="file-icon">&#128196;</span> <!-- You can replace this with the actual icon code or use an image -->
+          <p id="file-name"></p>
+          <button id="remove-file" onclick="removeFile()">X</button>
+        </div>
       {% if error %}
           <p class="message"> {{ error }} </p>
           {% endif %}
-          
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+          </div>
       <button class="upload-btn" type="submit">Upload</button>
   </form>
 </div>
@@ -139,12 +194,36 @@ updateLibraryTitle();
     console.log('Right click:', modelName);
   }
 
-    function displayFileName() {
+    {% comment %} function displayFileName() {
         var input = document.getElementsByClassName('fileInput')[0];
         var fileName = input.files[0].name;
         document.getElementById('file-name').innerHTML = 'Selected file: ' + fileName;
+    } {% endcomment %}
+
+    function displayFileName() {
+      var input = document.getElementsByClassName('fileInput')[0];
+      
+      if (input.files.length > 0) {
+        var fileName = input.files[0].name;
+        document.getElementById('file-name').innerHTML = 'Selected file: ' + fileName;
+        
+        // Show the file-name-container
+        document.getElementById('file-name-container').style.display = 'flex';
+      } else {
+        // Hide the file-name-container if no file is selected
+        document.getElementById('file-name-container').style.display = 'none';
+      }
     }
 
+    function removeFile() {
+      var input = document.getElementsByClassName('fileInput')[0];
+      var fileNameContainer = document.getElementById('file-name-container');
+      
+      // Clear the file input and hide the container
+      input.value = '';
+      fileNameContainer.style.display = 'none';
+    }
+    
     var uploadArea = document.getElementsByClassName('upload-area')[0];
 
     uploadArea.addEventListener('dragover', function (e) {
