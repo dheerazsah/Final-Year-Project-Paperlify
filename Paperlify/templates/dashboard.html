@@ -1,11 +1,19 @@
 {% extends "./base.html"%}
+<script src="./static/script.js"></script>
 {% block title %}Dashboard{% endblock %}
 
 {% block template %}
+{% comment %} <div class="preloader-wrapper">
+<div class="d-flex justify-content-center">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+</div> {% endcomment %}
 
 <div>
   <section class="main-content">
-      <h1>Summarize article with <br><span class="gradient-text">Hugging Face</span></h1>
+      <h1 id="libraryTitle">Summarize article with <br><span class="gradient-text">Hugging Face</span></h1>
       <p>Simplify your reading with Paperlify, an AI based document summarizer that <br> transforms lengthy articles into clear and concise summaries </p>
   </section>
 </div>
@@ -13,8 +21,8 @@
 <div class="switch-box">
   <div class="button-box">
     <div id="t-btn"></div>
-    <button type="button" class="toggle-btn" onclick="leftClick()"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</button>
-    <button type="button" class="toggle-btn" onclick="rightClick()"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</button>
+    <button type="button" class="toggle-btn" onclick="leftClick('hugging-face')"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</button>
+    <button type="button" class="toggle-btn" onclick="rightClick('nltk-library')"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</button>
   </div>
 </div>
 
@@ -66,7 +74,6 @@
 .summarize-btn:hover {
   background-color: var(--hover-blue);
 }
-
 </style>
 
 
@@ -95,14 +102,41 @@
 </div>
 
 <script>
+const libraryNames = ["Hugging Face", "NLTK Library"];
+let currentLibraryIndex = 0;
+
+// Function to update the library title with typewriter effect
+function updateLibraryTitle() {
+  const libraryTitleElement = document.getElementById('libraryTitle');
+  const currentLibraryName = libraryNames[currentLibraryIndex];
+
+  let index = 0;
+  const intervalId = setInterval(function () {
+    if (index <= currentLibraryName.length) {
+      libraryTitleElement.innerHTML = `Summarize article with <br><span class="gradient-text">${currentLibraryName.slice(0, index)}</span>`;
+      index++;
+    } else {
+      clearInterval(intervalId);
+      setTimeout(function () {
+        // Wait for a moment before starting the next library change
+        currentLibraryIndex = (currentLibraryIndex + 1) % libraryNames.length;
+        updateLibraryTitle();
+      }, 1000);
+    }
+  }, 100);
+}
+updateLibraryTitle();
+
   var tbtn = document.getElementById('t-btn')
 
-  function leftClick() {
-    tbtn.style.left = '0'
+  function leftClick(modelName) {
+    tbtn.style.left = '0';
+    console.log('Left click:', modelName);
   }
   
-  function rightClick() {
-    tbtn.style.left = '130px'
+  function rightClick(modelName) {
+    tbtn.style.left = '130px';
+    console.log('Right click:', modelName);
   }
 
     function displayFileName() {
@@ -147,6 +181,7 @@
 <div class="summary-box">
 <div class="summary-title">Document <span class="gradient-text">Content</span></div>
 <form action="" method="post">
+<form method="post" action="{% url 'dashboard' %}" id="summarizeForm">
 {% csrf_token %}
 <div class="summary-content">
 <textarea name="input_text" rows="10" cols="80">{{ content }}</textarea>
