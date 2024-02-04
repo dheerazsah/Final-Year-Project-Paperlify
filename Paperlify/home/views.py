@@ -336,6 +336,11 @@ def dashboard(request):
                             file_info.extracted_text = content
                             file_info.save()  
                             #return render(request, 'dashboard.html', {'content': content})
+
+                            # Show a success message
+                            success_message = "File uploaded successfully."
+                            messages.success(request, success_message)
+                            
                         except Exception as e:
                             error_message = "Error reading the uploaded PDF document."
                             messages.error(request, error_message)
@@ -351,6 +356,11 @@ def dashboard(request):
                     error_message = "Unexpected error during file upload."
                     messages.error(request, error_message)
                     print(f"Unexpected error: {str(e)}")
+            
+            else:
+                # No file selected, show an error message
+                error_message = "Please select a file before uploading."
+                messages.error(request, error_message)
 
             if 'summarize' in request.POST:
                 try:

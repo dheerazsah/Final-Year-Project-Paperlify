@@ -72,10 +72,11 @@
   Note: The styles for this gradient grid background is heavily inspired by the creator of this amazing site (https://dub.sh) – all credits go to them! 
 */
 
-.gradient {
+/* .gradient {
   height: fit-content;
-  z-index: 3;
+  z-index: 1;
   width: 100%;
+  pointer-events: none;
   max-width: 640px;
   background-image: radial-gradient(
       at 27% 37%,
@@ -88,14 +89,14 @@
     radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 1) 0px, transparent 50%),
     radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 1) 0px, transparent 50%),
     radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 1) 0px, transparent 50%);
-  position: absolute;
+  position: relative;
   content: "";
   width: 100%;
   height: 100%;
   filter: blur(100px) saturate(150%);
   top: 80px;
   opacity: 0.15;
-}
+} */
 
   .preloader-wrapper{
     position:  fixed;
@@ -559,6 +560,7 @@
     display: none;
 }
 
+
   
   .submit-btn {
     display: block;
@@ -610,6 +612,14 @@
   }
   
   .summary-box {
+    text-align: left;
+    max-width: 80%;
+    margin: 20px auto;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+
+  .document-box{
     text-align: left;
     max-width: 80%;
     margin: 20px auto;
