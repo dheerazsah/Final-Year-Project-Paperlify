@@ -126,6 +126,9 @@ def loginPage(request):
                 return render(request, 'login.html', {'error': 'Invalid username or password.'})
     return render(request, 'login.html')
 
+def error_404(request, expection):
+    return render(request, '4040.html')
+
 def forgotpassword(request):
     return render(request, 'forgotpassword.html')
 

@@ -50,3 +50,5 @@ urlpatterns = [
     #path('<str:slug>', views.document, name='document'), 
     #path('document', views.document, name='document'),
 ]
+
+handler404 = 'home.views.error_404'
