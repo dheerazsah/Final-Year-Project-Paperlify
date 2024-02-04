@@ -242,9 +242,12 @@
     letter-spacing: 0.5px;
   }
   
-  .login-btn:hover,
+  .login-btn:hover {
+    background-color: var(--hover-blue);
+  }
+
   .upload-btn:hover {
-    background: var(--hover-blue);
+    background-color: var(--hover-blue);
   }
   
   .space {
@@ -555,6 +558,7 @@
   .upload-area input {
     display: none;
 }
+
   
   .submit-btn {
     display: block;
@@ -583,7 +587,7 @@
   }
   
   .drag-area button.upload-btn:hover {
-    background: var(--primary-blue);
+    background: #4a66e6;
   }
   
 

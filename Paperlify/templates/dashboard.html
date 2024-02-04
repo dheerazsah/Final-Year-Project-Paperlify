@@ -36,32 +36,6 @@
 </div>
 
 <style>
-  {% comment %} .upload-area {
-    border: 1px dashed #ccc;
-    border-radius: 6px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    margin: 10px;
-  } {% endcomment %}
-
-  {% comment %} .upload-area input {
-      display: none;
-  } {% endcomment %}
-
-    {% comment %} .submit-btn {
-      display: block;
-      width: 100%;
-      background: var(--primary-blue);
-      color: var(--color-white);
-      font-weight: bold;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-size: 1rem;
-      cursor: pointer;
-    } {% endcomment %}
-
     textarea {
     width: 100%;
     border: none;
@@ -88,7 +62,7 @@
   position: relative;
   display: none;
   align-items: center;
-  background-color: #f0effa; /* Adjust background color as needed */
+  background-color: #f0effa; 
   padding: 10px;
   border-radius: 8px;
   margin: 10px;
@@ -98,13 +72,14 @@
 #file-icon {
   font-size: 24px; /* Adjust icon size as needed */
   margin-right: 10px;
+  color:var(--primary-blue);
 }
 
 #file-name {
   margin-top: 10px;
   margin: 0;
-  color: #333; /* Adjust text color as needed */
-  font-size: 16px; /* Adjust text size as needed */
+  color: #333;
+  font-size: 16px;
 }
 
 #remove-file {
@@ -123,6 +98,9 @@
 #remove-file:hover {
   background-color: darkred;
 }
+.progress {
+  display: none;
+}
 </style>
 
 
@@ -133,7 +111,7 @@
     </div>
 {% endif %}
 
-  <form method="POST" action="" enctype="multipart/form-data">
+  <form method="POST" action="" enctype="multipart/form-data" id="uploadForm">
       {% csrf_token %}
       {% comment %} <div class="icon"><i class="uil uil-file-upload"></i></div>
       <h2>Upload a document</h2> {% endcomment %}
@@ -142,20 +120,24 @@
             <input type="file" class="fileInput" id="file" name="file" accept=".txt, .pdf, .doc, .docx" onchange="displayFileName()">
         </div>
         <div id="file-name-container">
-          <span id="file-icon">&#128196;</span> <!-- You can replace this with the actual icon code or use an image -->
+          <span id="file-icon"><i class="uil uil-file-alt"></i></span> 
+          <!-- You can replace this with the actual icon code or use an image -->
           <p id="file-name"></p>
           <button id="remove-file" onclick="removeFile()">X</button>
         </div>
       {% if error %}
           <p class="message"> {{ error }} </p>
           {% endif %}
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-          </div>
-      <button class="upload-btn" type="submit">Upload</button>
+      <button class="upload-btn" type="submit" onclick="uploadFile()">Upload</button>
+      <div class="progress" style="margin-top: 20px;">
+        {% comment %} <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div> {% endcomment %}
+        <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%; height: 20px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+      </div>
   </form>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+<script src="https://malsup.github.io/jquery.form.js"></script> 
 <script>
 const libraryNames = ["Hugging Face", "NLTK Library"];
 let currentLibraryIndex = 0;
@@ -200,6 +182,7 @@ updateLibraryTitle();
         document.getElementById('file-name').innerHTML = 'Selected file: ' + fileName;
     } {% endcomment %}
 
+
     function displayFileName() {
       var input = document.getElementsByClassName('fileInput')[0];
       
@@ -243,7 +226,36 @@ updateLibraryTitle();
         fileInput.files = e.dataTransfer.files;
         displayFileName();
     });
-    
+
+    function uploadFile() {
+      $('.progress').show();
+      var formData = new FormData($('#uploadForm')[0]);
+
+      $.ajax({
+          url: '/', 
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          xhr: function () {
+              var xhr = new window.XMLHttpRequest();
+              xhr.upload.addEventListener("progress", function (evt) {
+                  if (evt.lengthComputable) {
+                      var percentComplete = (evt.loaded / evt.total) * 100;
+                      $('#progress-bar').css('width', percentComplete + '%');
+                      $('#progress-bar').html(percentComplete.toFixed(2) + '%');
+                  }
+              }, false);
+              return xhr;
+          },
+          success: function (data) {
+              // Handle success response from the server
+          },
+          error: function (error) {
+              // Handle error response from the server
+          }
+      });
+  }
 </script>
 
 
