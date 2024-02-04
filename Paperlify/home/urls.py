@@ -37,6 +37,10 @@ urlpatterns = [
     path('homepage', views.homepage, name='homepage'), #Mapping '/homepage' to the homepage view
     path('dashboard2nd', views.dashboard2nd, name='dashboard2nd'), #Mapping '/dashboard2nd' to the dashboard2nd view
     path('dashboard', views.dashboard, name='dashboard'), #Mapping '/dashboard' to the dashboard view
+
+    path('upload', views.upload_file, name='upload_file'),
+    path('summarize', views.summarize_text, name='summarize_text'),
+
     path('profile', views.profile, name='profile'), #Mapping '/profile' to the profile view
     path('test', views.test, name='test'), #Mapping '/test' to the test view
     path('mydocuments', views.mydocuments, name='mydocuments'), #Mapping '/mydocuments' to the mydocuments view

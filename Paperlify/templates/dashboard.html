@@ -129,7 +129,7 @@
 {% endfor %}
 {% endif %}
 
-  <form method="POST" action="" enctype="multipart/form-data" id="uploadForm">
+  <form method="POST" action="{% url 'upload_file' %}" enctype="multipart/form-data" id="uploadForm">
       {% csrf_token %}
       {% comment %} <div class="icon"><i class="uil uil-file-upload"></i></div>
       <h2>Upload a document</h2> {% endcomment %}
@@ -259,6 +259,7 @@ updateLibraryTitle();
         $.ajax({
             url: '/', 
             type: 'POST',
+            headers: {'X-CSRFToken': csrf_token},
             data: formData,
             processData: false,
             contentType: false,
@@ -275,8 +276,8 @@ updateLibraryTitle();
             },
             success: function (data) {
               // Handle success response from the server
-              var documentSection = document.querySelector('.document-box');
-              documentSection.scrollIntoView({ behavior: 'smooth' });
+              //var documentSection = document.querySelector('.document-box');
+              //documentSection.scrollIntoView({ behavior: 'smooth' });
             },
             error: function (error) {
               // Handle error response from the server
@@ -298,8 +299,7 @@ updateLibraryTitle();
 
 <div class="document-box">
 <div class="summary-title">Document <span class="gradient-text">Content</span></div>
-<form action="" method="post">
-<form method="post" action="{% url 'dashboard' %}" id="summarizeForm">
+<form method="POST" action="{% url 'summarize_text' %}" id="summarizeForm">
 {% csrf_token %}
 <div class="summary-content">
 <textarea name="input_text" rows="10" cols="80">{{ content }}</textarea>
