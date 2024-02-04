@@ -109,6 +109,7 @@
   margin-top: 20px;
   overflow: hidden;
 }
+
 </style>
 
 
@@ -153,6 +154,35 @@
       </div>
   </form>
 </div>
+
+<div class="document-box">
+  <div class="summary-title">Document <span class="gradient-text">Content</span></div>
+  <form method="POST" action="{% url 'summarize_text' %}" id="summarizeForm">
+  {% csrf_token %}
+  <div class="summary-content">
+  <textarea name="input_text" rows="10" cols="80">{{ content }}</textarea>
+  <input class="summarize-btn" type="submit" name="summarize" value="Summarize" onclick="summarizeText()">
+  <div class="progress" style="margin-top: 20px;">
+    <div id="summarize-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%; height: 20px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+  </div>
+    </div>
+  </form>
+  </div>
+  
+  <!-- Add the Summarized Document Editor -->
+  <!-- {% comment %} <div class="editor-box">
+    <div class="editor-title">Summarized Document</div>
+        <textarea rows="10" cols="80">{{ summary.0.summary_text }}</textarea>
+  </div> {% endcomment %} -->
+  
+ <!-- <div class="summary-box" id="summary-box" style="display: none;"> -->
+  <div class="summary-box" id="summary-box">
+    <div class="summary-title">Document <span class="gradient-text">Summary</span></div>
+    <div class="summary-content">
+        {{ summary.0.summary_text }}
+    </div>
+  </div>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
 <script src="https://malsup.github.io/jquery.form.js"></script> 
@@ -276,14 +306,46 @@ updateLibraryTitle();
             },
             success: function (data) {
               // Handle success response from the server
-              //var documentSection = document.querySelector('.document-box');
-              //documentSection.scrollIntoView({ behavior: 'smooth' });
+              var documentSection = document.querySelector('.document-box');
+              documentSection.scrollIntoView({ behavior: 'smooth' });
             },
             error: function (error) {
               // Handle error response from the server
             }
         });
     }
+
+    function summarizeText() {
+      // A function to get the text to summarize
+      var inputText = document.querySelector('[name="input_text"]').value;
+  
+      // Check if the input text is not empty
+      if (!inputText.trim()) {
+          // Handle the case where there is no text to summarize
+          return;
+      }
+  
+      // Display the progress bar
+      $('.progress').show();
+  
+      // Simulate a delay to represent the summarization process
+      var progress = 0;
+      var intervalId = setInterval(function () {
+          if (progress <= 100) {
+              $('#summarize-progress-bar').css('width', progress + '%');
+              $('#summarize-progress-bar').html(progress.toFixed(2) + '%');
+              progress += 5; // Increase the progress by 5% in each interval
+          } else {
+              clearInterval(intervalId);
+
+              // Once summarization is complete, hide the progress bar
+              $('.progress').hide();
+              
+              // Show the summarized section
+              document.getElementById('summary-box').style.display = 'block';
+          }
+      }, 500);
+  }
 </script>
 
 
@@ -297,29 +359,6 @@ updateLibraryTitle();
   </form>
 </div> {% endcomment %} -->
 
-<div class="document-box">
-<div class="summary-title">Document <span class="gradient-text">Content</span></div>
-<form method="POST" action="{% url 'summarize_text' %}" id="summarizeForm">
-{% csrf_token %}
-<div class="summary-content">
-<textarea name="input_text" rows="10" cols="80">{{ content }}</textarea>
-<input class="summarize-btn" type="submit" name="summarize" value="Summarize"> 
-</form>
-  </div>
-</div>
-
-<!-- Add the Summarized Document Editor -->
-<!-- {% comment %} <div class="editor-box">
-  <div class="editor-title">Summarized Document</div>
-      <textarea rows="10" cols="80">{{ summary.0.summary_text }}</textarea>
-</div> {% endcomment %} -->
-
-<div class="summary-box">
-  <div class="summary-title">Document <span class="gradient-text">Summary</span></div>
-  <div class="summary-content">
-      {{ summary.0.summary_text }}
-  </div>
-</div>
 
 
   {% comment %} <div>

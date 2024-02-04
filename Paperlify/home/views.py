@@ -436,7 +436,7 @@ def dashboard(request):
     #return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'recent_documents': recent_documents})
     return render(request, 'dashboard.html', {'content': content, 'summary': summary})
 '''
-
+from django.http import JsonResponse
 def dashboard(request):
     content = ''
     summary = None
@@ -444,7 +444,6 @@ def dashboard(request):
 
     return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'recent_documents': recent_documents})
 
-from django.http import JsonResponse
 def upload_file(request):
     content = ''
     summary = None
@@ -570,9 +569,13 @@ def summarize_text(request):
             input_text = request.POST.get('input_text', '')
 
             # Check if input_text is empty
+            '''
             if not input_text.strip():
                 error_message = "Please upload a file or enter text before summarizing."
-                return render(request, 'dashboard.html', {'error_message': error_message})
+                #return render(request, 'dashboard.html', {'error_message': error_message})
+                messages.error(request, error_message)
+                print(f"Request error: {str(e)}")
+            '''
 
             # Summarize the content using the Hugging Face model
             payload = {
@@ -614,7 +617,7 @@ def summarize_text(request):
             print(f"Request error: {str(e)}")
 
         except Exception as e:
-            error_message = "Unexpected error during summarization."
+            error_message = "Please upload a file or enter text before summarizing."
             messages.error(request, error_message)
             print(f"Unexpected error: {str(e)}")
 
@@ -633,7 +636,7 @@ def summarize_text(request):
         #  # Filter documents based on the user_id
         # documents = FileUpload.objects.filter(user_id=user_id).order_by('-upload_time')[:3]
         # context = {'documents': documents}
-        
+
     #return JsonResponse({'content': content, 'summary': summary})
     return render(request, 'dashboard.html', {'content': content, 'summary': summary})
 
