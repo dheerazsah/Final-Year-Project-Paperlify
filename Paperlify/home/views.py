@@ -462,6 +462,13 @@ def dashboard(request):
     '''
     return render(request, 'dashboard.html', {'content': content, 'summary':summary})
 
+def update_library(request):
+    if request.method == 'POST':
+        selected_library = request.POST.get('selected_library')
+        print(f'Selected Library: {selected_library}')
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})
+
 import pythoncom
 from win32com import client
 from django.conf import settings

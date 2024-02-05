@@ -202,6 +202,39 @@ function updateLibraryTitle() {
 }
 updateLibraryTitle();
 
+document.addEventListener('DOMContentLoaded', function() {
+  var radioButtons = document.querySelectorAll('.btn-check');
+
+  radioButtons.forEach(function(radioButton) {
+      radioButton.addEventListener('click', function() {
+          var selectedLibrary = document.querySelector('input[name="btnradio"]:checked').nextElementSibling.textContent.trim();
+
+          sendSelectedLibraryToServer(selectedLibrary);
+      });
+  });
+
+  function sendSelectedLibraryToServer(selectedLibrary) {
+      var formData = new FormData();
+      formData.append('selected_library', selectedLibrary);
+
+      fetch('/update_library/', {
+          method: 'POST',
+          body: formData,
+          headers: {
+              'X-CSRFToken': "{{ csrf_token }}",
+          },
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('Server response:', data);
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+  }
+});
+
+
     {% comment %} function displayFileName() {
         var input = document.getElementsByClassName('fileInput')[0];
         var fileName = input.files[0].name;
