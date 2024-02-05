@@ -493,31 +493,7 @@
   background: #f0effa;
   padding: 10px;
   border-radius: 8px;
-}
-
-/* Toggle Button Styles */
-.toggle-btn {
-  padding: 10px;
-  cursor: pointer;
-	background: transparent;
-  border: none;
-  text-align: center;
-  cursor: pointer;
-  outline: none;
-  color: #d7d6dd;
-  position: relative; 
-}
-
-/* Toggle Indicator Styles */
-#t-btn {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 100%;
-  background: var(--primary-blue); /* Indicator color */
-  border-radius: 5px;
-  transition: 0.5s ease;
+  
 }
 
 .main-content p {
