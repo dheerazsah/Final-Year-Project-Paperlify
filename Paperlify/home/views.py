@@ -443,10 +443,28 @@ from django.http import JsonResponse
 def dashboard(request):
     content = ''
     summary = None
-    recent_documents = FileUpload.objects.filter(user_id=request.user.id, summarized_text__isnull=False).order_by('-created_at')[:3]
 
-    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'recent_documents': recent_documents})
+    '''
+    library = '' 
+    if library == 'hugging_face':
+        info_message = "You are using Hugging Face"
+        messages.info(request, info_message)
+        print(info_message)
+    elif library == 'nltk':
+        info_message = "You are using NLTK"
+        messages.info(request, info_message)
+        print(info_message)
+    else:
+        info_message = "Invalid Library"
+        messages.info(request, info_message)
+        print(info_message)
+    #return JsonResponse({'message': message})
+    '''
+    return render(request, 'dashboard.html', {'content': content, 'summary':summary})
 
+import pythoncom
+from win32com import client
+from django.conf import settings
 def upload_file(request):
     content = ''
     summary = None
@@ -506,7 +524,7 @@ def upload_file(request):
                         messages.error(request, error_message)
                         print(f"Error reading text file: {str(e)}")
 
-                elif uploadfile.name.endswith(('.doc', '.docx')):
+                elif uploadfile.name.endswith(('.docx')):
                     try:
                         content = docx2txt.process(uploadfile)
                         if not content.strip():
@@ -515,10 +533,36 @@ def upload_file(request):
                             return JsonResponse({'content': content, 'summary': summary})
                         file_info.extracted_text = content
                         file_info.save()
+
                     except Exception as e:
                         error_message = "Error processing the uploaded Word document."
                         messages.error(request, error_message)
                         print(f"Error processing doc/docx file: {str(e)}")
+
+                elif uploadfile.name.endswith(('.doc')):
+                    try:
+                         # Initialize the COM library
+                        pythoncom.CoInitialize()
+                        
+                        # Create a new Word application
+                        word_app = client.Dispatch("Word.Application")
+                        word_app.Visible = False
+                        
+                        # Open the document
+                        doc_path = os.path.join(settings.MEDIA_ROOT, uploadfile.name)
+                        doc = word_app.Documents.Open(doc_path)
+                        
+                        # Extract text from the document
+                        content = doc.Content.Text
+                        
+                        # Close the document and Word application
+                        doc.Close()
+                        word_app.Quit()
+
+                    except Exception as e:
+                        error_message = "Error processing the uploaded Word document."
+                        messages.error(request, error_message)
+                        print(f"Error processing doc file: {str(e)}")
 
                 elif uploadfile.name.endswith('.pdf'):
                     try:

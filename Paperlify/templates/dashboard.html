@@ -10,7 +10,8 @@
   </div>
 </div>
 </div> {% endcomment %}
-{% if messages %}
+
+{% comment %} {% if messages %}
   <div class="error-message">
     <ul>
       {% for message in messages %}
@@ -18,7 +19,7 @@
       {% endfor %}
     </ul>
   </div>
-{% endif %}
+{% endif %} {% endcomment %}
 
 <div>
   <section class="main-content">
@@ -28,12 +29,15 @@
 </div>
 
 <div class="switch-box">
-  <div class="button-box">
-    <div id="t-btn"></div>
-    <button type="button" class="toggle-btn" onclick="leftClick('hugging-face')"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</button>
-    <button type="button" class="toggle-btn" onclick="rightClick('nltk-library')"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</button>
+  <div class="btn-group btn-group-lg" role="group" aria-label="Basic radio toggle button group">
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+    <label class="btn btn-outline-primary" for="btnradio1"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</label>
+  
+    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradio2"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</label>
   </div>
 </div>
+
 
 <style>
     textarea {
@@ -110,6 +114,7 @@
   overflow: hidden;
 }
 
+
 </style>
 
 
@@ -119,16 +124,6 @@
         {{ error_message }}
     </div>
 {% endif %} {% endcomment %}
-
-{% if messages %}
-{% for message in messages %}
-    {% if message.tags == 'error' %}
-        <div class="error-message">{{ message }}</div>
-    {% elif message.tags == 'success' %}
-        <div class="success-message">{{ message }}</div>
-    {% endif %}
-{% endfor %}
-{% endif %}
 
   <form method="POST" action="{% url 'upload_file' %}" enctype="multipart/form-data" id="uploadForm">
       {% csrf_token %}
@@ -170,11 +165,6 @@
   </div>
   
   <!-- Add the Summarized Document Editor -->
-  <!-- {% comment %} <div class="editor-box">
-    <div class="editor-title">Summarized Document</div>
-        <textarea rows="10" cols="80">{{ summary.0.summary_text }}</textarea>
-  </div> {% endcomment %} -->
-  
  <!-- <div class="summary-box" id="summary-box" style="display: none;"> -->
   <div class="summary-box" id="summary-box">
     <div class="summary-title">Document <span class="gradient-text">Summary</span></div>
@@ -211,18 +201,6 @@ function updateLibraryTitle() {
   }, 100);
 }
 updateLibraryTitle();
-
-  var tbtn = document.getElementById('t-btn')
-
-  function leftClick(modelName) {
-    tbtn.style.left = '0';
-    console.log('Left click:', modelName);
-  }
-  
-  function rightClick(modelName) {
-    tbtn.style.left = '130px';
-    console.log('Right click:', modelName);
-  }
 
     {% comment %} function displayFileName() {
         var input = document.getElementsByClassName('fileInput')[0];
@@ -349,19 +327,8 @@ updateLibraryTitle();
 </script>
 
 
-<!-- Show Document -->
-<!-- {% comment %} <div class="editor-box">
-  <form action="" method="post">
-      {% csrf_token %}
-      <div class="editor-title">Document Content</div>
-      <textarea name="input_text" rows="10" cols="80">{{ content }}</textarea>
-      <input class="summarize-btn" type="submit" name="summarize" value="Summarize"> 
-  </form>
-</div> {% endcomment %} -->
 
-
-
-  {% comment %} <div>
+<div>
       <section class="main-content">
           <h1>Recent Documents</h1>
       </section>
@@ -387,5 +354,5 @@ updateLibraryTitle();
 
 <div class="browse-button">
   <a href="{% url 'mydocuments' %}">Browse All Documents</a>
-</div> {% endcomment %}
+</div> 
 {% endblock %}
