@@ -29,18 +29,21 @@
 </div>
 
 <div class="switch-box">
-  <div class="btn-group btn-group-lg" role="group" aria-label="Basic radio toggle button group">
+  <div class="toggle-container">
+  
+  {% comment %} <div class="btn-group btn-group-lg" role="group" aria-label="Basic radio toggle button group">
     <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
     <label class="btn btn-outline-primary" for="btnradio1"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</label>
   
     <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio2"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</label>
+    <label class="btn btn-outline-primary" for="btnradio2"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</label> {% endcomment %}
     <form method="POST" action="{% url 'dashboard' %}">
       {% csrf_token %}
-      <button type="submit" class="toggle-btn" name="button" value="hugface"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</button>
-      <button type="submit" class="toggle-btn" name="button" value="nltk"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</button>
+      <button type="submit" class="toggle-btn hugging-face {% if active_button == 'hugface' %}active{% endif %}" name="button" value="hugface"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</button>
+      <button type="submit" class="toggle-btn nltk {% if active_button == 'nltk' %}active{% endif %}" name="button" value="nltk"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</button>
     </form>
   </div>
+</div>
 </div>
 
 <style>
@@ -118,28 +121,30 @@
   overflow: hidden;
 }
 
-.toggle-btn {
-  background-color: var(--primary-blue);
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
+.toggle-container {
+  background-color: #f0effa; 
+  padding: 10px; 
+  border-radius: 10px;
   display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  transition-duration: 0.4s;
-  cursor: pointer;
-  border-radius: 8px;
 }
 
-.toggle-btn:hover {
-  background-color: var(--hover-blue);
+  .toggle-btn {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  .toggle-btn.active {
+    background-color: var(--primary-blue);
 }
-
-
-
-
 </style>
 
 
@@ -227,49 +232,25 @@ function updateLibraryTitle() {
 }
 updateLibraryTitle();
 
-document.addEventListener('DOMContentLoaded', function() {
-  function updateSuccessMessage(message) {
-    console.log(message);
-    $('#success_message_placeholder').text(message);
-  }
-        var radioButtons = document.querySelectorAll('.btn-check');
+    const toggleButtons = document.querySelectorAll('.toggle-btn');
 
-        radioButtons.forEach(function(radioButton) {
-            radioButton.addEventListener('click', function() {
-                var selectedLibrary = document.querySelector('input[name="btnradio"]:checked').nextElementSibling.textContent.trim();
-
-                sendSelectedLibraryToServer(selectedLibrary);
-            });
+    // Function to handle button click
+    function handleButtonClick(event) {
+        // Remove active class from all buttons
+        toggleButtons.forEach(button => {
+            button.classList.remove('active');
         });
 
-        function sendSelectedLibraryToServer(selectedLibrary) {
-            var formData = new FormData();
-            formData.append('selected_library', selectedLibrary);
+        // Add active class to the clicked button
+        event.target.classList.add('active');
+    }
 
-            fetch('/update_library', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': "{{ csrf_token }}",
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Server response:', data);
-                updateSuccessMessage(data.message); // Update the message dynamically
-
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
+    // Add click event listener to each toggle button
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', handleButtonClick);
     });
 
-    {% comment %} function displayFileName() {
-        var input = document.getElementsByClassName('fileInput')[0];
-        var fileName = input.files[0].name;
-        document.getElementById('file-name').innerHTML = 'Selected file: ' + fileName;
-    } {% endcomment %}
+  
 
 
     function displayFileName() {
@@ -396,7 +377,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <div>
   <section class="main-content">
     <h1>Recent Documents</h1>
-    <h2 id="success_message_placeholder">aa</h2>
       </section>
   </div>
 

@@ -443,29 +443,31 @@ from django.http import JsonResponse
 def dashboard(request):
     content = ''
     summary = None
+    active_button = request.session.get('active_button', 'hugface') 
+    if request.method == "POST":
+        button_clicked = request.POST.get("button")
+        if button_clicked == "hugface":
+            active_button = "hugface"
+            print("Hugging Face button clicked")  # Print to console
+            success_message = f"You are using Hugging Face for summarization."
+            messages.info(request, success_message)
+            # Store active_button in session
+            request.session['active_button'] = active_button  
+        elif button_clicked == "nltk":
+            active_button = "nltk"
+            print("NLTK Library button clicked")  # Print to console
+            success_message = f"You are using NLTK for summarization."
+            messages.info(request, success_message)
+            # Store active_button in session
+            request.session['active_button'] = active_button  
 
-    '''
-    library = '' 
-    if library == 'hugging_face':
-        info_message = "You are using Hugging Face"
-        messages.info(request, info_message)
-        print(info_message)
-    elif library == 'nltk':
-        info_message = "You are using NLTK"
-        messages.info(request, info_message)
-        print(info_message)
-    else:
-        info_message = "Invalid Library"
-        messages.info(request, info_message)
-        print(info_message)
-    #return JsonResponse({'message': message})
-    '''
-    return render(request, 'dashboard.html', {'content': content, 'summary':summary})
+    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button})
+
+
 
 def update_library(request):
     if request.method == 'POST':
-        selected_library = request.POST.get('selected_library')
-        print(f'Selected Library: {selected_library}')
+        
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
 
@@ -476,6 +478,8 @@ def upload_file(request):
     content = ''
     summary = None
     file_info = None
+    # Retrieve active_button from session
+    active_button = request.session.get('active_button', 'hugface') 
 
     if request.method == 'POST':
         try:
@@ -609,7 +613,7 @@ def upload_file(request):
             messages.error(request, error_message)
             print(f"Unexpected error: {str(e)}")
     
-    return render(request, 'dashboard.html', {'content': content, 'summary': summary})
+    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button})
     #return JsonResponse({'content': content, 'summary': summary})
 
 
@@ -617,6 +621,8 @@ def summarize_text(request):
     content = ''
     summary = None
     file_info = None
+    # Retrieve active_button from session
+    active_button = request.session.get('active_button', 'hugface')  
 
     if request.method == 'POST':
         try:
@@ -692,7 +698,7 @@ def summarize_text(request):
         # context = {'documents': documents}
 
     #return JsonResponse({'content': content, 'summary': summary})
-    return render(request, 'dashboard.html', {'content': content, 'summary': summary})
+    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button})
 
 # def mydocuments(request):
 #     user_id = request.user.id
