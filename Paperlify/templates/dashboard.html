@@ -199,7 +199,15 @@
   <div class="summary-box" id="summary-box">
     <div class="summary-title">Document <span class="gradient-text">Summary</span></div>
     <div class="summary-content">
-        {{ summary.0.summary_text }}
+      {% if active_button == 'hugface' %}
+      {% if summary %}
+          {{ summary.0.summary_text }}
+      {% endif %}
+      {% elif active_button == 'nltk' %}
+          {% if summary %}
+              {{ summary }}
+          {% endif %}
+      {% endif %}
     </div>
   </div>
 
