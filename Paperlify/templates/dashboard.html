@@ -35,9 +35,13 @@
   
     <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
     <label class="btn btn-outline-primary" for="btnradio2"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</label>
+    <form method="POST" action="{% url 'dashboard' %}">
+      {% csrf_token %}
+      <button type="submit" class="toggle-btn" name="button" value="hugface"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</button>
+      <button type="submit" class="toggle-btn" name="button" value="nltk"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</button>
+    </form>
   </div>
 </div>
-
 
 <style>
     textarea {
@@ -113,6 +117,27 @@
   margin-top: 20px;
   overflow: hidden;
 }
+
+.toggle-btn {
+  background-color: var(--primary-blue);
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.toggle-btn:hover {
+  background-color: var(--hover-blue);
+}
+
+
 
 
 </style>
@@ -203,37 +228,42 @@ function updateLibraryTitle() {
 updateLibraryTitle();
 
 document.addEventListener('DOMContentLoaded', function() {
-  var radioButtons = document.querySelectorAll('.btn-check');
-
-  radioButtons.forEach(function(radioButton) {
-      radioButton.addEventListener('click', function() {
-          var selectedLibrary = document.querySelector('input[name="btnradio"]:checked').nextElementSibling.textContent.trim();
-
-          sendSelectedLibraryToServer(selectedLibrary);
-      });
-  });
-
-  function sendSelectedLibraryToServer(selectedLibrary) {
-      var formData = new FormData();
-      formData.append('selected_library', selectedLibrary);
-
-      fetch('/update_library/', {
-          method: 'POST',
-          body: formData,
-          headers: {
-              'X-CSRFToken': "{{ csrf_token }}",
-          },
-      })
-      .then(response => response.json())
-      .then(data => {
-          console.log('Server response:', data);
-      })
-      .catch(error => {
-          console.error('Error:', error);
-      });
+  function updateSuccessMessage(message) {
+    console.log(message);
+    $('#success_message_placeholder').text(message);
   }
-});
+        var radioButtons = document.querySelectorAll('.btn-check');
 
+        radioButtons.forEach(function(radioButton) {
+            radioButton.addEventListener('click', function() {
+                var selectedLibrary = document.querySelector('input[name="btnradio"]:checked').nextElementSibling.textContent.trim();
+
+                sendSelectedLibraryToServer(selectedLibrary);
+            });
+        });
+
+        function sendSelectedLibraryToServer(selectedLibrary) {
+            var formData = new FormData();
+            formData.append('selected_library', selectedLibrary);
+
+            fetch('/update_library', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': "{{ csrf_token }}",
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Server response:', data);
+                updateSuccessMessage(data.message); // Update the message dynamically
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
 
     {% comment %} function displayFileName() {
         var input = document.getElementsByClassName('fileInput')[0];
@@ -356,14 +386,17 @@ document.addEventListener('DOMContentLoaded', function() {
               document.getElementById('summary-box').style.display = 'block';
           }
       }, 500);
+
   }
 </script>
 
 
 
+
 <div>
-      <section class="main-content">
-          <h1>Recent Documents</h1>
+  <section class="main-content">
+    <h1>Recent Documents</h1>
+    <h2 id="success_message_placeholder">aa</h2>
       </section>
   </div>
 
