@@ -657,6 +657,7 @@ def document_detail(request, slug):
         print(e)
     return render(request, 'document.html', context)
 
+'''
 def search(request):
     # return HttpResponse('This is a search')
     user_id = request.user.id
@@ -664,7 +665,17 @@ def search(request):
     # Filter documents based on the user_id and the correct field name ('doc_name' in this case)
     context = {'documents': FileUpload.objects.filter(user_id=user_id, doc_name__icontains=query)}
     return render(request, 'search.html', context)
+'''
 
+def search(request):
+    user_id = request.user.id
+    query = request.GET.get('query')
+    payload = []
+    if query:
+        documents = list(FileUpload.objects.filter(user_id=user_id, doc_name__icontains=query).values('doc_name'))
+        for document in documents:
+            payload.append(document)
+    return JsonResponse({'status': 200, 'data': payload})
 '''
 def dashboard2nd(request):
     content = ''
