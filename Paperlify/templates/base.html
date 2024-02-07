@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM Sans:wght@400;500;700&display=swap" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+    <script src="https://malsup.github.io/jquery.form.js"></script> 
+
+    <script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"/>
+
     <script src="./static/script.js"></script>
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
     <link rel="icon" type="image/x-icon" href="./static/images/Paperlify Logo Blue.png" />
@@ -17,8 +25,8 @@
     </title>
   </head>
   <body>
-    <div class="gradient"></div>
-    <style>
+
+    {% comment %} <style>
       .btn-primary {
         background-color: #5271ff;
         border-color: #5271ff;
@@ -30,7 +38,8 @@
         border-color: #4a66e6;
         color: #fff;
       }
-    </style>
+    </style> {% endcomment %}
+
 
     <div class="preloader-wrapper">
       <div class="d-flex justify-content-center">
@@ -39,22 +48,16 @@
         </div>
       </div>
     </div>
-    <script>
-      // Initial call to start the animation
-      const preloaderWrapper = document.querySelector('.preloader-wrapper');
-      window.addEventListener('load', function(){
-          preloaderWrapper.classList.add('fade-out-animation');
-      });
-    </script>
 
     <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
-        <a class="navbar-brand logo" href="{% url 'homepage' %}"><img src="./static/images/Paperlify Logo White.png" alt="Paperlify Logo" />Paperlify</a>
+        <a class="navbar-brand logo" href="{% url 'dashboard' %}"><img src="./static/images/Paperlify Logo White.png" alt="Paperlify Logo" />Paperlify</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <form action="/search" method="GET">
+              <form action="/search" method="GET"> 
+                {% comment %} {% csrf_token %} {% endcomment %}
                 <input type="text" id="search" name="query" placeholder="Search documents" />
                 <button type="submit">Search</button>
               </form>
@@ -75,6 +78,11 @@
         </div>
       </div>
     </nav>
+    </div>
+
+    <div id="search-results">Hehe</div>
+
+
 
     <!-- Logout Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -92,6 +100,78 @@
         </div>
       </div>
     </div>
+
+    <script>
+      setTimeout(function(){
+        if ($('#msg').length > 0){
+          $('#msg').remove();
+        }
+      }, 2000)
+      
+      // Initial call to start the animation
+      const preloaderWrapper = document.querySelector('.preloader-wrapper');
+      window.addEventListener('load', function(){
+          preloaderWrapper.classList.add('fade-out-animation');
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        // Get the input element
+        const searchInput = document.getElementById('search');
+        const searchResults = document.getElementById('search-results');
+    
+        // Listen for input events on the input field
+        searchInput.addEventListener('input', function(event) {
+          // Log the input value to the console
+          console.log(event.target.value);
+          const query = event.target.value.trim();
+          if (query === '') {
+            searchResults.innerHTML = ''; // Clear search results if input is empty
+            return;
+          }
+
+          fetch(`/search?query=${query}`)
+          .then(response => response.json())
+          .then(data => {
+            // Clear previous search results
+            searchResults.innerHTML = '';
+            // Append new search results
+            data.documents.forEach(document => {
+              const docItem = document.createElement('div');
+              docItem.textContent = document.doc_name; // Change this according to your data structure
+              searchResults.appendChild(docItem);
+            });
+          })
+          .catch(error => console.error('Error fetching search results:', error));
+        });
+      });
+
+    </script>
+
+    {% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger m-2 alert-dismissible fade show " role="alert" id="msg">
+          <strong>Oopsie! </strong>{{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <!-- <div class="error-message">{{ message }}</div> -->
+        {% elif message.tags == 'success' %}
+        <div class="alert alert-success m-2 alert-dismissible fade show " role="alert" id="msg">
+          <strong>Yay! </strong>{{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        {% elif message.tags == 'info' %}
+        <div class="alert alert-info m-2 alert-dismissible fade show " role="alert" id="msg">
+          <strong>Info: </strong>{{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <!-- <div class="success-message">{{ message }}</div> -->
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    {% comment %} <div class="gradient"></div> {% endcomment %}
     {% block template %}
     {% endblock %}
     <footer>
