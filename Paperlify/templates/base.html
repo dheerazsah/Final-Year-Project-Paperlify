@@ -56,7 +56,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <form action="/search" method="GET"> 
+              <form action="/search" method="GET" id+"search-box"> 
                 {% comment %} {% csrf_token %} {% endcomment %}
                 <input type="text" id="search" name="query" placeholder="Search documents" />
                 <button type="submit">Search</button>
@@ -80,7 +80,7 @@
     </nav>
     </div>
 
-    <div id="search-results">Hehe</div>
+    <div id="search-results"></div>
 
 
 
@@ -101,6 +101,15 @@
       </div>
     </div>
 
+    <div class="container mt-5 pt-5 col-md-5">
+      <h4>Search</h4>
+
+      <div id="autocomplete" class="autocomplete">
+        <input class="autocomplete-input"/>
+        <ul class="autocomplete-result-list"></ul>
+      </div>
+    </div>
+      
     <script>
       setTimeout(function(){
         if ($('#msg').length > 0){
@@ -114,7 +123,7 @@
           preloaderWrapper.classList.add('fade-out-animation');
       });
 
-      document.addEventListener('DOMContentLoaded', function() {
+      {% comment %} document.addEventListener('DOMContentLoaded', function() {
         // Get the input element
         const searchInput = document.getElementById('search');
         const searchResults = document.getElementById('search-results');
@@ -137,13 +146,32 @@
             // Append new search results
             data.documents.forEach(document => {
               const docItem = document.createElement('div');
-              docItem.textContent = document.doc_name; // Change this according to your data structure
+              docItem.textContent = document.doc_name;
               searchResults.appendChild(docItem);
             });
           })
           .catch(error => console.error('Error fetching search results:', error));
         });
-      });
+      }); {% endcomment %}
+
+      new Autocomplete('#autocomplete', {
+        search: input =>{
+        console.log(input)
+        const url = `/search?query=${input}`
+        return new Promise(resolve =>{
+          fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data)
+            const documents = data.data.map(item => item.doc_name); // Extract doc_name property
+            resolve(documents);
+          })
+        })
+      }, 
+      onSubmit : result => {
+        window.open('/mydocuments/?search=${result}')
+      }
+      })
 
     </script>
 
