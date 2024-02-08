@@ -31,6 +31,9 @@ from django.utils import timezone
 from django.utils.datastructures import MultiValueDictKeyError
 
 from django.contrib.auth.hashers import make_password
+from django.template.loader import render_to_string
+
+
 
 
 # Create your views here.
@@ -51,7 +54,7 @@ def signupPage(request):
         if not username or not fname or not password or not password:
             return render(request, 'signup.html', {'error': 'Enter your username, first name, email, and password.'})
 
-        #Password Complexity Requirements to check if th passowrd mee
+        #Password Complexity Requirements to check if the passowrd is complex
         if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
             return render(request, 'signup.html', {'error': 'Password must contain at least one uppercase letter, one symbol, and one number.'})
         
@@ -862,6 +865,7 @@ def dashboard2nd(request):
 '''
 
 from django.contrib.auth import update_session_auth_hash
+
 @login_required
 def profile(request):
     user = request.user
@@ -900,22 +904,31 @@ def profile(request):
             if user.check_password(current_password):
                 # Check if the new password is different from the current password
                 if new_password != current_password:
-                    if new_password == confirm_password:
-                        user.set_password(new_password)
-                        user.save()
-                        update_session_auth_hash(request, user)  # Update the user's session
-                        messages.success(request, 'Password changed successfully')
+                    # Check password complexity requirements
+                    if (re.search("[A-Z]", new_password) and
+                        re.search("[0-9]", new_password) and
+                        re.search("[!@#$%^&*]", new_password)):
+                            
+                        if new_password == confirm_password:
+                            user.set_password(new_password)
+                            user.save()
+                            update_session_auth_hash(request, user)  # Update the user's session
+                            messages.success(request, 'Password changed successfully')
 
-                        # Log the user's activity for password change
-                        UserActivityLog.objects.create(
-                            user=user,
-                            activity='change_password',
-                            ip_address=request.META.get('REMOTE_ADDR')
-                        )
-                        return redirect('login')
-                    
+                            # Log the user's activity for password change
+                            UserActivityLog.objects.create(
+                                user=user,
+                                activity='change_password',
+                                ip_address=request.META.get('REMOTE_ADDR')
+                            )
+                            return redirect('login')
+
+                        else:
+                            messages.error(request, 'New password and confirmation do not match')
+
                     else:
-                        messages.error(request, 'New password and confirmation do not match')
+                        messages.error(request, 'Password must contain at least one uppercase letter, one symbol, and one number.')
+
                 else:
                     messages.error(request, 'New password should be different from the current password')
             else:
@@ -929,6 +942,14 @@ def profile(request):
             user.reactivation_token = reactivation_token
             user.is_active = False # Deactivate the user account
             user.save()
+
+            # Prepare context data for the email template
+            context = {
+                'reactivation_link': request.build_absolute_uri(f"reactivate_account/?token={reactivation_token}")
+            }
+
+            # Render the email template
+            email = render_to_string('email.html', context)
 
             subject = 'Account Deleted Confirmation'
             message = f'Your account has been deleted. To reactivate it, click on the link below:\n\n'\
