@@ -40,7 +40,7 @@ urlpatterns = [
 
     path('upload', views.upload_file, name='upload_file'),
     path('summarize', views.summarize_text, name='summarize_text'),
-    path('update_library', views.update_library, name='update_library'),
+    #path('update_library', views.update_library, name='update_library'),
 
     path('profile', views.profile, name='profile'), #Mapping '/profile' to the profile view
     path('test', views.test, name='test'), #Mapping '/test' to the test view

@@ -1,5 +1,4 @@
 {% extends "./base.html"%}
-<script src="./static/script.js"></script>
 {% block title %}Dashboard{% endblock %}
 
 {% block template %}
@@ -201,7 +200,7 @@
     <div class="summary-content">
       {% if active_button == 'hugface' %}
       {% if summary %}
-          {{ summary.0.summary_text }}
+          {{ summary.0.generated_text }}
       {% endif %}
       {% elif active_button == 'nltk' %}
           {% if summary %}
@@ -257,9 +256,6 @@ updateLibraryTitle();
     toggleButtons.forEach(button => {
         button.addEventListener('click', handleButtonClick);
     });
-
-  
-
 
     function displayFileName() {
       var input = document.getElementsByClassName('fileInput')[0];
@@ -378,9 +374,6 @@ updateLibraryTitle();
 
   }
 </script>
-
-
-
 
 <div>
   <section class="main-content">

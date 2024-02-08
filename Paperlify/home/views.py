@@ -433,12 +433,22 @@ def summarize_text(request):
                 # Summarize the content using the Hugging Face model
                 payload = {
                     "inputs": input_text,
+                    "parameters": {
+                    "truncation": "only_first"
                 }
+                }
+
+                '''
+                {"content": "", "summary": {"error": "Input is too long for this model, shorten your input or use 'parameters': {'truncation': 'only_first'} 
+                to run the model only on the first part.", "warnings": ["There was an inference error: unknown error: index out of range in self", 
+                "Token indices sequence length is longer than the specified maximum sequence length for this model (3149 > 1024). Running this sequence 
+                through the model will result in indexing errors"]}}
+                '''
                 response = requests.post(API_URL, headers=HEADERS, json=payload)
                 summary = response.json()
 
                 if summary and len(summary) > 0:
-                    summarized_text = summary[0].get('summary_text', '')
+                    summarized_text = summary[0].get('generated_text', '') #summary_text
                 # file_info = FileUpload(user=request.user)
                 # file_info.doc_name = fileName
                 # file_info.doc_size = fileSize
@@ -454,6 +464,13 @@ def summarize_text(request):
                     file_info.extracted_text = input_text
                     file_info.summarized_text = summarized_text
                     file_info.save()
+
+                # Log the user's activity
+                UserActivityLog.objects.create(
+                    user=request.user,
+                    activity='summarize using Hugging Face',
+                    ip_address=request.META.get('REMOTE_ADDR')
+                )
                     
             elif active_button == 'nltk':
                 #Text Preprocessing 
@@ -513,9 +530,47 @@ def summarize_text(request):
                 # Log the user's activity
                 UserActivityLog.objects.create(
                     user=request.user,
-                    activity='summarize',
+                    activity='summarize using NLTK library',
                     ip_address=request.META.get('REMOTE_ADDR')
                 )
+
+            else:
+                # Summarize the content using the Hugging Face model
+                payload = {
+                    "inputs": input_text,
+                    "parameters": {
+                    "truncation": "only_first"
+                }
+                }
+
+                response = requests.post(API_URL, headers=HEADERS, json=payload)
+                summary = response.json()
+
+                if summary and len(summary) > 0:
+                    summarized_text = summary[0].get('generated_text', '') #summary_text
+                # file_info = FileUpload(user=request.user)
+                # file_info.doc_name = fileName
+                # file_info.doc_size = fileSize
+                # file_info.doc_type = contentType
+                # file_info.extracted_text = input_text
+                # file_info.summarized_text = summarized_text
+                # file_info.save()
+                    
+                # Update file_info if needed
+                file_info_id = request.session.get('file_info', {}).get('id')
+                if file_info_id:
+                    file_info = FileUpload.objects.get(id=file_info_id)
+                    file_info.extracted_text = input_text
+                    file_info.summarized_text = summarized_text
+                    file_info.save()
+            
+                # Log the user's activity
+                UserActivityLog.objects.create(
+                    user=request.user,
+                    activity='summarize using Hugging Face',
+                    ip_address=request.META.get('REMOTE_ADDR')
+                )
+                    
                     
         except requests.RequestException as e:
             error_message = "Error connecting to the summarization service. Please try again later."
