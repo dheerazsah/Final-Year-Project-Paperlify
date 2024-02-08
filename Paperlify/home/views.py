@@ -869,17 +869,26 @@ def profile(request):
     if request.method == 'POST':
         if 'update_profile' in request.POST:
             # user.username = request.POST.get('username')
-            user.first_name = request.POST.get('fullname')
-            user.email = request.POST.get('email')
-            user.save()
-            messages.success(request, 'Profile updated successfully')
+            first_name = request.POST.get('fullname')
+            email = request.POST.get('email')
 
-            # Log the user's activity for profile update
-            UserActivityLog.objects.create(
-                user=user,
-                activity='update_profile',
-                ip_address=request.META.get('REMOTE_ADDR')
-            )
+            # Check if any changes are made to the user's profile
+            if first_name != user.first_name or email != user.email:
+                # Update the user's profile
+                user.first_name = first_name
+                user.email = email
+                user.save()
+                messages.success(request, 'Profile updated successfully')
+
+                # Log the user's activity for profile update
+                UserActivityLog.objects.create(
+                    user=user,
+                    activity='update_profile',
+                    ip_address=request.META.get('REMOTE_ADDR')
+                )
+
+            else:
+                messages.info(request, 'No changes were made to the profile')
 
         if 'change_password' in request.POST:
             # Password change handling
@@ -889,22 +898,26 @@ def profile(request):
 
             # Validate the current password
             if user.check_password(current_password):
-                if new_password == confirm_password:
-                    user.set_password(new_password)
-                    user.save()
-                    update_session_auth_hash(request, user)  # Update the user's session
-                    messages.success(request, 'Password changed successfully')
+                # Check if the new password is different from the current password
+                if new_password != current_password:
+                    if new_password == confirm_password:
+                        user.set_password(new_password)
+                        user.save()
+                        update_session_auth_hash(request, user)  # Update the user's session
+                        messages.success(request, 'Password changed successfully')
 
-                    # Log the user's activity for password change
-                    UserActivityLog.objects.create(
-                        user=user,
-                        activity='change_password',
-                        ip_address=request.META.get('REMOTE_ADDR')
-                    )
-                    return redirect('login')
+                        # Log the user's activity for password change
+                        UserActivityLog.objects.create(
+                            user=user,
+                            activity='change_password',
+                            ip_address=request.META.get('REMOTE_ADDR')
+                        )
+                        return redirect('login')
                     
+                    else:
+                        messages.error(request, 'New password and confirmation do not match')
                 else:
-                    messages.error(request, 'New password and confirmation do not match')
+                    messages.error(request, 'New password should be different from the current password')
             else:
                 messages.error(request, 'Current password is incorrect')
 

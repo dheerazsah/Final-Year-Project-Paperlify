@@ -2,6 +2,7 @@
 {% block title %}Profile{% endblock %}
 
 {% block template %}
+
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -21,6 +22,7 @@
       </div>
     </div>
   </div>
+  
 
 <section class="content">
     <section class="main-content">
@@ -28,7 +30,7 @@
     </section>
     <div class="profile-info">
         <form action="" method="POST">
-            {% if messages %}
+            {% comment %} {% if messages %}
                 {% for message in messages %}
                     {% if message.tags == 'error' %}
                         <p class="error-message">{{ message }}</p>
@@ -36,7 +38,7 @@
                         <p class="success-message">{{ message }}</p>
                     {% endif %}
                 {% endfor %}
-            {% endif %}
+            {% endif %} {% endcomment %}
 
             {% csrf_token %}
             <div class="input-field">
@@ -73,9 +75,37 @@
                 <label for="confirm-password">Confirm Password</label>
                 <input type="password" id="confirm-password" name="confirm_password" required>
             </div>
+            <div class="input-container" cta>
+                <label class="checkbox-container">
+                    <input type="checkbox">
+                    <span class="checkmark"></span> Show Password
+                </label>
+            </div>
+
             <button type="submit" class="change-password-button" name="change_password">Change Password</button>
         </form>
         <button type="submit" class="delete-account-button" name="delete_account" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Account</button>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var currentPasswordInput = document.getElementById('current-password');
+        var passwordInput = document.getElementById('new-password');
+        var confirmPasswordInput = document.getElementById('confirm-password');
+        var showPasswordCheckbox = document.querySelector('input[type="checkbox"]');
+
+        showPasswordCheckbox.addEventListener('change', function () {
+            if (showPasswordCheckbox.checked) {
+                currentPasswordInput.type ='text';
+                passwordInput.type = 'text';
+                confirmPasswordInput.type = 'text';
+            } else {
+                currentPasswordInput.type ='password';
+                passwordInput.type = 'password';
+                confirmPasswordInput.type = 'password';
+            }
+        });
+    });
+</script>
 {% endblock %}
