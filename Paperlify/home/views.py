@@ -641,19 +641,22 @@ def mydocuments(request):
     today_documents = FileUpload.objects.filter(
         user_id=user_id,
         summarized_text__isnull=False,
-        created_at__date=today
+        created_at__date=today,
+        is_deleted=False,
     ).order_by('-created_at')
 
     yesterday_documents = FileUpload.objects.filter(
         user_id=user_id,
         summarized_text__isnull=False,
-        created_at__date=yesterday
+        created_at__date=yesterday,
+        is_deleted=False,
     ).exclude(id__in=today_documents.values_list('id', flat=True)
     ).order_by('-created_at')
 
     last_week_documents = FileUpload.objects.filter(
         user_id=user_id,
         summarized_text__isnull=False,
+        is_deleted=False,
         created_at__date__range=[last_week, yesterday]
     ).exclude(id__in=today_documents.values_list('id', flat=True)
     ).exclude(id__in=yesterday_documents.values_list('id', flat=True)
@@ -662,6 +665,7 @@ def mydocuments(request):
     last_month_documents = FileUpload.objects.filter(
         user_id=user_id,
         summarized_text__isnull=False,
+        is_deleted=False,
         created_at__date__range=[last_month, yesterday]
     ).exclude(id__in=today_documents.values_list('id', flat=True)
     ).exclude(id__in=yesterday_documents.values_list('id', flat=True)
@@ -670,7 +674,8 @@ def mydocuments(request):
 
     previous_documents = FileUpload.objects.filter(
         user_id=user_id,
-        summarized_text__isnull=False
+        summarized_text__isnull=False,
+        is_deleted=False,
     ).exclude(
         Q(created_at__date=today) |
         Q(created_at__date=yesterday) |
@@ -692,6 +697,16 @@ def mydocuments(request):
     }
 
     return render(request, 'mydocuments.html', context)
+
+from django.shortcuts import get_object_or_404
+def delete_document(request, doc_id):
+    if request.method == 'POST':
+        document = get_object_or_404(FileUpload, pk=doc_id)
+        document.is_deleted = True  # Soft delete the document
+        document.save()
+        return JsonResponse({'message': 'Document deleted successfully'})
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
 
     # user = request.user 
     # with connection.cursor() as cursor:

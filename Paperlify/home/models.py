@@ -64,6 +64,7 @@ class FileUpload(models.Model):
     doc_type = models.CharField(max_length=100) #CharField with a maximum length of 100 characters, representing the type of the document
     extracted_text = models.TextField(blank=True, null=True) #TextField allowing storage of extracted text from the document (optional and can be null)
     summarized_text = models.TextField(blank=True, null=True) #TextField for storing summarized content from the document (optional and can be null)
+    is_deleted = models.BooleanField(default=False)  # Soft delete flag
     slug = models.SlugField(max_length=1000, null=True, blank=True) #SlugField with a maximum length of 1000 characters, used for generating a unique URL
     #created_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(default=timezone.now) #DateTimeField storing the timestamp when the document was created, with a default value of the current time
