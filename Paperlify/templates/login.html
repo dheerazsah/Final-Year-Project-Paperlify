@@ -15,12 +15,6 @@
     <title>Paperlify | Login</title>
 
     <script>
-        setTimeout(function(){
-            if ($('#msg').length > 0){
-            $('#msg').remove();
-            }
-        }, 2000)
-
         document.addEventListener('DOMContentLoaded', function () {
             var passwordInput = document.getElementById('password');
             var showPasswordCheckbox = document.querySelector('input[type="checkbox"]');
@@ -32,6 +26,13 @@
                     passwordInput.type = 'password';
                 }
             });
+
+            setTimeout(function(){
+                var msgElement = document.getElementById('msg');
+                if (msgElement) {
+                    msgElement.remove();
+                }
+            }, 2000);
         });
     </script>
     

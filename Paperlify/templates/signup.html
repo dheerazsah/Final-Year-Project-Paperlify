@@ -29,7 +29,15 @@
                     confirmPasswordInput.type = 'password';
                 }
             });
+
+            setTimeout(function(){
+                var msgElement = document.getElementById('msg');
+                if (msgElement) {
+                    msgElement.remove();
+                }
+            }, 2000);
         });
+
     </script>
 
 </head>
