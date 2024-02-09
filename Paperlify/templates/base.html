@@ -26,21 +26,6 @@
   </head>
   <body>
 
-    {% comment %} <style>
-      .btn-primary {
-        background-color: #5271ff;
-        border-color: #5271ff;
-        color: #fff;
-      }
-      
-      .btn-primary:hover {
-        background-color: #4a66e6;
-        border-color: #4a66e6;
-        color: #fff;
-      }
-    </style> {% endcomment %}
-
-
     <div class="preloader-wrapper">
       <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
@@ -54,13 +39,13 @@
         <a class="navbar-brand logo" href="{% url 'dashboard' %}"><img src="./static/images/Paperlify Logo White.png" alt="Paperlify Logo" />Paperlify</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav ms-auto mb-6 mb-lg-0">
             <li class="nav-item">
-              <form action="/search" method="GET" id+"search-box"> 
-                {% comment %} {% csrf_token %} {% endcomment %}
+              {% comment %} <form action="/search" method="GET" id+"search-box"> 
+                {% csrf_token %}
                 <input type="text" id="search" name="query" placeholder="Search documents" />
                 <button type="submit">Search</button>
-              </form>
+              </form> {% endcomment %}
             </li>
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Upload Document</a>
@@ -80,10 +65,6 @@
     </nav>
     </div>
 
-    <div id="search-results"></div>
-
-
-
     <!-- Logout Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -100,96 +81,6 @@
         </div>
       </div>
     </div>
-
-    <div class="container mt-5 pt-5 col-md-5">
-      <h4>Search</h4>
-
-      <div id="autocomplete" class="autocomplete">
-        <input class="autocomplete-input"/>
-        <ul class="autocomplete-result-list"></ul>
-      </div>
-    </div>
-      
-    <script>
-      setTimeout(function(){
-        if ($('#msg').length > 0){
-          $('#msg').remove();
-        }
-      }, 2000)
-      
-      // Initial call to start the animation
-      const preloaderWrapper = document.querySelector('.preloader-wrapper');
-      window.addEventListener('load', function(){
-          preloaderWrapper.classList.add('fade-out-animation');
-      });
-
-      {% comment %} document.addEventListener('DOMContentLoaded', function() {
-        // Get the input element
-        const searchInput = document.getElementById('search');
-        const searchResults = document.getElementById('search-results');
-    
-        // Listen for input events on the input field
-        searchInput.addEventListener('input', function(event) {
-          // Log the input value to the console
-          console.log(event.target.value);
-          const query = event.target.value.trim();
-          if (query === '') {
-            searchResults.innerHTML = ''; // Clear search results if input is empty
-            return;
-          }
-
-          fetch(`/search?query=${query}`)
-          .then(response => response.json())
-          .then(data => {
-            // Clear previous search results
-            searchResults.innerHTML = '';
-            // Append new search results
-            data.documents.forEach(document => {
-              const docItem = document.createElement('div');
-              docItem.textContent = document.doc_name;
-              searchResults.appendChild(docItem);
-            });
-          })
-          .catch(error => console.error('Error fetching search results:', error));
-        });
-      }); {% endcomment %}
-
-      new Autocomplete('#autocomplete', {
-        search: input =>{
-        console.log(input)
-        const url = `/search?query=${input}`
-        return new Promise(resolve =>{
-          fetch(url)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data)
-            const documents = data.data.map(item => item.doc_name); // Extract doc_name property
-            resolve(documents);
-          });
-        });
-      }, 
-      
-      onSubmit : result => {
-        // Get the slug corresponding to the selected document
-        const selectedDocument = result.trim();
-        const url = `/search?query=${selectedDocument}`;
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.data && data.data.length > 0) {
-                    const slug = data.data[0].slug; // Assuming slug is available in the response
-                    window.open(`/mydocuments/${slug}`, '_blank');
-                } else {
-                    console.error('No matching document found for:', selectedDocument);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching document details:', error);
-            });
-      }
-      });
-
-    </script>
 
     {% if messages %}
     {% for message in messages %}
@@ -214,6 +105,67 @@
         {% endif %}
     {% endfor %}
     {% endif %}
+
+
+   <div class="container mt-2 pt-2 col-md-3">
+      {% comment %} <h4>Search</h4> {% endcomment %}
+
+      <div id="autocomplete" class="autocomplete">
+        <input class="autocomplete-input"/>
+        <ul class="autocomplete-result-list"></ul>
+      </div>
+    </div>
+      
+    <script>
+      setTimeout(function(){
+        if ($('#msg').length > 0){
+          $('#msg').remove();
+        }
+      }, 2000)
+      
+      // Initial call to start the animation
+      const preloaderWrapper = document.querySelector('.preloader-wrapper');
+      window.addEventListener('load', function(){
+          preloaderWrapper.classList.add('fade-out-animation');
+      });
+
+      new Autocomplete('#autocomplete', {
+        search: input =>{
+        console.log(input)
+        const url = `/search?query=${input}`
+        return new Promise(resolve =>{
+          fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data)
+            const documents = data.data.map(item => item.doc_name); // Extract doc_name property
+            resolve(documents);
+          });
+        });
+      }, 
+
+      onSubmit : result => {
+        // Get the slug corresponding to the selected document
+        const selectedDocument = result.trim();
+        const url = `/search?query=${selectedDocument}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.data && data.data.length > 0) {
+                    const slug = data.data[0].slug; // Assuming slug is available in the response
+                    window.open(`/mydocuments/${slug}`, '_blank');
+                } else {
+                    console.error('No matching document found for:', selectedDocument);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching document details:', error);
+            });
+      }
+      }); 
+
+    </script>
+
 
     {% comment %} <div class="gradient"></div> {% endcomment %}
     {% block template %}

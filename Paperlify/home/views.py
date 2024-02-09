@@ -964,7 +964,7 @@ def profile(request):
                 activity='delete_account',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
-            messages.success(request, 'Account deleted successfully')
+            #messages.success(request, 'Account deleted successfully')
             return redirect('login')
 
 
@@ -977,21 +977,24 @@ def confirmpassword(request):
 
     return render(request, 'confirmpassword.html')
 
-from .models import ReactivationToken
-
+#from .models import ReactivationToken
+from .models import User
 def reactivate_account(request, token):
     try:
         # Find the user with the provided reactivation token
-        user = User.objects.get(reactivation_token=token, is_active=False)
+        reactivation_token = User.objects.get(reactivation_token=token)
+        user = reactivation_token.user
     except User.DoesNotExist:
         # Token is invalid or the account is already active
         messages.error(request, 'Invalid reactivation link')
-        return redirect('login')  # Redirect to login or any other page
+        return redirect('signup')  # Redirect to login or any other page
 
     # If the token is valid, set the account as active and clear the reactivation token
     user.is_active = True
     user.reactivation_token = ''
     user.save()
+
+
 
     # Log the user's activity for account reactivation
     UserActivityLog.objects.create(
