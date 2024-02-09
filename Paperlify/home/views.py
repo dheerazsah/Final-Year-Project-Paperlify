@@ -289,12 +289,28 @@ def upload_file(request):
                 fileSize = uploadfile.size
                 contentType = uploadfile.content_type
 
+                # Check if a file with the same name already exists
+                existing_files = FileUpload.objects.filter(doc_name=fileName)
+                if existing_files.exists():
+                    # Append a number to the file name if it already exists
+                    #fileName = f"{os.path.splitext(fileName)[0]}-{existing_files.count() + 1}{os.path.splitext(fileName)[1]}"
+                    # If file with same name exists, append a unique number to make it unique
+                    fileName, file_extension = os.path.splitext(fileName)
+                    fileName = f"{fileName}-{existing_files.count() + 1}{file_extension}"
+
                 # Save the file to the file system
-                file_info = FileUpload(
+                # file_info = FileUpload(
+                #     user=user,
+                #     doc_name=uploadfile.name,
+                #     doc_size=uploadfile.size,
+                #     doc_type=uploadfile.content_type
+                # )
+                # file_info.save()
+                file_info = FileUpload.objects.create(
                     user=user,
-                    doc_name=uploadfile.name,
-                    doc_size=uploadfile.size,
-                    doc_type=uploadfile.content_type
+                    doc_name=fileName,
+                    doc_size=fileSize,
+                    doc_type=contentType
                 )
                 file_info.save()
 
@@ -1014,6 +1030,8 @@ def test(request):
     context = {'documents': FileUpload.objects.filter(user_id=user_id)}
     return render(request, 'test.html', context)
 
+def terms_conditions(request):
+    return render(request, 'terms&conditions.html')
 
 def logoutUser(request):
     logout(request)
