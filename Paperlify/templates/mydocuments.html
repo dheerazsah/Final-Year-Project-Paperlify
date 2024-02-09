@@ -17,9 +17,13 @@
         {% for document in today_documents %}
         <div class="document">
             <div class="document-info">
-                <h2>{{ document.doc_name}}</h2>
+                {% if document.doc_name|length > 26 %}
+                <h2>{{ document.doc_name|slice:":26"|add:"..." }}</h2>
+            {% else %}
+                <h2>{{ document.doc_name }}</h2>
+            {% endif %}
                 <p>Upload Time: {{ document.created_at }}</p>
-                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
                     <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
@@ -42,9 +46,13 @@
         {% for document in yesterday_documents %}
         <div class="document">
             <div class="document-info">
+                {% if document.doc_name|length > 26 %}
+                <h2>{{ document.doc_name|slice:":26"|add:"..." }}</h2>
+            {% else %}
                 <h2>{{ document.doc_name }}</h2>
+            {% endif %}
                 <p>Upload Time: {{ document.created_at }}</p>
-                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
                     <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
@@ -67,9 +75,13 @@
         {% for document in last_week_documents %}
         <div class="document">
             <div class="document-info">
+                {% if document.doc_name|length > 26 %}
+                <h2>{{ document.doc_name|slice:":26"|add:"..." }}</h2>
+            {% else %}
                 <h2>{{ document.doc_name }}</h2>
+            {% endif %}
                 <p>Upload Time: {{ document.created_at }}</p>
-                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
                     <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
@@ -92,9 +104,13 @@
         {% for document in last_month_documents %}
         <div class="document">
             <div class="document-info">
+                {% if document.doc_name|length > 26 %}
+                <h2>{{ document.doc_name|slice:":26"|add:"..." }}</h2>
+            {% else %}
                 <h2>{{ document.doc_name }}</h2>
+            {% endif %}
                 <p>Upload Time: {{ document.created_at }}</p>
-                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
                     <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
@@ -117,9 +133,13 @@
         {% for document in previous_documents %}
         <div class="document">
             <div class="document-info">
-                <h2>{{ document.doc_name }}</h2>
+                {% if document.doc_name|length > 26 %}
+                    <h2>{{ document.doc_name|slice:":26"|add:"..." }}</h2>
+                {% else %}
+                    <h2>{{ document.doc_name }}</h2>
+                {% endif %}
                 <p>Upload Time: {{ document.created_at }}</p>
-                <p>{{ document.summarized_text|truncatewords:20 }}</p>
+                <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
                     <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">

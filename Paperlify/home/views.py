@@ -704,7 +704,9 @@ def delete_document(request, doc_id):
         document = get_object_or_404(FileUpload, pk=doc_id)
         document.is_deleted = True  # Soft delete the document
         document.save()
-        return JsonResponse({'message': 'Document deleted successfully'})
+        #return JsonResponse({'message': 'Document deleted successfully'})
+        # Redirect to mydocuments view after deletion
+        return redirect('mydocuments')
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
