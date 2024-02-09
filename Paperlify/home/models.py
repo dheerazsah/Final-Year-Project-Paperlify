@@ -48,7 +48,11 @@ def generate_random_string(N):
 def generate_slug(text):
     new_slug = slugify(text) #Generating a new slug using the slugify function
     if FileUpload.objects.filter(slug = new_slug).exists(): #Checking if the generated slug already exists in ileUploal model
-        generate_slug(text + generate_random_string(5))  #If it does, recursively call generate_slug function with an appended random string
+        # If slug already exists, append a unique number to make it unique
+        count = 1
+        while FileUpload.objects.filter(slug=f"{new_slug}-{count}").exists(): # Check if slug with appended number exists
+            count += 1
+        new_slug = f"{new_slug}-{count}" # Append unique number to slug
     return new_slug #Return final unique slug
 
 #Model for File Upload with various fields 
