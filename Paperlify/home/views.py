@@ -296,7 +296,13 @@ def upload_file(request):
                     #fileName = f"{os.path.splitext(fileName)[0]}-{existing_files.count() + 1}{os.path.splitext(fileName)[1]}"
                     # If file with same name exists, append a unique number to make it unique
                     fileName, file_extension = os.path.splitext(fileName)
-                    fileName = f"{fileName}-{existing_files.count() + 1}{file_extension}"
+                    count = 1
+                    while True:
+                        newfileName = f"{fileName}-{count}{file_extension}"
+                        if not FileUpload.objects.filter(doc_name=newfileName).exists():
+                            fileName = newfileName
+                            break
+                        count += 1
 
                 # Save the file to the file system
                 # file_info = FileUpload(
