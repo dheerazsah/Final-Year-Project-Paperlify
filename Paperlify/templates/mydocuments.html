@@ -1,4 +1,5 @@
 {% extends "./base.html" %}
+{% load humanize %}
 {% block title %}My Documents{% endblock %}
 
 {% block template %}
@@ -8,7 +9,7 @@
         <!-- <p>Every document you summarized is saved here</p> -->
     </section>
 </div>
-
+  
 <div class="document-container">
     {% if today_documents %}
     <!-- Today's Documents -->
@@ -22,7 +23,7 @@
             {% else %}
                 <h2>{{ document.doc_name }}</h2>
             {% endif %}
-                <p>Upload Time: {{ document.created_at }}</p>
+                <p>Uploaded: {{ document.created_at|naturaltime }}</p>
                 <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
@@ -51,65 +52,7 @@
             {% else %}
                 <h2>{{ document.doc_name }}</h2>
             {% endif %}
-                <p>Upload Time: {{ document.created_at }}</p>
-                <p>{{ document.summarized_text|truncatewords:14 }}</p>
-                <div class="action-buttons">
-                    <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
-                    <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this document?');"><i class="fa fa-trash"></i> Delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <p>No documents available.</p>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if last_week_documents %}
-    <!-- Last Week's Documents -->
-    <div class="document-section">
-        <h2>Last Week</h2>
-        {% for document in last_week_documents %}
-        <div class="document">
-            <div class="document-info">
-                {% if document.doc_name|length > 26 %}
-                <h2>{{ document.doc_name|slice:":26"|add:"..." }}</h2>
-            {% else %}
-                <h2>{{ document.doc_name }}</h2>
-            {% endif %}
-                <p>Upload Time: {{ document.created_at }}</p>
-                <p>{{ document.summarized_text|truncatewords:14 }}</p>
-                <div class="action-buttons">
-                    <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
-                    <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this document?');"><i class="fa fa-trash"></i> Delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <p>No documents available.</p>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if last_month_documents %}
-    <!-- Last Month's Documents -->
-    <div class="document-section">
-        <h2>This Month</h2>
-        {% for document in last_month_documents %}
-        <div class="document">
-            <div class="document-info">
-                {% if document.doc_name|length > 26 %}
-                <h2>{{ document.doc_name|slice:":26"|add:"..." }}</h2>
-            {% else %}
-                <h2>{{ document.doc_name }}</h2>
-            {% endif %}
-                <p>Upload Time: {{ document.created_at }}</p>
+                <p>Uploaded: {{ document.created_at|naturaltime  }}</p>
                 <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
@@ -138,7 +81,7 @@
                 {% else %}
                     <h2>{{ document.doc_name }}</h2>
                 {% endif %}
-                <p>Upload Time: {{ document.created_at }}</p>
+                <p>Uploaded: {{ document.created_at|naturaltime  }}</p>
                 <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>

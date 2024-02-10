@@ -641,8 +641,6 @@ def mydocuments(request):
 
     today = datetime.now().date()
     yesterday = today - timedelta(days=1)
-    last_week = today - timedelta(weeks=1)
-    last_month = today - timedelta(weeks=4)
 
     today_documents = FileUpload.objects.filter(
         user_id=user_id,
@@ -659,50 +657,26 @@ def mydocuments(request):
     ).exclude(id__in=today_documents.values_list('id', flat=True)
     ).order_by('-created_at')
 
-    last_week_documents = FileUpload.objects.filter(
-        user_id=user_id,
-        summarized_text__isnull=False,
-        is_deleted=False,
-        created_at__date__range=[last_week, yesterday]
-    ).exclude(id__in=today_documents.values_list('id', flat=True)
-    ).exclude(id__in=yesterday_documents.values_list('id', flat=True)
-    ).order_by('-created_at')
-
-    last_month_documents = FileUpload.objects.filter(
-        user_id=user_id,
-        summarized_text__isnull=False,
-        is_deleted=False,
-        created_at__date__range=[last_month, yesterday]
-    ).exclude(id__in=today_documents.values_list('id', flat=True)
-    ).exclude(id__in=yesterday_documents.values_list('id', flat=True)
-    ).exclude(id__in=last_week_documents.values_list('id', flat=True)
-    ).order_by('-created_at')
-
     previous_documents = FileUpload.objects.filter(
         user_id=user_id,
         summarized_text__isnull=False,
         is_deleted=False,
     ).exclude(
         Q(created_at__date=today) |
-        Q(created_at__date=yesterday) |
-        Q(created_at__date__range=[last_week, today]) |
-        Q(created_at__date__range=[last_month, today])
+        Q(created_at__date=yesterday)
     ).order_by('-created_at')
 
     context = {
         'today_documents': today_documents,
         'yesterday_documents': yesterday_documents,
-        'last_week_documents': last_week_documents,
-        'last_month_documents': last_month_documents,
         'previous_documents': previous_documents,
         'today_documents_available': bool(today_documents),
         'yesterday_documents_available': bool(yesterday_documents),
-        'last_week_documents_available': bool(last_week_documents),
-        'last_month_documents_available': bool(last_month_documents),
         'previous_documents_available': bool(previous_documents),
     }
 
     return render(request, 'mydocuments.html', context)
+
 
 from django.shortcuts import get_object_or_404
 def delete_document(request, doc_id):
