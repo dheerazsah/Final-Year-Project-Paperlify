@@ -298,6 +298,10 @@ import os
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
 HEADERS = {"Authorization": "Bearer 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"}
 def dashboard(request):
+    user_id = request.user.id
+    # Filter documents based on the user_id and summarized_text__isnull=False
+    context = {'documents': FileUpload.objects.filter(user_id=user_id, summarized_text__isnull=False, is_deleted=False).order_by('-created_at')[:3]}
+    #context = {'documents': FileUpload.objects.filter(user_id=user_id, summarized_text__isnull=False).order_by('-created_at')}
     content = ''
     summary = None
     active_button = request.session.get('active_button', 'hugface') 
@@ -318,7 +322,7 @@ def dashboard(request):
             # Store active_button in session
             request.session['active_button'] = active_button  
 
-    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button})
+    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button, 'context':context})
 
 
 

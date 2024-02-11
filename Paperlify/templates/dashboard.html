@@ -1,4 +1,5 @@
 {% extends "./base.html"%}
+{% load humanize %}
 {% block title %}Dashboard{% endblock %}
 
 {% block template %}
@@ -144,6 +145,22 @@
   .toggle-btn.active {
     background-color: var(--primary-blue);
 }
+
+.placeholder-image {
+  max-width: 200px; 
+  display: block;
+  margin: 0 auto;
+}
+
+.no-summary {
+  text-align: center;
+}
+
+.no-summary p {
+  margin-bottom: 10px; 
+  color: var(--primary-blue);
+}
+
 </style>
 
 
@@ -201,11 +218,26 @@
       {% if active_button == 'hugface' %}
       {% if summary %}
           {{ summary.0.generated_text }}
+      {% else %}
+      <div class="no-summary">
+        <img src=".\static\images\NoDocuments.png" alt="No Summary" class="placeholder-image">
+        <p>No summary available</p>
+      </div>
       {% endif %}
       {% elif active_button == 'nltk' %}
           {% if summary %}
               {{ summary }}
+          {% else %}
+            <div class="no-summary">
+              <img src=".\static\images\NoDocuments.png" alt="No Summary" class="placeholder-image">
+              <p>No summary available</p>
+            </div>
           {% endif %}
+        {% else %}
+        <div class="no-summary">
+          <img src=".\static\images\NoDocuments.png" alt="No Summary" class="placeholder-image">
+          <p>No summary available</p>
+        </div>
       {% endif %}
     </div>
   </div>
@@ -381,23 +413,32 @@ updateLibraryTitle();
       </section>
   </div>
 
-<div class="document-container">
+  <div class="document-container">
     <!-- Document 1 -->
-    {% for document in documents %}
+    {% for document in context.documents %}
     <div class="document">
         <div class="document-info">
-            <h2>{{ document.doc_name }}</h2>
-            <p>Upload Time: {{ document.created_at }}</p>
-            <p>{{ document.summarized_text|truncatewords:20 }}</p>
-            <div class="browse-button">
-                <a href="{% url 'document_detail' document.slug %}">View More</a>
-            </div>
+          {% if document.doc_name|length > 26 %}
+          <h2>{{ document.doc_name|slice:":26"|add:"..." }}</h2>
+          {% else %}
+          <h2>{{ document.doc_name }}</h2>
+          {% endif %}
+            <p>Upload Time: {{ document.created_at|naturaltime }}</p>
+            {% if document.summarized_text %}
+            <p>{{ document.summarized_text|truncatewords:14 }}</p>
+            <div class="action-buttons">
+              <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
+          </div>
+            {% else %}
+            <p>No summary available.</p>
+            {% endif %}
         </div>
     </div>
     {% empty %}
     <p>No documents available.</p>
     {% endfor %}
 </div>
+
 
 <div class="browse-button">
   <a href="{% url 'mydocuments' %}">Browse All Documents</a>
