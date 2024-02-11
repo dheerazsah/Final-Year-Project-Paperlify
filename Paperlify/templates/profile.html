@@ -7,13 +7,13 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Account</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Deactivate Account</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">Are you sure you want to delete this account?</div>
+        <div class="modal-body">Are you sure you want to deactivate this account?</div>
         <div class="modal-footer">
           <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
-          <a href="{% url 'confirmpassword' %}" type="button" class="btn btn-primary">Delete</a>
+          <a href="{% url 'confirmpassword' %}" type="button" class="btn btn-primary">Deactivate</a>
           {% comment %} <form method="POST" action="{% url 'profile' %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary" name="delete_account">Delete</button>
@@ -84,7 +84,7 @@
 
             <button type="submit" class="change-password-button" name="change_password">Change Password</button>
         </form>
-        <button type="submit" class="delete-account-button" name="delete_account" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete Account</button>
+        <button type="submit" class="delete-account-button" name="delete_account" data-bs-toggle="modal" data-bs-target="#deleteModal">Deactivate Account</button>
     </div>
 </section>
 
