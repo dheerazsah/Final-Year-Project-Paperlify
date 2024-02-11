@@ -48,7 +48,7 @@ urlpatterns = [
     path('activate_account/<uidb64>/<token>', views.activate_account, name='activate_account'),
     #path('<str:slug>', views.document, name='document'), 
     #path('document', views.document, name='document'),
-    path('delete_document/', views.delete_document, name='delete_document'),
+    path('delete_document/<doc_id>/', views.delete_document, name='delete_document'),
     path('terms&conditions', views.terms_conditions, name='terms_conditions')
 ]
 
