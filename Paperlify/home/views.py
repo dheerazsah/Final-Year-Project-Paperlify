@@ -33,9 +33,6 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth.hashers import make_password
 from django.template.loader import render_to_string
 
-
-
-
 # Create your views here.
 #@login_required(login_url='login')
 
@@ -52,11 +49,13 @@ def signupPage(request):
 
         #Check if any required field is empty and display an error message 
         if not username or not fname or not password or not password:
-            return render(request, 'signup.html', {'error': 'Enter your username, first name, email, and password.'})
+            messages.error(request, 'Enter your username, first name, email, and password.')
+            return render(request, 'signup.html')
 
         #Password Complexity Requirements to check if the passowrd is complex
         if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
-            return render(request, 'signup.html', {'error': 'Password must contain at least one uppercase letter, one symbol, and one number.'})
+            messages.error(request, 'Password must contain at least one uppercase letter, one symbol, and one number.')
+            return render(request, 'signup.html')
         
         #Check if the entered password and confirm password matches 
         if password != confirm_password:
@@ -64,30 +63,35 @@ def signupPage(request):
 
         #Check if the name contains only alphanumeric characters and spaces
         if not all(char.isalpha() or char.isspace() for char in fname):
-            return render(request, 'signup.html', {'error': 'Name must contain alphabetic characters with spaces.'})
+            messages.error(request, 'Name must contain alphabetic characters with spaces.')
+            return render(request, 'signup.html')
         
         #Check if the username already exists
         if User.objects.filter(username=username):
-            return render(request, 'signup.html', {'error': 'Username already exists. Please try a new username.'})
+            messages.error(request, 'Username already exists. Please try a new username.')
+            return render(request, 'signup.html')
 
         #Check if the email address already exists 
         if User.objects.filter(email=email):
-            return render(request, 'signup.html', {'error': 'Email already exists. Please try a new email.'})
+            messages.error(request, 'Email already exists. Please try a new email.')
+            return render(request, 'signup.html')
 
         # Email Validation
         #Check if the email format is valid using a regular expression
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            return render(request, 'signup.html', {'error': 'Invalid email format. Please provide a valid email.'})
+            messages.error(request, 'Invalid email format. Please provide a valid email.')
+            return render(request, 'signup.html')
 
         else:
             # If there are no error messages, create the user account
-            myuser = User.objects.create_user(username, email, password)
-            myuser.first_name = fname
-            myuser.save()
+            user = User.objects.create_user(username, email, password)
+            user.first_name = fname
+            user.save()
+
 
             # Log the user's signup activity
             UserActivityLog.objects.create(
-                user=myuser,  
+                user=user,  
                 activity='signup',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
@@ -98,8 +102,8 @@ def signupPage(request):
             # from_email = 'paperlify@gmail.com'
             # recipient_list = [db_email]
             # send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-            
-            return render(request, 'login.html', {'success': 'Your account has been created successfully.'})
+            messages.success(request, 'Your account has been created successfully.')
+            return render(request, 'login.html')
 
     #Render the signup.html template if the request method is not POST
     return render(request, 'signup.html')
@@ -111,7 +115,8 @@ def loginPage(request):
         password = request.POST.get('password')
         
         if not username or not password:
-            return render(request, 'login.html', {'error': 'Enter your username and password.'})
+            messages.error(request, 'Enter your username and password.')
+            return render(request, 'login.html')
         else:
             user = authenticate(request, username = username, password = password)
             if user is not None:
@@ -126,7 +131,8 @@ def loginPage(request):
 
                 return redirect('dashboard')
             else:
-                return render(request, 'login.html', {'error': 'Invalid username or password.'})
+                messages.error(request, 'Invalid username or password.')
+                return render(request, 'login.html')
     return render(request, 'login.html')
 
 def error_404(request, expection):
@@ -748,137 +754,26 @@ def search(request):
         for document in documents:
             payload.append(document)
     return JsonResponse({'status': 200, 'data': payload})
-'''
-def dashboard2nd(request):
-    content = ''
-    summary = None
-    file_info = None
 
-    if request.method == 'POST':
-        user = request.user
-        fileName = ''
-        fileSize = 0
-        contentType = ''
 
-        if 'file' in request.FILES:
-            uploadfile = request.FILES['file']
-            fileName = uploadfile.name
-            fileSize = uploadfile.size
-            contentType = uploadfile.content_type
+#################################################################
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import six
+class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return(
+            six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.is_active)
+        )
+account_activation_token = AccountActivationTokenGenerator()
 
-            # Save upload information to the database
-            file_info = FileUpload(
-                user=request.user,
-                doc_name=uploadfile.name,
-                doc_size=uploadfile.size,
-                doc_type=uploadfile.content_type
-            )
-            file_info.save()
-
-            request.session['file_info'] = {
-                'id': file_info.id,
-                'doc_name': file_info.doc_name,
-                'doc_size': file_info.doc_size,
-                'doc_type': file_info.doc_type,
-            }
-
-            # Log the user's activity
-            UserActivityLog.objects.create(
-                user=request.user,
-                activity='upload document',
-                ip_address=request.META.get('REMOTE_ADDR')
-            )
-
-            # Extract and display content for supported file types
-            if uploadfile.name.endswith('.txt'):
-                with uploadfile.open() as file:
-                    content = file.read().decode('utf-8')
-                    file_info.extracted_text = content
-                    file_info.save()
-
-            elif uploadfile.name.endswith(('.doc', '.docx')):
-                content = docx2txt.process(uploadfile)
-                file_info.extracted_text = content
-                file_info.save()
-
-            elif uploadfile.name.endswith('.pdf'):
-                content = ''
-                pdf_reader = PdfReader(uploadfile)
-                for page_num in range(len(pdf_reader.pages)):
-                    page = pdf_reader.pages[page_num]
-                    content += page.extract_text()
-                file_info.extracted_text = content
-                file_info.save()
-
-        if 'summarize' in request.POST:
-            input_text = request.POST.get('input_text', '')
-
-            #Text Preprocessing 
-            #Removes the special characters from the sentences
-            stringText = input_text  # Use input_text instead of request.GET['newText']
-            formattedStringText = re.sub('[^a-zA-Z]', ' ', stringText)
-            formattedStringText = re.sub('\s+', ' ', formattedStringText)
-
-            #Sentence Tokenization
-            #The input text is tokenized into sentences using NLTK's sent_tokenize function
-            sentences = nltk.sent_tokenize(stringText)
-
-            #Frequency Analysis
-            #Performs frequency analysis on the words in the input text. 
-            frequencyDictionary = {}
-            stopwords = nltk.corpus.stopwords.words('english')
-
-            for word in nltk.word_tokenize(formattedStringText):
-                if word not in stopwords and word not in frequencyDictionary:
-                    frequencyDictionary.update({word: 1})
-                elif word not in stopwords and word in frequencyDictionary:
-                    frequencyDictionary[word] += 1
-
-            maxFrequencyValue = max(frequencyDictionary.values())
-            for word in frequencyDictionary:
-                frequencyDictionary[word] = frequencyDictionary[word] / maxFrequencyValue
-                
-            #The sentences are scored based on the normalized frequencies of the words they contain.
-            scores = {}
-            for sentence in sentences:
-                for word in nltk.word_tokenize(sentence.lower()):
-                    if word in frequencyDictionary.keys() and sentence not in scores:
-                        scores.update({sentence: frequencyDictionary[word]})
-                    elif word not in frequencyDictionary.keys():
-                        continue
-                    else:
-                        scores[sentence] += frequencyDictionary[word]
-
-            #Summary generation
-            #Sentences are sorted based on their scores, and a summary is generated by selecting the top 10% of sentences.
-            sortedSentences = sorted(scores, key=scores.get, reverse=True)
-
-            summary = ''
-            for i in range(0, len(sortedSentences) // 10 + 1):
-                summary += sortedSentences[i]
-
-            if summary and len(summary) > 0:
-                # Retrieve the existing record using the stored file_info ID
-                file_info_id = request.session.get('file_info', {}).get('id')
-                if file_info_id:
-                    file_info = FileUpload.objects.get(id=file_info_id)
-
-                    # Update the existing record with summarized text
-                    file_info.extracted_text = input_text
-                    file_info.summarized_text = summary
-                    file_info.save()
-
-            # Log the user's activity
-            UserActivityLog.objects.create(
-                user=request.user,
-                activity='summarize',
-                ip_address=request.META.get('REMOTE_ADDR')
-            )
-    return render(request, 'dashboard2nd.html', {'content': content, 'summary': summary})
-'''
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+from django.contrib.auth import get_user_model
 
 from django.contrib.auth import update_session_auth_hash
-
 @login_required
 def profile(request):
     user = request.user
@@ -949,27 +844,14 @@ def profile(request):
 
         if 'delete_account' in request.POST:
             # Generate a unique token for reactivation link
-            reactivation_token = User.objects.make_random_password()
+            #reactivation_token = User.objects.make_random_password()
+            # Save the token in session
+            #request.session['reactivation_token'] = reactivation_token
 
             # Save the token and set the account as inactive
-            user.reactivation_token = reactivation_token
+            #user.reactivation_token = reactivation_token
             user.is_active = False # Deactivate the user account
             user.save()
-
-            # Prepare context data for the email template
-            context = {
-                'reactivation_link': request.build_absolute_uri(f"reactivate_account/?token={reactivation_token}")
-            }
-
-            # Render the email template
-            email = render_to_string('email.html', context)
-
-            subject = 'Account Deleted Confirmation'
-            message = f'Your account has been deleted. To reactivate it, click on the link below:\n\n'\
-                      f'{request.build_absolute_uri("reactivate_account/")}token={reactivation_token}'
-            from_email = 'paperlify@gmail.com'
-            recipient_list = [user.email]
-            send_mail(subject, message, from_email, recipient_list, fail_silently = False)
 
             # Log the user's activity for account deletion
             UserActivityLog.objects.create(
@@ -977,6 +859,40 @@ def profile(request):
                 activity='delete_account',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
+
+            # Prepare context data for the email template
+            # context = {
+            #     'reactivation_link': request.build_absolute_uri(f"reactivate_account/?token={urlsafe_base64_encode(force_bytes(reactivation_token))}")
+            # }
+
+            # Render the email template
+            #email = render_to_string('email.html', context)
+
+            subject = 'Account Deleted Confirmation'
+            message = render_to_string("email.html", {
+                'user': user.username,
+                'domain': get_current_site(request).domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+                'protocol': 'https' if request.is_secure() else 'http'
+
+            })
+            from_email = 'paperlify@gmail.com'
+            recipient_list = [user.email]
+            #email = EmailMessage(subject, message, to=[to_email])
+            email = EmailMessage(subject, message, from_email, recipient_list)
+
+            #send_mail(subject, message, from_email, recipient_list, fail_silently = False)
+            if email.send():
+                messages.success(request, f'Dear <br>{user}<br>, please go to your email and click on received activation link to confirm registration.')
+
+            # message = f'Your account has been deleted. To reactivate it, click on the link below:\n\n'\
+            #           f'{request.build_absolute_uri("reactivate_account/")}token={reactivation_token}'
+            
+            else:
+                messages.error(request, f'Problem sending email')
+
+        
             #messages.success(request, 'Account deleted successfully')
             return redirect('login')
 
@@ -986,38 +902,41 @@ def profile(request):
     }
     return render(request, 'profile.html', context)
 
+
 def confirmpassword(request):
 
     return render(request, 'confirmpassword.html')
 
 #from .models import ReactivationToken
 from .models import User
-def reactivate_account(request, token):
-    try:
-        # Find the user with the provided reactivation token
-        reactivation_token = User.objects.get(reactivation_token=token)
-        user = reactivation_token.user
-    except User.DoesNotExist:
-        # Token is invalid or the account is already active
-        messages.error(request, 'Invalid reactivation link')
-        return redirect('signup')  # Redirect to login or any other page
+def reactivate_account(request, uidb64, token):
+    User = get_user_model()
+    try: 
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except:
+        user = None
 
-    # If the token is valid, set the account as active and clear the reactivation token
-    user.is_active = True
-    user.reactivation_token = ''
-    user.save()
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+
+        messages.success(request, 'Thank you for your email confirmation. Now you can login to your account.')
+        return redirect('login')
+    else: 
+        messages.error(request, 'Activation link is invalid.')
 
 
+    # user = request.user
+    # # Log the user's activity for account reactivation
+    # UserActivityLog.objects.create(
+    #     user=user,
+    #     activity='reactivate_account',
+    #     ip_address=request.META.get('REMOTE_ADDR')
+    # )
 
-    # Log the user's activity for account reactivation
-    UserActivityLog.objects.create(
-        user=user,
-        activity='reactivate_account',
-        ip_address=request.META.get('REMOTE_ADDR')
-    )
-
-    messages.success(request, 'Account reactivated successfully. You can now login.')
-    return redirect('login')  # Redirect to login or any other page
+    #messages.success(request, 'Account reactivated successfully. You can now login.')
+    return redirect('login')  # Redirect to login
 
 
 

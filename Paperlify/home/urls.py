@@ -22,8 +22,6 @@ from django.urls import path
 #Importing views from home app
 from home import views
 
-from home.views import profile, reactivate_account
-
 #URL patterns for the application
 urlpatterns = [
     path('', views.signupPage, name='signup'), #Mapping the root URL to the signupPage view
@@ -47,9 +45,11 @@ urlpatterns = [
     path('mydocuments', views.mydocuments, name='mydocuments'), #Mapping '/mydocuments' to the mydocuments view
     path('mydocuments/<slug>', views.document_detail, name='document_detail'), #Mapping '/mydocuments/<slug>' to the document_detail view
     path('search', views.search, name='search'), #Mapping '/search' to the search view
-    path('reactivate_account/<uidb64>/<token>/', views.reactivate_account, name='reactivate_account'),
+    path('reactivate_account/<uidb64>/<token>', views.reactivate_account, name='reactivate_account'),
     #path('<str:slug>', views.document, name='document'), 
     #path('document', views.document, name='document'),
+    path('delete_document/', views.delete_document, name='delete_document'),
+    path('terms&conditions', views.terms_conditions, name='terms_conditions')
 ]
 
 handler404 = 'home.views.error_404'
