@@ -33,6 +33,25 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth.hashers import make_password
 from django.template.loader import render_to_string
 
+
+#################################################################
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import six
+class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return(
+            six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.is_active)
+        )
+account_activation_token = AccountActivationTokenGenerator()
+
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+from django.contrib.auth import get_user_model
+from django.contrib.auth import update_session_auth_hash
+
 # Create your views here.
 #@login_required(login_url='login')
 
@@ -86,6 +105,8 @@ def signupPage(request):
             # If there are no error messages, create the user account
             user = User.objects.create_user(username, email, password)
             user.first_name = fname
+            # Set is_active to False initially
+            user.is_active = False 
             user.save()
 
 
@@ -96,13 +117,36 @@ def signupPage(request):
                 ip_address=request.META.get('REMOTE_ADDR')
             )
 
+            subject = 'Activate Your Account'
+            message = render_to_string("email.html", {
+                'user': user.username,
+                'domain': get_current_site(request).domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+                'protocol': 'https' if request.is_secure() else 'http'
+
+            })
+            from_email = 'paperlify@gmail.com'
+            recipient_list = [user.email]
+            #email = EmailMessage(subject, message, to=[to_email])
+            email = EmailMessage(subject, message, from_email, recipient_list)
+
+            if email.send():
+                messages.success(request, 'Your account has been created successfully. Please verify your email.')
+
+            # message = f'Your account has been deleted. To reactivate it, click on the link below:\n\n'\
+            #           f'{request.build_absolute_uri("reactivate_account/")}token={reactivation_token}'
+            
+            else:
+                messages.error(request, f'Problem sending email')
+
             # Send a welcome email to the user
             # subject = 'Welcome to Paperlify'
             # message = f'Thank you for signing up, {fname}!\n\nYour account has been created successfully.'
             # from_email = 'paperlify@gmail.com'
             # recipient_list = [db_email]
             # send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-            messages.success(request, 'Your account has been created successfully.')
+        
             return render(request, 'login.html')
 
     #Render the signup.html template if the request method is not POST
@@ -118,21 +162,34 @@ def loginPage(request):
             messages.error(request, 'Enter your username and password.')
             return render(request, 'login.html')
         else:
-            user = authenticate(request, username = username, password = password)
-            if user is not None:
-                login(request, user)
+            try:
+                user = User.objects.get(username=username)
+                if user.is_active:
+                    user = authenticate(request, username=username, password=password)
+                    if user is not None:
+                        login(request, user)
 
-                # Log the user's activity
-                UserActivityLog.objects.create(
-                    user=user, 
-                    activity='login',
-                    ip_address=request.META.get('REMOTE_ADDR')
-                )
+                        # Log the user's activity
+                        UserActivityLog.objects.create(
+                            user=user, 
+                            activity='login',
+                            ip_address=request.META.get('REMOTE_ADDR')
+                        )
 
-                return redirect('dashboard')
-            else:
+                        return redirect('dashboard')
+                    
+                    else:
+                        messages.error(request, 'Invalid username or password.')
+                        return render(request, 'login.html')
+                
+                else:
+                    messages.error(request, 'Your account is deactivated or requires email verification.')
+                    return render(request, 'login.html')
+            
+            except User.DoesNotExist:
                 messages.error(request, 'Invalid username or password.')
                 return render(request, 'login.html')
+            
     return render(request, 'login.html')
 
 def error_404(request, expection):
@@ -756,24 +813,6 @@ def search(request):
     return JsonResponse({'status': 200, 'data': payload})
 
 
-#################################################################
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-import six
-class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
-    def _make_hash_value(self, user, timestamp):
-        return(
-            six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.is_active)
-        )
-account_activation_token = AccountActivationTokenGenerator()
-
-from django.template.loader import render_to_string
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.core.mail import EmailMessage
-from django.contrib.auth import get_user_model
-
-from django.contrib.auth import update_session_auth_hash
 @login_required
 def profile(request):
     user = request.user
@@ -856,17 +895,9 @@ def profile(request):
             # Log the user's activity for account deletion
             UserActivityLog.objects.create(
                 user=user,
-                activity='delete_account',
+                activity='deactivate_account',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
-
-            # Prepare context data for the email template
-            # context = {
-            #     'reactivation_link': request.build_absolute_uri(f"reactivate_account/?token={urlsafe_base64_encode(force_bytes(reactivation_token))}")
-            # }
-
-            # Render the email template
-            #email = render_to_string('email.html', context)
 
             subject = 'Account Deleted Confirmation'
             message = render_to_string("email.html", {
@@ -884,7 +915,7 @@ def profile(request):
 
             #send_mail(subject, message, from_email, recipient_list, fail_silently = False)
             if email.send():
-                messages.success(request, f'Dear <br>{user}<br>, please go to your email and click on received activation link to confirm registration.')
+                messages.info(request, f'Account deactivated successfully. If you want to reactivate check email.')
 
             # message = f'Your account has been deleted. To reactivate it, click on the link below:\n\n'\
             #           f'{request.build_absolute_uri("reactivate_account/")}token={reactivation_token}'
@@ -907,9 +938,9 @@ def confirmpassword(request):
 
     return render(request, 'confirmpassword.html')
 
-#from .models import ReactivationToken
+
 from .models import User
-def reactivate_account(request, uidb64, token):
+def activate_account(request, uidb64, token):
     User = get_user_model()
     try: 
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -921,19 +952,17 @@ def reactivate_account(request, uidb64, token):
         user.is_active = True
         user.save()
 
-        messages.success(request, 'Thank you for your email confirmation. Now you can login to your account.')
+        # Log the user's activity for account reactivation
+        UserActivityLog.objects.create(
+            user=user,
+            activity='activate_account',
+            ip_address=request.META.get('REMOTE_ADDR')
+        )
+
+        messages.success(request, 'Account activated successfully. Now you can login to your account.')
         return redirect('login')
     else: 
         messages.error(request, 'Activation link is invalid.')
-
-
-    # user = request.user
-    # # Log the user's activity for account reactivation
-    # UserActivityLog.objects.create(
-    #     user=user,
-    #     activity='reactivate_account',
-    #     ip_address=request.META.get('REMOTE_ADDR')
-    # )
 
     #messages.success(request, 'Account reactivated successfully. You can now login.')
     return redirect('login')  # Redirect to login
