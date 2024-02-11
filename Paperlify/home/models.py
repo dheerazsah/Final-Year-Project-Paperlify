@@ -20,6 +20,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True) #EmailField for storing the user's email, set as unique
     otp = models.CharField(max_length=6, null=True, blank=True) #CharField with a maximum length of 6, storing a one-time password (OTP), can be null or blank
     otp_created_at = models.DateTimeField(null=True, blank=True) #DateTimeField, capturing the timestamp when the OTP is created, can be null or blank
+    #reactivation_token = models.CharField(max_length=50, null=True, blank=True)
 
     #Many-to-many relationship with groups is implemented
     groups = models.ManyToManyField(
@@ -67,8 +68,8 @@ class FileUpload(models.Model):
     is_deleted = models.BooleanField(default=False)  # Soft delete flag
     slug = models.SlugField(max_length=1000, null=True, blank=True) #SlugField with a maximum length of 1000 characters, used for generating a unique URL
     #created_at = models.DateTimeField(auto_now_add=True)
-    created_at = models.DateTimeField(default=timezone.now) #DateTimeField storing the timestamp when the document was created, with a default value of the current time
-    updated_at = models.DateTimeField(auto_now=True) #DateTimeField set to auto_now, updating the timestamp whenever the document is modified.
+    created_at = models.DateTimeField(auto_now_add=True) #DateTimeField storing the timestamp when the document was created, with a default value of the current time
+    #updated_on = models.DateTimeField(auto_now=True) #DateTimeField set to auto_now, updating the timestamp whenever the document is modified.
 
     #Specifying the desired table name for the file uploads 
     class Meta:
