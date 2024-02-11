@@ -58,16 +58,29 @@
                     <div class="message {{ message.tags }}">{{ message }}</div>
                 {% endfor %}
             </div> {% endcomment %}
-            {% if error %}
+
+            {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
                 <div class="alert alert-danger m-2 alert-dismissible fade show " role="alert" id="msg">
-                    {{ error }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <strong>Oopsie! </strong>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                {% elif success %}
+                <!-- <div class="error-message">{{ message }}</div> -->
+                {% elif message.tags == 'success' %}
                 <div class="alert alert-success m-2 alert-dismissible fade show " role="alert" id="msg">
-                    <strong>Yay! </strong>{{ success }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <strong>Yay! </strong>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+
+                {% elif message.tags == 'info' %}
+                <div class="alert alert-info m-2 alert-dismissible fade show " role="alert" id="msg">
+                <strong>Info: </strong>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <!-- <div class="success-message">{{ message }}</div> -->
+                {% endif %}
+            {% endfor %}
             {% endif %}
 
             
@@ -92,9 +105,7 @@
                     <p><a href="{% url 'forgotpassword' %}" class="hyper-link"><strong>Forgot Password?</strong></a></p>
                 </div>
                 <button class="login-btn" type="submit">Login</button>
-                <div class="login-container">
-                        <p>Don’t have an account yet? <a href="{% url 'signup' %}" class="hyper-link"><strong>Create New Account</strong></a></p>
-                    </div>  
+                <p>Don’t have an account yet? <a href="{% url 'signup' %}" class="hyper-link"><strong>Create New Account</strong></a></p>
             </form>
         </div>
     </div>

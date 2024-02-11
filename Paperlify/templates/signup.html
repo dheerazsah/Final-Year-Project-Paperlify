@@ -57,7 +57,7 @@
             <form action="" method="POST" class="signup-form">
             {% csrf_token %}
 
-            {% if error %}
+            {% comment %} {% if error %}
                 <div class="alert alert-danger m-2 alert-dismissible fade show " role="alert" id="msg">
                     {{ error }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -67,6 +67,30 @@
                     <strong>Yay! </strong>{{ success }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+            {% endif %} {% endcomment %}
+
+            {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                <div class="alert alert-danger m-2 alert-dismissible fade show " role="alert" id="msg">
+                <strong>Oopsie! </strong>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <!-- <div class="error-message">{{ message }}</div> -->
+                {% elif message.tags == 'success' %}
+                <div class="alert alert-success m-2 alert-dismissible fade show " role="alert" id="msg">
+                <strong>Yay! </strong>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                {% elif message.tags == 'info' %}
+                <div class="alert alert-info m-2 alert-dismissible fade show " role="alert" id="msg">
+                <strong>Info: </strong>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <!-- <div class="success-message">{{ message }}</div> -->
+                {% endif %}
+            {% endfor %}
             {% endif %}
                 
                 <section class="content">
@@ -106,12 +130,10 @@
                         <span class="checkmark"></span> Show Password
                     </label>
                 </div>
+                <p>By signing up, you agree to our <a href="{% url 'terms_conditions' %}" class="hyper-link"><strong>Terms and Conditions</strong></a></p>
 
                 <button class="login-btn" type="submit">Sign Up</button>
-                <div class="login-container">
-                       <p>Already have an account? <a href="{% url 'login' %}" class="hyper-link"><strong>Login</strong></a></p> 
-                    </div>
-                    
+                <p>Already have an account? <a href="{% url 'login' %}" class="hyper-link"><strong>Login</strong></a></p>
             </form>
         </div>
     </div>
