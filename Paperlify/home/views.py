@@ -336,6 +336,9 @@ import pythoncom
 from win32com import client
 from django.conf import settings
 def upload_file(request):
+    user_id = request.user.id
+    # Filter documents based on the user_id and summarized_text__isnull=False
+    context = {'documents': FileUpload.objects.filter(user_id=user_id, summarized_text__isnull=False, is_deleted=False).order_by('-created_at')[:3]}
     content = ''
     summary = None
     file_info = None
@@ -496,11 +499,14 @@ def upload_file(request):
             messages.error(request, error_message)
             print(f"Unexpected error: {str(e)}")
     
-    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button})
+    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button, 'context': context})
     #return JsonResponse({'content': content, 'summary': summary})
 
 
 def summarize_text(request):
+    user_id = request.user.id
+    # Filter documents based on the user_id and summarized_text__isnull=False
+    context = {'documents': FileUpload.objects.filter(user_id=user_id, summarized_text__isnull=False, is_deleted=False).order_by('-created_at')[:3]}
     content = ''
     summary = None
     file_info = None
@@ -510,6 +516,7 @@ def summarize_text(request):
     if request.method == 'POST':
         try:
             input_text = request.POST.get('input_text', '')
+            
 
             if active_button == 'hugface':
 
@@ -691,7 +698,7 @@ def summarize_text(request):
         # context = {'documents': documents}
 
     #return JsonResponse({'content': content, 'summary': summary})
-    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button})
+    return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button, 'context': context})
 
 # def mydocuments(request):
 #     user_id = request.user.id

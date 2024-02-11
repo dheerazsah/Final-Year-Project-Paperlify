@@ -636,7 +636,6 @@
     padding: 20px; 
     margin: 10px;
     /* padding-top: 10px; */
-    font-size: 1.1em;
     color: #555;
   }
   
@@ -938,7 +937,7 @@
   }
   
   footer a:hover {
-    color: var(--color-gray-200);
+    color: var(--hover-blue);
   }
   
   footer .container {
