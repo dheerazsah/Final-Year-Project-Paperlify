@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(150) NOT NULL,
   `first_name` varchar(150) NOT NULL,
+  `last_name` varchar(150) NOT NULL,
   `email` varchar(254) NOT NULL,
   `password` varchar(128) NOT NULL,
   `last_login` datetime(6) DEFAULT NULL,
@@ -113,21 +114,21 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table paperlify.auth_user: ~14 rows (approximately)
-INSERT INTO `auth_user` (`id`, `username`, `first_name`, `email`, `password`, `last_login`, `date_joined`, `is_staff`, `is_active`, `is_superuser`, `otp`, `otp_created_at`, `otp_verified`) VALUES
-	(1, 'dhiraj', 'Dhiraj K Sah', 'dheerazsah31@gmail.com', 'pbkdf2_sha256$720000$vme1Xb88AIXv8jsHWzWDo6$BQeAev9f1ENmwub4G7VKRE36hSOexL0FnlIo0z7YuOw=', '2024-02-15 15:37:19.882112', '2023-12-06 18:25:42.694369', 1, 1, 1, '583851', '2024-02-16 12:32:20.851978', '1'),
-	(2, 'niraj', 'Niraj Kumar Sah', 'niraj@gmail.com', 'pbkdf2_sha256$720000$Ok1UCAPpSLCqyrEbx96b4E$hL9JGX9HzWnGQxmdhBtw2AC9gmkfckWek/0O036lhAg=', '2024-02-16 12:36:49.324194', '2023-12-06 18:27:23.024827', 0, 1, 1, NULL, NULL, NULL),
-	(3, 'test', 'Test ', 'test@gmail.com', 'pbkdf2_sha256$720000$ZKiU9GwHYX5GFKHTxLJ0mp$JvAjBJLj3apGfY5/pVv1v2jw98n8U6Wrsbyi1peYo/0=', '2024-02-10 11:18:27.224690', '2023-12-06 18:27:51.431433', 0, 1, 0, '305281', '2024-02-16 12:28:43.801153', NULL),
-	(4, 'madan', 'Madan K Khanal ', 'madan@gmail.com', 'pbkdf2_sha256$600000$SZ22XvxKCBDmqwnUQFQOYP$Z3ySBuS0OfiPXywThf/GcAm9dRqQ/veOgoZkBdu5Mxs=', '2023-12-08 10:10:26.332854', '2023-12-06 18:28:36.800011', 0, 1, 0, NULL, NULL, NULL),
-	(5, 'manoj', 'Manoj Karki', 'manoj@gmail.com', 'pbkdf2_sha256$600000$L6I6XVb5jrPJSxlWMzuWr7$8xESqncucGp6oqVbi3aor12z+/z3IRW8YrwlmACoHdo=', NULL, '2023-12-06 18:29:02.118192', 0, 1, 0, NULL, NULL, NULL),
-	(6, 'nimisha', 'Nimisha Pradhan', 'nimisha@gmail.com', 'pbkdf2_sha256$720000$evnbVN0Rg3BlgyuDE4H8VX$yXZDw0LRFnpkUQed/YKIvJe7NEr69YFoqX7Hvmyaq6Y=', '2024-02-11 19:23:01.062576', '2023-12-06 18:31:24.813487', 0, 1, 0, NULL, NULL, NULL),
-	(7, 'lujana', 'Lujana Bajracharya', 'lujana@gmail.com', 'pbkdf2_sha256$600000$2WyoHVdRV06ztOvWTLXBAL$mKsJNSpjZexA34dXq/57BJlDkZJznJp4O7XDuvqhbYE=', '2023-12-06 18:23:36.086264', '2023-12-06 18:10:28.541164', 0, 1, 0, '163191', '2023-12-06 18:16:22.851063', NULL),
-	(8, 'rishan', 'Rishan Das', 'rishan@gmail.com', 'pbkdf2_sha256$600000$ZFn1YDNsuHRGbChCQi1SB8$ZqNSl8Rx2mUl4lKhithyJcHt3DtYkC8s9zLrJlonuaw=', NULL, '2023-12-08 08:12:43.844013', 0, 1, 0, NULL, NULL, NULL),
-	(9, 'luja', 'Luja Shrestha', 'luja@gmail.com', 'pbkdf2_sha256$600000$Rlefe3RDEQCiFVGYVBCuHX$9SBA3FsgzQgvUtEnHOAJdi4hHKheX7CYZN7jFmpRuGM=', NULL, '2023-12-08 08:15:23.473755', 0, 1, 0, NULL, NULL, NULL),
-	(10, 'bibek', 'Bibek Karki', 'bibek@gmail.com', 'pbkdf2_sha256$600000$gLKblwuKWewz1GI4IjmLZr$XTYa9S6oSAvh3ltN+8qnLtILMXK90RLjE15BHK7iYXE=', NULL, '2023-12-08 08:23:34.971721', 0, 1, 0, NULL, NULL, NULL),
-	(11, 'heralddhiraj', 'Dhiraj Sah', 'dhirajherald@gmail.com', 'pbkdf2_sha256$720000$54uTEVG5hTwt6StXShT2Lp$fVexkX94rmA65NChq3ahK1KqPDkj+W5IPKw5JGMRRTQ=', '2024-01-08 18:16:37.369320', '2024-01-08 18:04:37.322071', 0, 1, 0, NULL, NULL, NULL),
-	(12, 'admin', 'Admin', 'admin@gmail.com', 'pbkdf2_sha256$720000$UFweeiHjVLLh7sET6bM6lW$siElLK/cPeHkO0AqnGxZAzwc56KlvPMLrDvBAXbo8vA=', '2024-01-31 05:10:08.005425', '2024-01-31 04:55:56.008526', 1, 1, 1, NULL, NULL, NULL),
-	(13, 'testdefense', 'Test Defense', 'testdefense@gmail.com', 'pbkdf2_sha256$720000$9mExUyvj6nMI6gYz9DY5Nn$bKWqmUSqCSpMOXkBzkbVuFiypk/yErEm9vXX3qrkWd0=', '2024-01-31 05:01:15.950030', '2024-01-31 05:00:39.242683', 0, 1, 0, NULL, NULL, NULL),
-	(14, 'herald', 'Herald', 'np03cs4m210013@heraldcollege.edu.np', 'pbkdf2_sha256$720000$OuCuWFDVBjarsSQRVvYPo3$cv8RsJ4Z+Dwed3ts0vJKJ4Lq4lEP1pKl0L/h+Qkkd+I=', '2024-02-11 18:41:04.914658', '2024-02-11 18:40:19.927567', 0, 1, 0, NULL, NULL, NULL);
+INSERT INTO `auth_user` (`id`, `username`, `first_name`, `last_name`, `email`, `password`, `last_login`, `date_joined`, `is_staff`, `is_active`, `is_superuser`, `otp`, `otp_created_at`, `otp_verified`) VALUES
+	(1, 'dhiraj', 'Dhiraj K Sah', '', 'dheerazsah31@gmail.com', 'pbkdf2_sha256$720000$vme1Xb88AIXv8jsHWzWDo6$BQeAev9f1ENmwub4G7VKRE36hSOexL0FnlIo0z7YuOw=', '2024-02-15 15:37:19.882112', '2023-12-06 18:25:42.694369', 1, 1, 1, '583851', '2024-02-16 12:32:20.851978', '1'),
+	(2, 'niraj', 'Niraj Kumar Sah', '', 'niraj@gmail.com', 'pbkdf2_sha256$720000$Ok1UCAPpSLCqyrEbx96b4E$hL9JGX9HzWnGQxmdhBtw2AC9gmkfckWek/0O036lhAg=', '2024-02-17 10:17:09.237502', '2023-12-06 18:27:23.024827', 0, 1, 1, NULL, NULL, NULL),
+	(3, 'test', 'Test ', '', 'test@gmail.com', 'pbkdf2_sha256$720000$ZKiU9GwHYX5GFKHTxLJ0mp$JvAjBJLj3apGfY5/pVv1v2jw98n8U6Wrsbyi1peYo/0=', '2024-02-10 11:18:27.224690', '2023-12-06 18:27:51.431433', 0, 1, 0, '305281', '2024-02-16 12:28:43.801153', NULL),
+	(4, 'madan', 'Madan K Khanal ', '', 'madan@gmail.com', 'pbkdf2_sha256$600000$SZ22XvxKCBDmqwnUQFQOYP$Z3ySBuS0OfiPXywThf/GcAm9dRqQ/veOgoZkBdu5Mxs=', '2023-12-08 10:10:26.332854', '2023-12-06 18:28:36.800011', 0, 1, 0, NULL, NULL, NULL),
+	(5, 'manoj', 'Manoj Karki', '', 'manoj@gmail.com', 'pbkdf2_sha256$600000$L6I6XVb5jrPJSxlWMzuWr7$8xESqncucGp6oqVbi3aor12z+/z3IRW8YrwlmACoHdo=', NULL, '2023-12-06 18:29:02.118192', 0, 1, 0, NULL, NULL, NULL),
+	(6, 'nimisha', 'Nimisha Pradhan', '', 'nimisha@gmail.com', 'pbkdf2_sha256$720000$evnbVN0Rg3BlgyuDE4H8VX$yXZDw0LRFnpkUQed/YKIvJe7NEr69YFoqX7Hvmyaq6Y=', '2024-02-11 19:23:01.062576', '2023-12-06 18:31:24.813487', 0, 1, 0, NULL, NULL, NULL),
+	(7, 'lujana', 'Lujana Bajracharya', '', 'lujana@gmail.com', 'pbkdf2_sha256$600000$2WyoHVdRV06ztOvWTLXBAL$mKsJNSpjZexA34dXq/57BJlDkZJznJp4O7XDuvqhbYE=', '2023-12-06 18:23:36.086264', '2023-12-06 18:10:28.541164', 0, 1, 0, '163191', '2023-12-06 18:16:22.851063', NULL),
+	(8, 'rishan', 'Rishan Das', '', 'rishan@gmail.com', 'pbkdf2_sha256$600000$ZFn1YDNsuHRGbChCQi1SB8$ZqNSl8Rx2mUl4lKhithyJcHt3DtYkC8s9zLrJlonuaw=', NULL, '2023-12-08 08:12:43.844013', 0, 1, 0, NULL, NULL, NULL),
+	(9, 'luja', 'Luja Shrestha', '', 'luja@gmail.com', 'pbkdf2_sha256$600000$Rlefe3RDEQCiFVGYVBCuHX$9SBA3FsgzQgvUtEnHOAJdi4hHKheX7CYZN7jFmpRuGM=', NULL, '2023-12-08 08:15:23.473755', 0, 1, 0, NULL, NULL, NULL),
+	(10, 'bibek', 'Bibek Karki', '', 'bibek@gmail.com', 'pbkdf2_sha256$600000$gLKblwuKWewz1GI4IjmLZr$XTYa9S6oSAvh3ltN+8qnLtILMXK90RLjE15BHK7iYXE=', NULL, '2023-12-08 08:23:34.971721', 0, 1, 0, NULL, NULL, NULL),
+	(11, 'heralddhiraj', 'Dhiraj Sah', '', 'dhirajherald@gmail.com', 'pbkdf2_sha256$720000$54uTEVG5hTwt6StXShT2Lp$fVexkX94rmA65NChq3ahK1KqPDkj+W5IPKw5JGMRRTQ=', '2024-01-08 18:16:37.369320', '2024-01-08 18:04:37.322071', 0, 1, 0, NULL, NULL, NULL),
+	(12, 'admin', 'Admin', '', 'admin@gmail.com', 'pbkdf2_sha256$720000$UFweeiHjVLLh7sET6bM6lW$siElLK/cPeHkO0AqnGxZAzwc56KlvPMLrDvBAXbo8vA=', '2024-01-31 05:10:08.005425', '2024-01-31 04:55:56.008526', 1, 1, 1, NULL, NULL, NULL),
+	(13, 'testdefense', 'Test Defense', '', 'testdefense@gmail.com', 'pbkdf2_sha256$720000$9mExUyvj6nMI6gYz9DY5Nn$bKWqmUSqCSpMOXkBzkbVuFiypk/yErEm9vXX3qrkWd0=', '2024-01-31 05:01:15.950030', '2024-01-31 05:00:39.242683', 0, 1, 0, NULL, NULL, NULL),
+	(14, 'herald', 'Herald', '', 'np03cs4m210013@heraldcollege.edu.np', 'pbkdf2_sha256$720000$OuCuWFDVBjarsSQRVvYPo3$cv8RsJ4Z+Dwed3ts0vJKJ4Lq4lEP1pKl0L/h+Qkkd+I=', '2024-02-11 18:41:04.914658', '2024-02-11 18:40:19.927567', 0, 1, 0, NULL, NULL, NULL);
 
 -- Dumping structure for table paperlify.auth_user_groups
 CREATE TABLE IF NOT EXISTS `auth_user_groups` (
@@ -271,7 +272,7 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 	('iwm8e7eyp8mjyzrzfjk17niw2p8tdhh4', '.eJxVjMsOgjAUBf-la9OUQh9x6d5vaO6rFjUlobAi_ruQsNDtzJyzqQTrUtLaZE4jq6uy6vLLEOgl9RD8hPqYNE11mUfUR6JP2_R9YnnfzvbvoEAr-zqDDEwBMIrlaINB6TwHcN6jCQ49d4Z2EoU45uA8ioGByPa278Fl9fkCDZo4tg:1rPq6h:tWlO4fw_MddOJSbpEvlbIizJIM8_CUZYe4RGOEiATyg', '2024-01-30 20:32:23.389575'),
 	('j0gte2s0793a9p8jqud021uvd1mm43kq', '.eJxVjMsOgjAUBf-la9OUQh9x6d5vaO6rFjUlobAi_ruQsNDtzJyzqQTrUtLaZE4jq6uy6vLLEOgl9RD8hPqYNE11mUfUR6JP2_R9YnnfzvbvoEAr-zqDDEwBMIrlaINB6TwHcN6jCQ49d4Z2EoU45uA8ioGByPa278Fl9fkCDZo4tg:1rVDQs:5vuVbuvNBnv0urIg4IsaiFXuzNFkXdw_9R-8VEDB-Tc', '2024-02-14 16:27:26.831475'),
 	('j9tmzv55brtwv3da4sy49h9t2ospwskj', '.eJxVjLsOwjAQBH8FuUaWceKHKGkJVPTW-e5CAlEi2UmBEP-OI6WAcndn5y0CLHMXlswp9CSOQov9bxcBnzyuAz1gvE8Sp3FOfZQrIrc1y8tEPJw29k_QQe7KuwWuCR1Ez5q8dirywZIDY21UzkRLB4Wl8YzkW2dsZAU1oq50VYFpizTzwDgzhaGPCdKrWK_N7bxrtvj5AmF6RG8:1rXKQp:ck93McZ8yqMTmfcqR9bl3qddE9LRt2-JORC2Kic9lJc', '2024-02-20 12:20:07.874696'),
-	('jyd762dvjbt4ddp4rerbg66mika24qc5', '.eJxVjMsOwiAQRf-FtSEwJTxcuvcbyAwMUjWQlHZl_Hdt0oVu7znnvkTEba1xG7zEOYuzAHH63QjTg9sO8h3brcvU27rMJHdFHnTIa8_8vBzu30HFUb-1DXpiDcmAdsFrcgXYWOUNWeBSsISCRMl68Mpp43xmdhq8Y4VmUka8P8xFN0w:1raxST:I-0vmz1VRx97g1s1DShsLpTQS1W_oovs5fcmO3C1fHs', '2024-03-01 12:36:49.340144'),
+	('jyd762dvjbt4ddp4rerbg66mika24qc5', '.eJxVjMsOwiAQRf-FtSEwJTxcuvcbyAwMUjWQlHZl_Hdt0oVu7znnvkTEba1xG7zEOYuzAHH63QjTg9sO8h3brcvU27rMJHdFHnTIa8_8vBzu30HFUb-1DXpiDcmAdsFrcgXYWOUNWeBSsISCRMl68Mpp43xmdhq8Y4VmUka8P8xFN0w:1rbHkr:273oiNi-umiYUw9Amt089uY3UL0Y3gP1aqFgTGtFcas', '2024-03-02 10:17:09.246696'),
 	('k95c5or9y4qb77w7y7dqr4wzcavhvvkf', '.eJxVjstOwzAQAP_F52Ic5-HQI3ck_iBa2-vGkOxGsQOFqv-OoxYJrjOzj4sYYMvjsCVch-jFUWhx-MssuHekXfg3oBNLx5TXaOWeyLtN8oU9Ts_39t-CEdJYpgNg450B26P2vTbKYtV5A23XWWVa2_lKuUJ6dL4Ppu0sKmic07Wua2hDWRrihEOkwOJ4EfuvWqmD8OwGghnLjVeOlJMs5CxuIsXvIqr6yTQ3kL-WvYRlmaKDHJkeP8hLXpDO8xR4nSGnBw4hOiz9NiNl-cmrX1Z2mFKk0zzJXyOu1x8gj25h:1rMux5:Prw1-g2czweK4OB1gJb6M98JZfCO0sTJ2U9QMXghqA0', '2024-01-22 19:06:23.047971'),
 	('ks03pa1ld152d5m49ebzkovzu4dm0fku', '.eJxVjEEOgjAQRe_StWloOx3QpXvO0Mx0poIaSCisjHdXEha6_e-9_zKJtnVIW9UljWIuxpnT78aUHzrtQO403Wab52ldRra7Yg9abT-LPq-H-3cwUB2-tcaQQyZEDdDIGWJHjIW1Ee7EsQOvGh1gbAMAEEaPhTj67KV1gsW8P-vtN_Y:1rBIme:oreSaSmWAI8gxnFkl2w3rlixq2YUrrkJM-R4rXTEgk4', '2023-12-21 18:07:36.509748'),
 	('mdpvqp0y92b2dykzur6j2si2e3a9u345', '.eJxVjMsOwiAQAP-FsyHy2EU8eu83EBa2UjWQlPZk_HdD0oNeZybzFiHuWwl75zUsWVyFEqdfRjE9uQ6RH7Hem0ytbutCciTysF1OLfPrdrR_gxJ7GVtAO7tEHmyas9LeYSSvvTZoSbHOBg1YIPIOUHECcolJe7ygjWeN4vMFzCg3IQ:1rZEV4:kAfROcXvkBXcKIZwzAsta_SQkMPODbwZhDa-WoouG8I', '2024-02-25 18:24:22.794971'),
@@ -409,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `ip_address` varchar(50) DEFAULT NULL,
   `updated_on` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=810 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=812 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table paperlify.logs: ~740 rows (approximately)
 INSERT INTO `logs` (`id`, `user_id`, `activity`, `ip_address`, `updated_on`) VALUES
@@ -1218,7 +1219,9 @@ INSERT INTO `logs` (`id`, `user_id`, `activity`, `ip_address`, `updated_on`) VAL
 	(806, '1', 'login', '127.0.0.1', '2024-02-12 22:59:59'),
 	(807, '1', 'login', '127.0.0.1', '2024-02-15 09:52:19'),
 	(808, '1', 'summarize using NLTK library', '127.0.0.1', '2024-02-15 09:52:45'),
-	(809, '2', 'login', '127.0.0.1', '2024-02-16 06:51:49');
+	(809, '2', 'login', '127.0.0.1', '2024-02-16 06:51:49'),
+	(810, '2', 'login', '127.0.0.1', '2024-02-17 04:32:01'),
+	(811, '2', 'login', '127.0.0.1', '2024-02-17 04:32:09');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
