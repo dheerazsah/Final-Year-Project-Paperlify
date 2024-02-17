@@ -18,6 +18,7 @@ import re
 
 import nltk
 nltk.download('punkt')
+nltk.download('stopwords')
 
 #Import UserActivityLog model from the current app
 from .models import UserActivityLog
@@ -332,7 +333,7 @@ def update_library(request):
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
 
-import pythoncom
+# import pythoncom
 from win32com import client
 from django.conf import settings
 def upload_file(request):
@@ -436,30 +437,30 @@ def upload_file(request):
                         messages.error(request, error_message)
                         print(f"Error processing doc/docx file: {str(e)}")
 
-                elif uploadfile.name.endswith(('.doc')):
-                    try:
-                         # Initialize the COM library
-                        pythoncom.CoInitialize()
+                # elif uploadfile.name.endswith(('.doc')):
+                #     try:
+                #          # Initialize the COM library
+                #         pythoncom.CoInitialize()
                         
-                        # Create a new Word application
-                        word_app = client.Dispatch("Word.Application")
-                        word_app.Visible = False
+                #         # Create a new Word application
+                #         word_app = client.Dispatch("Word.Application")
+                #         word_app.Visible = False
                         
-                        # Open the document
-                        doc_path = os.path.join(settings.MEDIA_ROOT, uploadfile.name)
-                        doc = word_app.Documents.Open(doc_path)
+                #         # Open the document
+                #         doc_path = os.path.join(settings.MEDIA_ROOT, uploadfile.name)
+                #         doc = word_app.Documents.Open(doc_path)
                         
-                        # Extract text from the document
-                        content = doc.Content.Text
+                #         # Extract text from the document
+                #         content = doc.Content.Text
                         
-                        # Close the document and Word application
-                        doc.Close()
-                        word_app.Quit()
+                #         # Close the document and Word application
+                #         doc.Close()
+                #         word_app.Quit()
 
-                    except Exception as e:
-                        error_message = "Error processing the uploaded Word document."
-                        messages.error(request, error_message)
-                        print(f"Error processing doc file: {str(e)}")
+                    # except Exception as e:
+                    #     error_message = "Error processing the uploaded Word document."
+                    #     messages.error(request, error_message)
+                    #     print(f"Error processing doc file: {str(e)}")
 
                 elif uploadfile.name.endswith('.pdf'):
                     try:
@@ -532,9 +533,9 @@ def summarize_text(request):
                 # Summarize the content using the Hugging Face model
                 payload = {
                     "inputs": input_text,
-                    "parameters": {
-                    "truncation": "only_first"
-                }
+                #     "parameters": {
+                #     "truncation": "only_first"
+                # }
                 }
 
                 '''
@@ -547,7 +548,7 @@ def summarize_text(request):
                 summary = response.json()
 
                 if summary and len(summary) > 0:
-                    summarized_text = summary[0].get('generated_text', '') #summary_text
+                    summarized_text = summary[0].get('summary_text', '') #summary_text
                 # file_info = FileUpload(user=request.user)
                 # file_info.doc_name = fileName
                 # file_info.doc_size = fileSize
@@ -574,7 +575,7 @@ def summarize_text(request):
             elif active_button == 'nltk':
                 #Text Preprocessing 
                 #Removes the special characters from the sentences
-                stringText = input_text  # Use input_text instead of request.GET['newText']
+                stringText = input_text  # Use input_text
                 formattedStringText = re.sub('[^a-zA-Z]', ' ', stringText)
                 formattedStringText = re.sub('\s+', ' ', formattedStringText)
 
@@ -637,16 +638,16 @@ def summarize_text(request):
                 # Summarize the content using the Hugging Face model
                 payload = {
                     "inputs": input_text,
-                    "parameters": {
-                    "truncation": "only_first"
-                }
+                #     "parameters": {
+                #     "truncation": "only_first"
+                # }
                 }
 
                 response = requests.post(API_URL, headers=HEADERS, json=payload)
                 summary = response.json()
 
                 if summary and len(summary) > 0:
-                    summarized_text = summary[0].get('generated_text', '') #summary_text
+                    summarized_text = summary[0].get('summary_text', '') #summary_text generated_text
                 # file_info = FileUpload(user=request.user)
                 # file_info.doc_name = fileName
                 # file_info.doc_size = fileSize

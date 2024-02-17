@@ -256,8 +256,15 @@
         margin-right: 0;
     }
 }
-  
 </style>
+
+<script>
+  // Initial call to start the animation
+  const preloaderWrapper = document.querySelector('.preloader-wrapper');
+  window.addEventListener('load', function(){
+      preloaderWrapper.classList.add('fade-out-animation');
+  });
+</script>
 <body class="dashboard-body">
     <div class="back-button">
         <a href="{% url 'mydocuments' %}">Back</a>
