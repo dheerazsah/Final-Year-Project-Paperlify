@@ -107,14 +107,12 @@
     {% endif %}
 
 
-   <div class="container mt-2 pt-2 col-md-3">
-      {% comment %} <h4>Search</h4> {% endcomment %}
-
+    {% comment %} <div class="container mt-2 pt-2 col-md-3">
       <div id="autocomplete" class="autocomplete">
         <input class="autocomplete-input"/>
         <ul class="autocomplete-result-list"></ul>
       </div>
-  </div>
+  </div>  {% endcomment %}
       
     <script>
       setTimeout(function(){
@@ -128,41 +126,6 @@
       window.addEventListener('load', function(){
           preloaderWrapper.classList.add('fade-out-animation');
       });
-
-      new Autocomplete('#autocomplete', {
-        search: input =>{
-        console.log(input)
-        const url = `/search?query=${input}`
-        return new Promise(resolve =>{
-          fetch(url)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data)
-            const documents = data.data.map(item => item.doc_name); // Extract doc_name property
-            resolve(documents);
-          });
-        });
-      }, 
-
-      onSubmit : result => {
-        // Get the slug corresponding to the selected document
-        const selectedDocument = result.trim();
-        const url = `/search?query=${selectedDocument}`;
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.data && data.data.length > 0) {
-                    const slug = data.data[0].slug; // Assuming slug is available in the response
-                    window.open(`/mydocuments/${slug}`, '_blank');
-                } else {
-                    console.error('No matching document found for:', selectedDocument);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching document details:', error);
-            });
-      }
-      }); 
 
     </script>
 
