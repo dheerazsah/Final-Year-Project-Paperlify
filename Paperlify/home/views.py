@@ -863,7 +863,7 @@ def search(request):
     payload = []
     if query:
          # Fetch both doc_name and slug fields from the database
-        documents = list(FileUpload.objects.filter(user_id=user_id, doc_name__icontains=query).values('doc_name', 'slug'))
+        documents = list(FileUpload.objects.filter(user_id=user_id, doc_name__icontains=query, is_deleted=False, summarized_text__isnull=False).values('doc_name', 'slug'))
         for document in documents:
             payload.append(document)
     return JsonResponse({'status': 200, 'data': payload})
