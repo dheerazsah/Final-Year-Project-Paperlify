@@ -298,6 +298,7 @@ import os
 
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
 HEADERS = {"Authorization": "Bearer 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"}
+@login_required
 def dashboard(request):
     user_id = request.user.id
     # Filter documents based on the user_id and summarized_text__isnull=False
@@ -326,7 +327,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button, 'context':context})
 
 
-
+@login_required
 def update_library(request):
     if request.method == 'POST':
         
@@ -334,8 +335,9 @@ def update_library(request):
     return JsonResponse({'status': 'error'})
 
 # import pythoncom
-from win32com import client
+#from win32com import client
 from django.conf import settings
+@login_required
 def upload_file(request):
     user_id = request.user.id
     # Filter documents based on the user_id and summarized_text__isnull=False
@@ -503,7 +505,12 @@ def upload_file(request):
     return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button, 'context': context})
     #return JsonResponse({'content': content, 'summary': summary})
 
+from nltk.tokenize import sent_tokenize
+from nltk.stem import WordNetLemmatizer
+from nltk.stem import PorterStemmer
+nltk.download('wordnet')
 
+@login_required
 def summarize_text(request):
     user_id = request.user.id
     # Filter documents based on the user_id and summarized_text__isnull=False
@@ -573,26 +580,60 @@ def summarize_text(request):
                 )
                     
             elif active_button == 'nltk':
+                
                 #Text Preprocessing 
+                input_text = sent_tokenize(input_text)
+                # Assuming input_text contains the tokenized sentences
+                formatted_sentences = []
+
+                emoji_pattern = re.compile("["
+                           u"\U0001F600-\U0001F64F"  # emoticons
+                           u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                           u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                           u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                           u"\U00002702-\U000027B0"  # curly loop/scissors
+                           u"\U000024C2-\U0001F251"  # metro station/accept symbols
+                           "]+", flags=re.UNICODE)
+
+                url_pattern = re.compile(r'https?://\S+|www\.\S+')
+
                 #Removes the special characters from the sentences
-                stringText = input_text  # Use input_text
-                formattedStringText = re.sub('[^a-zA-Z]', ' ', stringText)
-                formattedStringText = re.sub('\s+', ' ', formattedStringText)
+                for sentence in input_text:
+                    formatted_sentence = re.sub('[^a-zA-Z\s\'.]', '', sentence)  # Remove special characters except spaces and periods
+                    formatted_sentence = emoji_pattern.sub(r' ', formatted_sentence)  # Remove emojis
+                    formatted_sentence = url_pattern.sub(r'', formatted_sentence)  # Remove URLs
+                    formatted_sentence = re.sub('\s+', ' ', formatted_sentence)  # Remove extra whitespaces
+                    formatted_sentence = re.sub(r'\. ', '. ', formatted_sentence)  # Add a space after each full stop
+                    formatted_sentences.append(formatted_sentence.strip())  # Strip leading/trailing whitespaces and append to the list
 
                 #Sentence Tokenization
                 #The input text is tokenized into sentences using NLTK's sent_tokenize function
-                sentences = nltk.sent_tokenize(stringText)
+                #sentences = nltk.sent_tokenize(stringText)
 
                 #Frequency Analysis
                 #Performs frequency analysis on the words in the input text. 
                 frequencyDictionary = {}
+                #stopwords = set(stopwords.words('english'))
                 stopwords = nltk.corpus.stopwords.words('english')
+                # Initialize lemmatizer and stemmer
+                lemmatizer = WordNetLemmatizer()
+                stemmer = PorterStemmer()
 
-                for word in nltk.word_tokenize(formattedStringText):
-                    if word not in stopwords and word not in frequencyDictionary:
-                        frequencyDictionary.update({word: 1})
-                    elif word not in stopwords and word in frequencyDictionary:
-                        frequencyDictionary[word] += 1
+
+                for sentence in formatted_sentences:
+                    words = nltk.word_tokenize(sentence)
+                    for word in words:
+                        if word.lower() not in stopwords and word.isalpha():
+                            # Lemmatize and stem the word
+                            lemma_word = lemmatizer.lemmatize(word.lower())
+                            stemmed_word = stemmer.stem(word.lower())
+                            # Update frequency dictionary
+                            if stemmed_word not in frequencyDictionary:
+                                frequencyDictionary[stemmed_word] = 1
+                            else:
+                                frequencyDictionary[stemmed_word] += 1
+
+
 
                 maxFrequencyValue = max(frequencyDictionary.values())
                 for word in frequencyDictionary:
@@ -600,14 +641,17 @@ def summarize_text(request):
                     
                 #The sentences are scored based on the normalized frequencies of the words they contain.
                 scores = {}
-                for sentence in sentences:
+                for sentence in formatted_sentences:
                     for word in nltk.word_tokenize(sentence.lower()):
-                        if word in frequencyDictionary.keys() and sentence not in scores:
-                            scores.update({sentence: frequencyDictionary[word]})
+                    # Lemmatize and stem the word
+                        lemma_word = lemmatizer.lemmatize(word)
+                        stemmed_word = stemmer.stem(word)
+                        if stemmed_word in frequencyDictionary.keys() and sentence not in scores:
+                            scores.update({sentence: frequencyDictionary[stemmed_word]})
                         elif word not in frequencyDictionary.keys():
                             continue
                         else:
-                            scores[sentence] += frequencyDictionary[word]
+                            scores[sentence] += frequencyDictionary[stemmed_word]
 
                 #Summary generation
                 #Sentences are sorted based on their scores, and a summary is generated by selecting the top 10% of sentences.
@@ -615,7 +659,7 @@ def summarize_text(request):
 
                 summary = ''
                 for i in range(0, len(sortedSentences) // 10 + 1):
-                    summary += sortedSentences[i]
+                    summary += sortedSentences[i]  + ' '
 
                 # Retrieve the existing record using the stored file_info ID
                 file_info_id = request.session.get('file_info', {}).get('id')
@@ -710,7 +754,7 @@ def summarize_text(request):
 
 from datetime import datetime, timedelta
 from django.db.models import Q
-
+@login_required
 def mydocuments(request):
     user_id = request.user.id
 
@@ -792,7 +836,7 @@ def delete_document(request, doc_id):
     # }
 
     # return render(request, 'mydocuments.html', context)
-
+@login_required
 def document_detail(request, slug):
     context={}
     try:
@@ -812,7 +856,7 @@ def search(request):
     context = {'documents': FileUpload.objects.filter(user_id=user_id, doc_name__icontains=query)}
     return render(request, 'search.html', context)
 '''
-
+@login_required
 def search(request):
     user_id = request.user.id
     query = request.GET.get('query')
@@ -990,6 +1034,7 @@ def test(request):
 def terms_conditions(request):
     return render(request, 'terms&conditions.html')
 
+@login_required
 def logoutUser(request):
     logout(request)
     
