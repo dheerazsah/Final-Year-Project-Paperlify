@@ -5,6 +5,7 @@
 from django.db import connection
 #Function and classes for rendering views and handling HTTP responses
 from django.shortcuts import render, redirect, HttpResponse
+from django.http import Http404
 #User model for managing user related information
 from django.contrib.auth.models import User
 #Message framework for displaying information to the user
@@ -15,6 +16,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 #Importing expression module for pattern matching and validation
 import re
+
+from functools import wraps
+from django.views.decorators.cache import never_cache
 
 import nltk
 nltk.download('punkt')
@@ -56,7 +60,18 @@ from django.contrib.auth import update_session_auth_hash
 # Create your views here.
 #@login_required(login_url='login')
 
+def not_logged_in(function):
+    @wraps(function)
+    def wrap(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return function(request, *args, **kwargs)
+        else:
+            # Redirect authenticated users to a specific URL, like the dashboard
+            return redirect('/dashboard')
+    return wrap
+        
 #View function for handling user signup requests 
+@not_logged_in
 def signupPage(request):
     #Check if the request method is POST 
     if request.method == 'POST':
@@ -153,7 +168,7 @@ def signupPage(request):
     #Render the signup.html template if the request method is not POST
     return render(request, 'signup.html')
 
-
+@not_logged_in
 def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -196,9 +211,11 @@ def loginPage(request):
 def error_404(request, expection):
     return render(request, '4040.html')
 
+@not_logged_in
 def forgotpassword(request):
     return render(request, 'forgotpassword.html')
 
+@not_logged_in
 def send_otp(request):
     if request.method == 'POST':
         email = request.POST['email']
@@ -239,6 +256,7 @@ def send_otp(request):
     else:
         return render(request, 'forgotpassword.html', {'otp_sent': False, 'otp_verified': False})
     
+@not_logged_in
 def verify_otp(request):
     if request.method == 'POST':
         try:
@@ -265,6 +283,7 @@ def verify_otp(request):
     else:
         return render(request, 'forgotpassword.html', {'otp_verified': False, 'otp_sent': False})
 
+@not_logged_in
 def resetpassword(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -282,8 +301,8 @@ def resetpassword(request):
             return render(request, 'resetpassword.html', {'otp_verified': True, 'error': error, 'email': email})
     return render(request, 'resetpassword.html')
 
-def homepage(request):
-    return render(request, 'homepage.html')
+# def homepage(request):
+#     return render(request, 'homepage.html')
 
 
 #from django.core.files.storage import FileSystemStorage
@@ -298,7 +317,9 @@ import os
 
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
 HEADERS = {"Authorization": "Bearer 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"}
-@login_required
+
+@never_cache
+@login_required(login_url='login')
 def dashboard(request):
     user_id = request.user.id
     # Filter documents based on the user_id and summarized_text__isnull=False
@@ -326,8 +347,8 @@ def dashboard(request):
 
     return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button, 'context':context})
 
-
-@login_required
+@never_cache
+@login_required(login_url='login')
 def update_library(request):
     if request.method == 'POST':
         
@@ -336,8 +357,9 @@ def update_library(request):
 
 # import pythoncom
 #from win32com import client
-from django.conf import settings
-@login_required
+#from django.conf import settings
+@never_cache
+@login_required(login_url='login')
 def upload_file(request):
     user_id = request.user.id
     # Filter documents based on the user_id and summarized_text__isnull=False
@@ -510,7 +532,8 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
 nltk.download('wordnet')
 
-@login_required
+@never_cache
+@login_required(login_url='login')
 def summarize_text(request):
     user_id = request.user.id
     # Filter documents based on the user_id and summarized_text__isnull=False
@@ -754,7 +777,8 @@ def summarize_text(request):
 
 from datetime import datetime, timedelta
 from django.db.models import Q
-@login_required
+@never_cache
+@login_required(login_url='login')
 def mydocuments(request):
     user_id = request.user.id
 
@@ -836,11 +860,17 @@ def delete_document(request, doc_id):
     # }
 
     # return render(request, 'mydocuments.html', context)
-@login_required
+
+@never_cache
+@login_required(login_url='login')
 def document_detail(request, slug):
     context={}
     try:
-        document_obj = FileUpload.objects.filter(slug = slug).first()
+        document_obj = FileUpload.objects.filter(slug = slug, is_deleted=False, user=request.user).first()
+        if not document_obj:
+            # If the document does not exist, raise a 404 error
+            raise Http404("Document does not exist or you don't have permission to access it.")
+        
         context['document_obj'] = document_obj
 
     except Exception as e:
@@ -856,7 +886,8 @@ def search(request):
     context = {'documents': FileUpload.objects.filter(user_id=user_id, doc_name__icontains=query)}
     return render(request, 'search.html', context)
 '''
-@login_required
+@never_cache
+@login_required(login_url='login')
 def search(request):
     user_id = request.user.id
     query = request.GET.get('query')
@@ -869,7 +900,8 @@ def search(request):
     return JsonResponse({'status': 200, 'data': payload})
 
 
-@login_required
+@never_cache
+@login_required(login_url='login')
 def profile(request):
     user = request.user
     
@@ -1025,25 +1057,27 @@ def activate_account(request, uidb64, token):
 
 
 
-def test(request):
-    user_id = request.user.id
-    # Filter documents based on the user_id
-    context = {'documents': FileUpload.objects.filter(user_id=user_id)}
-    return render(request, 'test.html', context)
+# def test(request):
+#     user_id = request.user.id
+#     # Filter documents based on the user_id
+#     context = {'documents': FileUpload.objects.filter(user_id=user_id)}
+#     return render(request, 'test.html', context)
 
+@not_logged_in
 def terms_conditions(request):
     return render(request, 'terms&conditions.html')
 
-@login_required
+@never_cache
+@login_required(login_url='login')
 def logoutUser(request):
-    logout(request)
-    
+    #if request.user.is_authenticated:
     # Log the user's activity
     UserActivityLog.objects.create(
         user=request.user,
         activity='logout',
         ip_address=request.META.get('REMOTE_ADDR')
     )
+    logout(request)
 
     messages.success(request, 'You are logged out successfully.')
     return redirect('login')

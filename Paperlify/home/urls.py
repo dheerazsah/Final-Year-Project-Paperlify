@@ -32,7 +32,7 @@ urlpatterns = [
     path('verify_otp', views.verify_otp, name='verify_otp'), #Mapping '/verify_otp' to the verify_otp view
     path('resetpassword', views.resetpassword, name='resetpassword'), #Mapping '/resetpassword' to the resetpassword view
     path('confirmpassword', views.confirmpassword, name='confirmpassword'),
-    path('homepage', views.homepage, name='homepage'), #Mapping '/homepage' to the homepage view
+    #path('homepage', views.homepage, name='homepage'), #Mapping '/homepage' to the homepage view
     #path('dashboard2nd', views.dashboard2nd, name='dashboard2nd'), #Mapping '/dashboard2nd' to the dashboard2nd view
     path('dashboard', views.dashboard, name='dashboard'), #Mapping '/dashboard' to the dashboard view
 
@@ -41,7 +41,7 @@ urlpatterns = [
     #path('update_library', views.update_library, name='update_library'),
 
     path('profile', views.profile, name='profile'), #Mapping '/profile' to the profile view
-    path('test', views.test, name='test'), #Mapping '/test' to the test view
+    #path('test', views.test, name='test'), #Mapping '/test' to the test view
     path('mydocuments', views.mydocuments, name='mydocuments'), #Mapping '/mydocuments' to the mydocuments view
     path('mydocuments/<slug>', views.document_detail, name='document_detail'), #Mapping '/mydocuments/<slug>' to the document_detail view
     path('search', views.search, name='search'), #Mapping '/search' to the search view
@@ -49,7 +49,8 @@ urlpatterns = [
     #path('<str:slug>', views.document, name='document'), 
     #path('document', views.document, name='document'),
     path('delete_document/<doc_id>/', views.delete_document, name='delete_document'),
-    path('terms&conditions', views.terms_conditions, name='terms_conditions')
+    path('terms&conditions', views.terms_conditions, name='terms_conditions'),
+    path('logout', views.logoutUser, name='logout'),
 ]
 
 handler404 = 'home.views.error_404'
