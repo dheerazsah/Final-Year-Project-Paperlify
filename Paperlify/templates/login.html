@@ -32,7 +32,7 @@
                 if (msgElement) {
                     msgElement.remove();
                 }
-            }, 3000);
+            }, 4000);
         });
     </script>
     
@@ -63,19 +63,19 @@
             {% for message in messages %}
                 {% if message.tags == 'error' %}
                 <div class="alert alert-danger m-2 alert-dismissible fade show " role="alert" id="msg">
-                <strong>Oopsie! </strong>{{ message }}
+                {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <!-- <div class="error-message">{{ message }}</div> -->
                 {% elif message.tags == 'success' %}
                 <div class="alert alert-success m-2 alert-dismissible fade show " role="alert" id="msg">
-                <strong>Yay! </strong>{{ message }}
+                {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 {% elif message.tags == 'info' %}
                 <div class="alert alert-info m-2 alert-dismissible fade show " role="alert" id="msg">
-                <strong>Info: </strong>{{ message }}
+                {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <!-- <div class="success-message">{{ message }}</div> -->
@@ -89,11 +89,11 @@
                 </section>
                 <div class="input-container email">
                     <label for="username">Username</label>
-                    <input id="username" name="username" placeholder="Enter your username" type="text">
+                    <input id="username" name="username" placeholder="Enter your username" type="text" required>
                 </div>
                 <div class="input-container password">
                     <label for="password">Password</label>
-                    <input id="password" name="password" placeholder="Must be atleast 6 characters" type="password">
+                    <input id="password" name="password" placeholder="Must be atleast 6 characters" type="password" required>
                     {% comment %} <i class="uil uil-eye-slash" id="togglePassword"></i> {% endcomment %}
                     {% comment %} <i class="uil uil-eye"></i> {% endcomment %}
                 </div>

@@ -169,6 +169,7 @@ def signupPage(request):
     return render(request, 'signup.html')
 
 @not_logged_in
+@never_cache
 def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
