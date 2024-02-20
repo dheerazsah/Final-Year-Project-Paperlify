@@ -241,8 +241,7 @@
   .login-btn, 
   .signup-btn,
   .send-email-btn,
-  .verify-otp-btn,
-  .change-password-button {
+  .verify-otp-btn{
     display: block;
     width: 100%;
     background: var(--primary-blue);
@@ -257,8 +256,7 @@
   .login-btn:hover,
   .signup-btn:hover,
   .send-email-btn:hover,
-  .verify-otp-btn:hover,
-  .change-password-button:hover {
+  .verify-otp-btn:hover{
     background-color: var(--hover-blue);
   }
 
@@ -390,18 +388,6 @@ margin-bottom: 10px;
     font-weight: 500;
   }
   
-  .btn-primary {
-    background-color: #5271ff;
-    border-color: #5271ff;
-    color: #fff;
-  }
-  
-  .btn-primary:hover {
-    background-color: #4a66e6;
-    border-color: #4a66e6;
-    color: #fff;
-  }
-  
   /* Search Bar Styles */
   .navbar form {
     display: flex;
@@ -428,6 +414,7 @@ margin-bottom: 10px;
   .navbar button[type="submit"]:hover {
     background-color: var(--hover-blue);
     color: var(--color-white);
+    border: 1px solid var(--color-white);
   }
   
   /* Styling for the modal container */
@@ -813,6 +800,10 @@ margin-bottom: 10px;
   }
   
   /* Profile Section */
+  .readonly-input {
+    background-color: #f2f2f2; 
+    color: #666; 
+}
   .profile-info {
     background-color: var(--color-white);
     padding: var(--padding);
@@ -902,7 +893,7 @@ margin-bottom: 10px;
     border: 1px solid #ccc;
   }
   
-  /* .change-password-button {
+   .change-password-button {
     background-color: var(--primary-blue);
     color: var(--color-white);
     width: 350px;
@@ -915,7 +906,7 @@ margin-bottom: 10px;
   
   .change-password-button:hover {
     background-color: var(--hover-blue);
-  } */
+  } 
 
   .delete-account-button {
     background-color: #FF0000;

@@ -24,8 +24,8 @@
       {% endblock %}
     </title>
   </head>
-  <body>
 
+  <body>
     <div class="preloader-wrapper">
       <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
@@ -36,19 +36,19 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
-        <a class="navbar-brand logo" href="{% url 'dashboard' %}"><img src="./static/images/Paperlify Logo White.png" alt="Paperlify Logo" />Paperlify</a>
+        <a class="navbar-brand logo" href="{% url 'dashboard' %}"><img src="./static/images/Paperlify Logo White.png" alt="Paperlify Logo"/>Paperlify</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto mb-6 mb-lg-0">
-            <li class="nav-item">
-              {% comment %} <form action="/search" method="GET" id+"search-box"> 
+            {% comment %}<li class="nav-item">
+               <form action="/search" method="GET" id+"search-box"> 
                 {% csrf_token %}
                 <input type="text" id="search" name="query" placeholder="Search documents" />
                 <button type="submit">Search</button>
-              </form> {% endcomment %}
-            </li>
+              </form> 
+            </li>{% endcomment %}
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Upload Document</a>
+              <a class="nav-link" aria-current="page" href="{% url 'dashboard' %}">Upload Document</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'mydocuments' %}">My Documents</a>
@@ -63,7 +63,6 @@
         </div>
       </div>
     </nav>
-    </div>
 
     <!-- Logout Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -104,18 +103,10 @@
           {{ message }}
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <!-- <div class="success-message">{{ message }}</div> -->
         {% endif %}
     {% endfor %}
     {% endif %}
 
-
-    {% comment %} <div class="container mt-2 pt-2 col-md-3">
-      <div id="autocomplete" class="autocomplete">
-        <input class="autocomplete-input"/>
-        <ul class="autocomplete-result-list"></ul>
-      </div>
-  </div>  {% endcomment %}
       
     <script>
       setTimeout(function(){
@@ -129,42 +120,41 @@
       window.addEventListener('load', function(){
           preloaderWrapper.classList.add('fade-out-animation');
       });
-
     </script>
 
 
     {% comment %} <div class="gradient"></div> {% endcomment %}
     {% block template %}
     {% endblock %}
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-            <h3>Contact Us</h3>
-            <p>Email: paperlify@gmail.com</p>
-            <p>Phone: +1 (123) 456-7890</p>
-          </div>
-          <div class="col-md-4">
-            <h3>Follow Us</h3>
-            <ul>
-              <li>
-                <a href="#">Facebook</a>
-              </li>
-              <li>
-                <a href="#">Twitter</a>
-              </li>
-              <li>
-                <a href="#">Instagram</a>
-              </li>
-            </ul>
-          </div>
-          <div class="col-md-4">
-            <h3>About Paperlify</h3>
-            <p>Paperlify is a text summarization tool using AI. Experience a smarter, faster, and more streamlined approach to information retrieval with Paperlify - where understanding meets efficiency.</p>
-          </div>
+  </div>
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <h3>Contact Us</h3>
+          <p>Email: paperlify@gmail.com</p>
+          <p>Phone: +1 (123) 456-7890</p>
+        </div>
+        <div class="col-md-4">
+          <h3>Follow Us</h3>
+          <ul>
+            <li>
+              <a href="#">Facebook</a>
+            </li>
+            <li>
+              <a href="#">Twitter</a>
+            </li>
+            <li>
+              <a href="#">Instagram</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h3>About Paperlify</h3>
+          <p>Paperlify is a text summarization tool using AI. Experience a smarter, faster, and more streamlined approach to information retrieval with Paperlify - where understanding meets efficiency.</p>
         </div>
       </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 </body>
 </html>

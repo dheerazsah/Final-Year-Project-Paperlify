@@ -13,7 +13,7 @@
         <div class="modal-body">Are you sure you want to deactivate this account?</div>
         <div class="modal-footer">
           <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
-          <a href="{% url 'confirmpassword' %}" type="button" class="btn btn-primary">Deactivate</a>
+          <a href="{% url 'confirmpassword' %}" type="button" class="btn btn-danger">Deactivate</a>
           {% comment %} <form method="POST" action="{% url 'profile' %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary" name="delete_account">Delete</button>
@@ -30,30 +30,20 @@
     </section>
     <div class="profile-info">
         <form action="" method="POST">
-            {% comment %} {% if messages %}
-                {% for message in messages %}
-                    {% if message.tags == 'error' %}
-                        <p class="error-message">{{ message }}</p>
-                    {% elif message.tags == 'success' %}
-                        <p class="success-message">{{ message }}</p>
-                    {% endif %}
-                {% endfor %}
-            {% endif %} {% endcomment %}
-
             {% csrf_token %}
             <div class="input-field">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+                <input type="text" id="username" name="username" value="{{ user.username }}" placeholder="{{ user.username }}" required>
             </div>
             <div class="input-field">
                 <label for="fullname">Full Name</label>
-                <input type="text" id="fullname" name="fullname" value="{{ user.first_name}}" required>
+                <input type="text" id="fullname" name="fullname" value="{{ user.first_name}}" placeholder="{{ user.first_name }}" required>
             </div>
             <div class="input-field">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ user.email}}" required>
+                <input type="email" id="email" name="email" value="{{ user.email}}" placeholder="{{ user.email }}" readonly class="readonly-input">
             </div>
-            <button type="submit" class="update-button" name="update_profile">Update Profile</button>
+            <button type="submit" class="update-button" name="update_profile" id="update-profile-btn" {% if button_disabled %}disabled{% endif %} >Update Profile</button>
         </form>
     </div>
 
@@ -89,6 +79,30 @@
 </section>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var formInputs = document.querySelectorAll('#username, #fullname');
+        var updateButton = document.getElementById('update-profile-btn');
+
+        // Store initial input values
+        var initialUsername = formInputs[0].value;
+        var initialFullName = formInputs[1].value;
+
+        // Check for changes in input fields
+        formInputs.forEach(function(input) {
+            input.addEventListener('input', function() {
+                var currentUsername = formInputs[0].value;
+                var currentFullName = formInputs[1].value;
+
+                // Enable update button if values have changed
+                if (currentUsername !== initialUsername || currentFullName !== initialFullName) {
+                    updateButton.removeAttribute('disabled');
+                } else {
+                    updateButton.setAttribute('disabled', 'disabled');
+                }
+            });
+        });
+    });
+    
     document.addEventListener('DOMContentLoaded', function () {
         var currentPasswordInput = document.getElementById('current-password');
         var passwordInput = document.getElementById('new-password');

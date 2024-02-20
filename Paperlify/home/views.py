@@ -66,6 +66,7 @@ from PyPDF2 import PdfReader
 from django.shortcuts import render
 import requests
 from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 import os
 
@@ -942,27 +943,35 @@ def profile(request):
     
     if request.method == 'POST':
         if 'update_profile' in request.POST:
-            # user.username = request.POST.get('username')
-            first_name = request.POST.get('fullname')
-            email = request.POST.get('email')
+            new_username = request.POST.get('username')
+            new_full_name = request.POST.get('fullname')
+            try:
+                existing_username = User.objects.get(username=new_username)
+                if existing_username != user:
+                    messages.error(request, 'Username already exists. Please choose a different username.')
+                    return render(request, 'profile.html', {'user': user, 'button_disabled': True})
+                
+                # Check if any changes are made to the user's profile
+                if (new_full_name != user.first_name or new_username != user.username):
+                    # Update the user's profile
+                    user.username = new_username
+                    user.first_name = new_full_name
+                    user.save()
+                    messages.success(request, 'Profile updated successfully')
 
-            # Check if any changes are made to the user's profile
-            if first_name != user.first_name or email != user.email:
-                # Update the user's profile
-                user.first_name = first_name
-                user.email = email
-                user.save()
-                messages.success(request, 'Profile updated successfully')
+                    # Log the user's activity for profile update
+                    UserActivityLog.objects.create(
+                        user=user,
+                        activity='update_profile',
+                        ip_address=request.META.get('REMOTE_ADDR')
+                    )
 
-                # Log the user's activity for profile update
-                UserActivityLog.objects.create(
-                    user=user,
-                    activity='update_profile',
-                    ip_address=request.META.get('REMOTE_ADDR')
-                )
+                else:
+                     messages.info(request, 'No changes were made to the profile')
 
-            else:
-                messages.info(request, 'No changes were made to the profile')
+            except ObjectDoesNotExist:
+                messages.error(request, 'An error occurred while updating your profile. Please try again later.')
+                return render(request, 'profile.html', {'user': user, 'button_disabled': True})
 
         if 'change_password' in request.POST:
             # Password change handling
@@ -1051,9 +1060,7 @@ def profile(request):
             return redirect('login')
 
 
-    context = {
-        'user': user
-    }
+    context = {'user': user, 'button_disabled': True}
     return render(request, 'profile.html', context)
 
 
