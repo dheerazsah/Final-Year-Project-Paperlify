@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/dashstyle.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM Sans:wght@400;500;700&display=swap"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="icon" type="image/x-icon" href="./static/images/Paperlify Logo Blue.png">
+    <title>Terms and Conditions</title>
+</head>
+<body>
+
+    <div class="back-button">
+        <button onclick="goBack()">Back</button>
+    </div>
+    <div class="main-content">
+        <h1>Terms and Condiitons</h1>
+        <p>Welcome to Paperlify, a text summarization tool using AI. By accessing or using Paperlify, 
+            <br>you agree to be bound by these Terms and Conditions.</p>
+    </div>
+
+    <div class="terms-content">
+        <h5>1. Acceptance of Terms</h5>
+        <p>By accessing or using our document-to-text summarization system, you agree to be bound by these Terms and Conditions. 
+            If you do not agree with any part of these terms, you may not use the System.
+        </p>
+
+        <h5>2. User Accounts</h5>
+        <p>In order to access the full features of the System, users may be required to create a user account. 
+            Users agree to provide accurate and complete information during the registration process and to keep their account information up-to-date.
+        </p>
+
+        <h5>3. Confidentiality</h5>
+        <p>We respect the privacy and confidentiality of user documents uploaded to the System for summarization. 
+        All uploaded documents are treated with strict confidentiality and are not shared with any third parties.
+        </p>
+
+        <h5>4. Use of Summarization Service</h5>
+        <p>You agree to use Paperlify's summarization service responsibly and lawfully. 
+            You may not use the service to summarize copyrighted materials without proper authorization.
+        </p>
+
+
+        <h5>5. Intellectual Property</h5>
+        <p>All intellectual property rights related to Paperlify, including but not limited to trademarks, logos, and software, are owned by Paperlify.
+        </p>
+
+        <h5>6. Limitation of Liability</h5>
+        <p>Paperlify shall not be liable for any indirect, incidental, special, or consequential damages arising out of or in connection with the use or inability to use the service.
+        </p>
+
+        <h5>7. Modifications to Terms</h5>
+        <p>Paperlify eserves the right to modify these Terms and Conditions at any time. 
+            Users will be notified of any changes to the Terms and Conditions, and continued use of the System after such notification constitutes acceptance of the modified terms.
+        </p>
+
+        <h5>8. Contact Information</h5>
+        <p>If you have any questions or concerns about these Terms and Conditions, please contact us at 
+            <b>paperlify@gmail.com</b>
+        </p>
+    </div>
+
+    <script>
+        // JavaScript function to navigate back in history
+        function goBack() {
+            window.history.back();
+        }
+
+
+        setTimeout(function(){
+            var msgElement = document.getElementById('msg');
+            if (msgElement) {
+                msgElement.remove();
+            }
+        }, 3000);
+    </script>
+</body>
+<footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <h3>Contact Us</h3>
+          <p>Email: paperlify@gmail.com</p>
+          <p>Phone: +1 (123) 456-7890</p>
+        </div>
+        <div class="col-md-4">
+          <h3>Follow Us</h3>
+          <ul>
+            <li>
+              <a href="#">Facebook</a>
+            </li>
+            <li>
+              <a href="#">Twitter</a>
+            </li>
+            <li>
+              <a href="#">Instagram</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h3>About Paperlify</h3>
+          <p>Paperlify is a text summarization tool using AI. Experience a smarter, faster, and more streamlined approach to information retrieval with Paperlify - where understanding meets efficiency.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</html>

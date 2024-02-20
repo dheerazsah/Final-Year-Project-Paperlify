@@ -180,7 +180,11 @@
   font-weight: bold;
   }
   
-  
+  .terms-content {
+    text-align: left;
+    padding: 40px 100px;
+    margin: 20px 60px 60px 60px;
+}
   
   /* Input field */
   form.login-form input[type="text"],
@@ -213,8 +217,12 @@
     top: 42px;
     right: 16px;
   }
+
+  .input-container {
+    text-align: left;
+}
   
-  .checkmark {
+  /* .checkmark {
     width: 48px;
     height: 48px;
     background: var(--color-white);
@@ -227,10 +235,14 @@
     position: relative;
     display: none;
   }
+   */
   
-  
-  /* Button */
-  .login-btn {
+  /************ BUTTONS *************/
+  .login-btn, 
+  .signup-btn,
+  .send-email-btn,
+  .verify-otp-btn,
+  .change-password-button {
     display: block;
     width: 100%;
     background: var(--primary-blue);
@@ -240,10 +252,13 @@
     padding: 1rem;
     border-radius: 8px;
     font-size: 0.75rem;
-    letter-spacing: 0.5px;
   }
   
-  .login-btn:hover {
+  .login-btn:hover,
+  .signup-btn:hover,
+  .send-email-btn:hover,
+  .verify-otp-btn:hover,
+  .change-password-button:hover {
     background-color: var(--hover-blue);
   }
 
@@ -255,30 +270,20 @@
     height: 100vh;
   }
 
-
-  .forgot-password-container {
-    background-color: var(--color-white);
-    padding: var(--padding);
-    margin: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.forgot-password-container {
+  background-color: var(--color-white);
+  padding: var(--padding);
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 140px;
 }
 
 .forgot-password-title {
     font-size: var(--h1-bold-size);
     color: var(--color-gray-200);
     margin: var(--gap) 0;
-}
-
-.success-message {
-    color: green;
-    margin-bottom: 10px;
-}
-
-.error-message {
-  color: rgb(128, 0, 0);
-  margin-bottom: 10px;
 }
 
 .input-field,
@@ -290,6 +295,18 @@
 .otp-field label {
     font-size: var(--body2-normal-size);
     color: var(--color-darkslategray);
+    display: block;
+    text-align: left;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 10px;
+}
+
+.error-message {
+color: rgb(128, 0, 0);
+margin-bottom: 10px;
 }
 
 .input-field input,
@@ -303,7 +320,7 @@
     border: 1px solid #ccc;
 }
 
-.send-email-button,
+/* .send-email-button,
 .verify-otp-button {
     background-color: var(--primary-blue);
     color: var(--color-white);
@@ -318,7 +335,7 @@
 .send-email-button:hover,
 .verify-otp-button:hover {
     background-color: var(--hover-blue);
-}
+} */
 
   .dashboard-body {
     font-family: "DM Sans" !important;
@@ -471,9 +488,11 @@
   }
 
   .main-content {
+    position: relative;
     text-align: center;
-    margin: 20px;
-  padding: 20px;
+    margin: 20px auto;
+    padding: 20px;
+    z-index: 1;
   }
 
   .main-content h1 {
@@ -759,18 +778,26 @@
   }
   
   .back-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    position: relative;
+    z-index: 2;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
   }
   
-  .back-button a {
+  .back-button button{
     display: inline-block;
     padding: 10px 20px;
     background-color: var(--primary-blue);
     color: var(--color-white);
     text-decoration: none;
+    border: none;
     border-radius: 5px;
+  }
+
+  .back-button button:hover {
+    background-color: var(--hover-blue);
   }
   
   /* Modal */
@@ -875,7 +902,7 @@
     border: 1px solid #ccc;
   }
   
-  .change-password-button {
+  /* .change-password-button {
     background-color: var(--primary-blue);
     color: var(--color-white);
     width: 350px;
@@ -888,7 +915,7 @@
   
   .change-password-button:hover {
     background-color: var(--hover-blue);
-  }
+  } */
 
   .delete-account-button {
     background-color: #FF0000;
@@ -961,6 +988,11 @@
       width: 80%;
       margin: 20px auto;
     }
+
+    .back-button button {
+      max-width: 150px;
+  }
+
   }
   
   /* Responsive screen for login */

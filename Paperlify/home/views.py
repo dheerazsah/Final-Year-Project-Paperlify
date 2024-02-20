@@ -16,6 +16,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 #Importing expression module for pattern matching and validation
 import re
+from django.core.validators import EmailValidator
 
 from functools import wraps
 from django.views.decorators.cache import never_cache
@@ -57,6 +58,17 @@ from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 
+
+#from django.core.files.storage import FileSystemStorage
+from .models import FileUpload  # Import the model
+import docx2txt
+from PyPDF2 import PdfReader
+from django.shortcuts import render
+import requests
+from django.core.exceptions import ValidationError
+from django.http import JsonResponse
+import os
+
 # Create your views here.
 #@login_required(login_url='login')
 
@@ -94,7 +106,8 @@ def signupPage(request):
         
         #Check if the entered password and confirm password matches 
         if password != confirm_password:
-            return render(request, 'signup.html', {'error': 'Password did not match.'})
+            messages.error(request, 'Password did not match.')
+            return render(request, 'signup.html')
 
         #Check if the name contains only alphanumeric characters and spaces
         if not all(char.isalpha() or char.isspace() for char in fname):
@@ -113,7 +126,15 @@ def signupPage(request):
 
         # Email Validation
         #Check if the email format is valid using a regular expression
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        # if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        #     messages.error(request, 'Invalid email format. Please provide a valid email.')
+        #     return render(request, 'signup.html')
+        
+        #Django's EmailValidator for additional validation
+        validator = EmailValidator(message='Enter a valid email address.')
+        try:
+            validator(email)
+        except ValidationError:
             messages.error(request, 'Invalid email format. Please provide a valid email.')
             return render(request, 'signup.html')
 
@@ -148,7 +169,7 @@ def signupPage(request):
             email = EmailMessage(subject, message, from_email, recipient_list)
 
             if email.send():
-                messages.success(request, 'Your account has been created successfully. Please verify your email.')
+                messages.success(request, 'Verfiy your email account via the link provided to your mail.')
 
             # message = f'Your account has been deleted. To reactivate it, click on the link below:\n\n'\
             #           f'{request.build_absolute_uri("reactivate_account/")}token={reactivation_token}'
@@ -219,41 +240,50 @@ def forgotpassword(request):
 @not_logged_in
 def send_otp(request):
     if request.method == 'POST':
-        email = request.POST['email']
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM auth_user WHERE email = %s", [email])
-            row = cursor.fetchone()
-
-        if row:
-            user_id = row[0]
-            username = row[1]
-            db_email = row[4]
-
-            otp = get_random_string(length=6, allowed_chars='1234567890')
-
+        try:
+            email = request.POST['email']
             with connection.cursor() as cursor:
-                cursor.execute(
-                    "UPDATE auth_user SET otp = %s, otp_created_at = %s WHERE id = %s",
-                    [otp, timezone.now(), user_id]
-                )
+                cursor.execute("SELECT * FROM auth_user WHERE email = %s", [email])
+                row = cursor.fetchone()
 
-            subject = 'Forget Password'
-            
-            message = f'Hello {username},<br><br>'
-            message += 'You requested a password reset. Please use the following OTP to proceed:<br><br>'
-            message += f'<strong>OTP: {otp}</strong><br><br>'
-            message += 'This OTP is valid for 15 minutes.<br>'
-            message += 'If you did not request a password reset, please ignore this email.<br><br>'
-            message += 'Thank You!'
+            if row:
+                user_id = row[0]
+                username = row[1]
+                db_email = row[4]
 
-            from_email = 'noreply'
-            recipient_list = [db_email]
+                otp = get_random_string(length=6, allowed_chars='1234567890')
 
-            send_mail(subject, message, from_email, recipient_list, html_message=message)
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "UPDATE auth_user SET otp = %s, otp_created_at = %s WHERE id = %s",
+                        [otp, timezone.now(), user_id]
+                    )
 
-            return render(request, 'forgotpassword.html', {'otp_sent': True, 'email': db_email})
-        else:
-            return render(request, 'forgotpassword.html', {'user_not_found': True, 'error': 'Email not found!'})
+                subject = 'Forget Password'
+                
+                message = f'Hello {username},<br><br>'
+                message += 'You requested a password reset. Please use the following OTP to proceed:<br><br>'
+                message += f'<strong>OTP: {otp}</strong><br><br>'
+                message += 'This OTP is valid for 15 minutes.<br>'
+                message += 'If you did not request a password reset, please ignore this email.<br><br>'
+                message += 'Thank You!'
+
+                from_email = 'noreply'
+                recipient_list = [db_email]
+
+                send_mail(subject, message, from_email, recipient_list, html_message=message)
+
+                messages.success(request, 'An OTP has been sent to your email. Please check your inbox.')
+                return render(request, 'forgotpassword.html', {'otp_sent': True, 'email': db_email})
+            else:
+                raise ValueError('Email not found!')
+                #return render(request, 'forgotpassword.html', {'user_not_found': True, 'error': 'Email not found!'})
+        except ValueError as ve:
+            messages.error(request, f'{str(ve)} Please make sure you entered a valid email.')
+            return render(request, 'forgotpassword.html', {'otp_sent': False})
+        # except Exception as e:
+        #     messages.error(request, f'Something went wrong: {str(e)}')
+        #     return render(request, 'forgotpassword.html', {'otp_sent': False})
     else:
         return render(request, 'forgotpassword.html', {'otp_sent': False, 'otp_verified': False})
     
@@ -278,8 +308,10 @@ def verify_otp(request):
 
                 return render(request, 'resetpassword.html', {'otp_verified': True, 'email': email})
             else:
+                messages.error(request, 'Invalid OTP. Please try again.')
                 return render(request, 'forgotpassword.html', {'otp_verified': False, 'email': email})
         except MultiValueDictKeyError:
+            messages.error(request, 'Email or OTP not provided.')
             return render(request, 'forgotpassword.html', {'otp_verified': False, 'email_not_found': True})
     else:
         return render(request, 'forgotpassword.html', {'otp_verified': False, 'otp_sent': False})
@@ -287,34 +319,36 @@ def verify_otp(request):
 @not_logged_in
 def resetpassword(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        new_password = request.POST.get('new_password')
-        confirm_password = request.POST.get('confirm_password')
+        try:
+            email = request.POST.get('email')
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
 
-        if new_password == confirm_password:
-            hashed_password = make_password(new_password)
-            with connection.cursor() as cursor:
-                cursor.execute("UPDATE auth_user SET password = %s WHERE email = %s", [hashed_password, email])
+            if new_password == confirm_password:
+                if not (re.search("[A-Z]", new_password) and re.search("[0-9]", new_password) and re.search("[!@#$%^&*]", new_password)):
+                    error = "Password must contain at least one uppercase letter, one symbol, and one number."
+                    messages.error(request, error)
+                    return render(request, 'resetpassword.html', {'otp_verified': True, 'error': error, 'email': email})
 
-            return redirect('/login')
-        else:
-            error = "Passwords do not match."
+                hashed_password = make_password(new_password)
+                with connection.cursor() as cursor:
+                    cursor.execute("UPDATE auth_user SET password = %s WHERE email = %s", [hashed_password, email])
+
+                messages.success(request, "Password changed successfully. You can now login with your new password.")
+                return redirect('/login')
+            else:
+                error = "Passwords do not match."
+                messages.error(request, error)
+                return render(request, 'resetpassword.html', {'otp_verified': True, 'error': error, 'email': email})
+        except Exception as e:
+            error = "Something went wrong while resetting your password. Please try again later."
+            messages.error(request, error)
             return render(request, 'resetpassword.html', {'otp_verified': True, 'error': error, 'email': email})
     return render(request, 'resetpassword.html')
 
 # def homepage(request):
 #     return render(request, 'homepage.html')
 
-
-#from django.core.files.storage import FileSystemStorage
-from .models import FileUpload  # Import the model
-import docx2txt
-from PyPDF2 import PdfReader
-from django.shortcuts import render
-import requests
-from django.core.exceptions import ValidationError
-from django.http import JsonResponse
-import os
 
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
 HEADERS = {"Authorization": "Bearer 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"}

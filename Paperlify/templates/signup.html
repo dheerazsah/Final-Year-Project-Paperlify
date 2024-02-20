@@ -15,6 +15,12 @@
     <title>Paperlify | Signup</title>
 
     <script>
+    // Initial call to start the animation
+      const preloaderWrapper = document.querySelector('.preloader-wrapper');
+      window.addEventListener('load', function(){
+          preloaderWrapper.classList.add('fade-out-animation');
+      });
+
         document.addEventListener('DOMContentLoaded', function () {
             var passwordInput = document.getElementById('password');
             var confirmPasswordInput = document.getElementById('confirm-password');
@@ -132,7 +138,7 @@
                 </div>
                 <p>By signing up, you agree to our <a href="{% url 'terms_conditions' %}" class="hyper-link"><strong>Terms and Conditions</strong></a></p>
 
-                <button class="login-btn" type="submit">Sign Up</button>
+                <button class="signup-btn" type="submit">Sign Up</button>
                 <p>Already have an account? <a href="{% url 'login' %}" class="hyper-link"><strong>Login</strong></a></p>
             </form>
         </div>
