@@ -1,6 +1,9 @@
 {% autoescape off %}
 Hi,
-Please click on the link below to reactivate your account:
+You're receiving this email because you've deactivated your account on our website.
+Please note that this link will be valid for 30 days.
+If you have done this by mistake.
+Please click the link below to activate your account. Please note that this link will be valid for 30 days.
 
 http://{{ domain }}{% url 'activate_account' uidb64=uid token=token %}
 {% endautoescape %}

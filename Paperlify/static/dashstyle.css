@@ -856,7 +856,22 @@ margin-bottom: 10px;
   .update-button:hover {
     background-color: var(--hover-blue);
   }
-  
+
+  .disabled-button {
+    background-color: #9c9c9c;
+    color: #666;
+    padding: 1rem;
+    width: 350px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+
+  .disabled-button:hover{
+    background-color: #e7e7e7;
+  }
+
   /* Password Change Section */
   .password-change {
     background-color: var(--color-white);
@@ -928,7 +943,7 @@ margin-bottom: 10px;
   footer {
     background-color: var(--primary-blue);
     color: var(--color-white);
-    padding: 100px 0;
+    padding: 100px 40px;
     margin-top: auto;
   }
   

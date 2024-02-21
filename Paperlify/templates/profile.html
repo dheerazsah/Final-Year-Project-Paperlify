@@ -14,10 +14,6 @@
         <div class="modal-footer">
           <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
           <a href="{% url 'confirmpassword' %}" type="button" class="btn btn-danger">Deactivate</a>
-          {% comment %} <form method="POST" action="{% url 'profile' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary" name="delete_account">Delete</button>
-        </form> {% endcomment %}
         </div>
       </div>
     </div>
@@ -32,6 +28,10 @@
         <form action="" method="POST">
             {% csrf_token %}
             <div class="input-field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email}}" placeholder="{{ user.email }}" readonly class="readonly-input">
+            </div>
+            <div class="input-field">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" value="{{ user.username }}" placeholder="{{ user.username }}" required>
             </div>
@@ -39,11 +39,7 @@
                 <label for="fullname">Full Name</label>
                 <input type="text" id="fullname" name="fullname" value="{{ user.first_name}}" placeholder="{{ user.first_name }}" required>
             </div>
-            <div class="input-field">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ user.email}}" placeholder="{{ user.email }}" readonly class="readonly-input">
-            </div>
-            <button type="submit" class="update-button" name="update_profile" id="update-profile-btn" {% if button_disabled %}disabled{% endif %} >Update Profile</button>
+            <button type="submit" class="update-button disabled-button" name="update_profile" id="update-profile-btn" {% if button_disabled %}disabled{% endif %}>Update Profile</button>
         </form>
     </div>
 
@@ -74,7 +70,7 @@
 
             <button type="submit" class="change-password-button" name="change_password">Change Password</button>
         </form>
-        <button type="submit" class="delete-account-button" name="delete_account" data-bs-toggle="modal" data-bs-target="#deleteModal">Deactivate Account</button>
+        <button type="submit" class="delete-account-button" data-bs-toggle="modal" data-bs-target="#deleteModal">Deactivate Account</button>
     </div>
 </section>
 
@@ -95,8 +91,12 @@
 
                 // Enable update button if values have changed
                 if (currentUsername !== initialUsername || currentFullName !== initialFullName) {
+                    updateButton.classList.remove('disabled-button');
+                    updateButton.classList.add('update-button');
                     updateButton.removeAttribute('disabled');
                 } else {
+                    updateButton.classList.remove('update-button');
+                    updateButton.classList.add('disabled-button');
                     updateButton.setAttribute('disabled', 'disabled');
                 }
             });

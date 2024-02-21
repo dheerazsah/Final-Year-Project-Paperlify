@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 #Importing expression module for pattern matching and validation
 import re
 from django.core.validators import EmailValidator
-
+from django.contrib.sessions.models import Session
 from functools import wraps
 from django.views.decorators.cache import never_cache
 
@@ -89,11 +89,11 @@ def signupPage(request):
     #Check if the request method is POST 
     if request.method == 'POST':
         #Extract the user input from the POST data
-        username = request.POST.get('username')
-        fname = request.POST.get('fname')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+        username = request.POST.get('username').strip()
+        fname = request.POST.get('fname').strip()
+        email = request.POST.get('email').strip()
+        password = request.POST.get('password').strip()
+        confirm_password = request.POST.get('confirm_password').strip()
 
         #Check if any required field is empty and display an error message 
         if not username or not fname or not password or not password:
@@ -101,7 +101,7 @@ def signupPage(request):
             return render(request, 'signup.html')
 
         #Password Complexity Requirements to check if the passowrd is complex
-        if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
+        if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password) and re.search("\s", password)):
             messages.error(request, 'Password must contain at least one uppercase letter, one symbol, and one number.')
             return render(request, 'signup.html')
         
@@ -109,16 +109,32 @@ def signupPage(request):
         if password != confirm_password:
             messages.error(request, 'Password did not match.')
             return render(request, 'signup.html')
+        
+        # Check if the new full name meets the minimum length requirement
+        if len(fname) < 6:
+            messages.error(request, 'Full Name must be at least 6 characters long.')
+            return render(request, 'signup.html')
 
         #Check if the name contains only alphanumeric characters and spaces
-        if not all(char.isalpha() or char.isspace() for char in fname):
+        if not all(char.isalpha() or (char.isspace() and not prev_char.isspace()) for prev_char, char in zip([''] + list(fname), fname)):
             messages.error(request, 'Name must contain alphabetic characters with spaces.')
             return render(request, 'signup.html')
         
+        # Check if the new username meets the minimum length requirement
+        if len(username) < 4:
+            messages.error(request, 'Username must be at least 4 characters long.')
+            return render(request, 'signup.html')
+        
+        # Check if the username already exists and does not contain spaces
+        if ' ' in username:
+            messages.error(request, 'Username cannot contain spaces.')
+            return render(request, 'signup.html')
+            
         #Check if the username already exists
         if User.objects.filter(username=username):
             messages.error(request, 'Username already exists. Please try a new username.')
             return render(request, 'signup.html')
+        
 
         #Check if the email address already exists 
         if User.objects.filter(email=email):
@@ -190,12 +206,12 @@ def signupPage(request):
     #Render the signup.html template if the request method is not POST
     return render(request, 'signup.html')
 
-@not_logged_in
+#@not_logged_in
 @never_cache
 def loginPage(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get('username').strip()
+        password = request.POST.get('password').strip()
         
         if not username or not password:
             messages.error(request, 'Enter your username and password.')
@@ -218,7 +234,7 @@ def loginPage(request):
                         return redirect('dashboard')
                     
                     else:
-                        messages.error(request, 'Invalid username or password.')
+                        messages.error(request, 'Invalid password.')
                         return render(request, 'login.html')
                 
                 else:
@@ -226,7 +242,7 @@ def loginPage(request):
                     return render(request, 'login.html')
             
             except User.DoesNotExist:
-                messages.error(request, 'Invalid username or password.')
+                messages.error(request, 'Username doesnot exist.')
                 return render(request, 'login.html')
             
     return render(request, 'login.html')
@@ -251,31 +267,38 @@ def send_otp(request):
                 user_id = row[0]
                 username = row[1]
                 db_email = row[4]
+                is_active = row[9]
 
-                otp = get_random_string(length=6, allowed_chars='1234567890')
+                if is_active:
+                    otp = get_random_string(length=6, allowed_chars='1234567890')
 
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "UPDATE auth_user SET otp = %s, otp_created_at = %s WHERE id = %s",
-                        [otp, timezone.now(), user_id]
-                    )
+                    with connection.cursor() as cursor:
+                        cursor.execute(
+                            "UPDATE auth_user SET otp = %s, otp_created_at = %s WHERE id = %s",
+                            [otp, timezone.now(), user_id]
+                        )
 
-                subject = 'Forget Password'
+                    subject = 'Forget Password'
+                    
+                    message = f'Hello {username},<br><br>'
+                    message += 'You requested a password reset. Please use the following OTP to proceed:<br><br>'
+                    message += f'<strong>OTP: {otp}</strong><br><br>'
+                    message += 'This OTP is valid for 15 minutes.<br>'
+                    message += 'If you did not request a password reset, please ignore this email.<br><br>'
+                    message += 'Thank You!'
+
+                    from_email = 'noreply'
+                    recipient_list = [db_email]
+
+                    send_mail(subject, message, from_email, recipient_list, html_message=message)
+
+                    messages.success(request, 'An OTP has been sent to your email. Please check your inbox.')
+                    return render(request, 'forgotpassword.html', {'otp_sent': True, 'email': db_email})
                 
-                message = f'Hello {username},<br><br>'
-                message += 'You requested a password reset. Please use the following OTP to proceed:<br><br>'
-                message += f'<strong>OTP: {otp}</strong><br><br>'
-                message += 'This OTP is valid for 15 minutes.<br>'
-                message += 'If you did not request a password reset, please ignore this email.<br><br>'
-                message += 'Thank You!'
+                else:
+                    messages.error(request, 'Your account is deactivated. Please reactivate your account.')
+                    return render(request, 'forgotpassword.html', {'otp_sent': False})
 
-                from_email = 'noreply'
-                recipient_list = [db_email]
-
-                send_mail(subject, message, from_email, recipient_list, html_message=message)
-
-                messages.success(request, 'An OTP has been sent to your email. Please check your inbox.')
-                return render(request, 'forgotpassword.html', {'otp_sent': True, 'email': db_email})
             else:
                 raise ValueError('Email not found!')
                 #return render(request, 'forgotpassword.html', {'user_not_found': True, 'error': 'Email not found!'})
@@ -321,12 +344,12 @@ def verify_otp(request):
 def resetpassword(request):
     if request.method == 'POST':
         try:
-            email = request.POST.get('email')
-            new_password = request.POST.get('new_password')
-            confirm_password = request.POST.get('confirm_password')
+            email = request.POST.get('email').strip()
+            new_password = request.POST.get('new_password').strip()
+            confirm_password = request.POST.get('confirm_password').strip()
 
             if new_password == confirm_password:
-                if not (re.search("[A-Z]", new_password) and re.search("[0-9]", new_password) and re.search("[!@#$%^&*]", new_password)):
+                if not (re.search("[A-Z]", new_password) and re.search("[0-9]", new_password) and re.search("[!@#$%^&*]", new_password) and re.search("\s", new_password)):
                     error = "Password must contain at least one uppercase letter, one symbol, and one number."
                     messages.error(request, error)
                     return render(request, 'resetpassword.html', {'otp_verified': True, 'error': error, 'email': email})
@@ -940,11 +963,31 @@ def search(request):
 @login_required(login_url='login')
 def profile(request):
     user = request.user
-    
     if request.method == 'POST':
         if 'update_profile' in request.POST:
-            new_username = request.POST.get('username')
-            new_full_name = request.POST.get('fullname')
+            new_username = request.POST.get('username').strip() 
+            new_full_name = request.POST.get('fullname').strip() 
+
+            # Check if the new username meets the minimum length requirement
+            if len(new_username) < 4:
+                messages.error(request, 'Username must be at least 4 characters long.')
+                return render(request, 'profile.html', {'user': user, 'button_disabled': True})
+            
+            # Check if there are any spaces in the username
+            if ' ' in new_username:
+                messages.error(request, 'Username cannot contain spaces.')
+                return render(request, 'profile.html', {'user': user, 'button_disabled': True})
+
+            # Check if the new full name meets the minimum length requirement
+            if len(new_full_name) < 6:
+                messages.error(request, 'Full Name must be at least 6 characters long.')
+                return render(request, 'profile.html', {'user': user, 'button_disabled': True})
+            
+            # Check if the name contains only alphanumeric characters and spaces
+            if not all(char.isalpha() or (char.isspace() and not prev_char.isspace()) for prev_char, char in zip([''] + list(new_full_name), new_full_name)):
+                messages.error(request, 'Full Name must contain alphabetic characters.')
+                return render(request, 'profile.html', {'user': user, 'button_disabled': True})
+                
             try:
                 existing_username = User.objects.get(username=new_username)
                 if existing_username != user:
@@ -958,26 +1001,33 @@ def profile(request):
                     user.first_name = new_full_name
                     user.save()
                     messages.success(request, 'Profile updated successfully')
-
-                    # Log the user's activity for profile update
-                    UserActivityLog.objects.create(
-                        user=user,
-                        activity='update_profile',
-                        ip_address=request.META.get('REMOTE_ADDR')
-                    )
+                
 
                 else:
                      messages.info(request, 'No changes were made to the profile')
 
-            except ObjectDoesNotExist:
-                messages.error(request, 'An error occurred while updating your profile. Please try again later.')
-                return render(request, 'profile.html', {'user': user, 'button_disabled': True})
+            except User.DoesNotExist:
+                # If the new username doesn't exist, continue updating the profile
+                user.username = new_username
+                user.first_name = new_full_name
+                user.save()
+                messages.success(request, 'Profile updated successfully')
+
+                # Log the user's activity for profile update
+                UserActivityLog.objects.create(
+                    user=user,
+                    activity='update_profile',
+                    ip_address=request.META.get('REMOTE_ADDR')
+                )
+
+            except Exception as e:
+                messages.error(request, f' {str(e)} An error occurred while updating your profile. Please try again later.')
 
         if 'change_password' in request.POST:
             # Password change handling
-            current_password = request.POST.get('current_password')
-            new_password = request.POST.get('new_password')
-            confirm_password = request.POST.get('confirm_password')
+            current_password = request.POST.get('current_password').strip()
+            new_password = request.POST.get('new_password').strip().strip()
+            confirm_password = request.POST.get('confirm_password').strip()
 
             # Validate the current password
             if user.check_password(current_password):
@@ -986,12 +1036,15 @@ def profile(request):
                     # Check password complexity requirements
                     if (re.search("[A-Z]", new_password) and
                         re.search("[0-9]", new_password) and
-                        re.search("[!@#$%^&*]", new_password)):
-                            
+                        re.search("[!@#$%^&*]", new_password) and
+                        re.search("\s", new_password)):
+                          
                         if new_password == confirm_password:
                             user.set_password(new_password)
                             user.save()
                             update_session_auth_hash(request, user)  # Update the user's session
+                            # Clear the session
+                            #request.session.flush()
                             messages.success(request, 'Password changed successfully')
 
                             # Log the user's activity for password change
@@ -1013,60 +1066,54 @@ def profile(request):
             else:
                 messages.error(request, 'Current password is incorrect')
 
-        if 'delete_account' in request.POST:
-            # Generate a unique token for reactivation link
-            #reactivation_token = User.objects.make_random_password()
-            # Save the token in session
-            #request.session['reactivation_token'] = reactivation_token
+    context = {'user': user, 'button_disabled': True}
+    return render(request, 'profile.html', context)
 
-            # Save the token and set the account as inactive
-            #user.reactivation_token = reactivation_token
-            user.is_active = False # Deactivate the user account
+
+@login_required
+def confirmpassword(request):
+    if request.method == 'POST':
+        entered_password = request.POST.get('confirm_password')
+        user = request.user
+        if user.check_password(entered_password):
+            # Password matches, proceed with account deactivation
+            user.is_active = False
             user.save()
 
-            # Log the user's activity for account deletion
+            # Log the user's activity for account deactivation
             UserActivityLog.objects.create(
                 user=user,
                 activity='deactivate_account',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
 
-            subject = 'Account Deleted Confirmation'
+            # Send email notification about account deactivation
+            subject = 'Account Deactivation Confirmation'
             message = render_to_string("email.html", {
                 'user': user.username,
                 'domain': get_current_site(request).domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
                 'protocol': 'https' if request.is_secure() else 'http'
-
             })
             from_email = 'paperlify@gmail.com'
             recipient_list = [user.email]
-            #email = EmailMessage(subject, message, to=[to_email])
             email = EmailMessage(subject, message, from_email, recipient_list)
 
-            #send_mail(subject, message, from_email, recipient_list, fail_silently = False)
             if email.send():
-                messages.info(request, f'Account deactivated successfully. If you want to reactivate check email.')
-
-            # message = f'Your account has been deleted. To reactivate it, click on the link below:\n\n'\
-            #           f'{request.build_absolute_uri("reactivate_account/")}token={reactivation_token}'
-            
+                # End the session
+                request.session.flush()
+                messages.info(request, f'Account deactivated successfully. If you want to reactivate, check your email.')
+                return redirect('login')
             else:
                 messages.error(request, f'Problem sending email')
 
-        
-            #messages.success(request, 'Account deleted successfully')
-            return redirect('login')
-
-
-    context = {'user': user, 'button_disabled': True}
-    return render(request, 'profile.html', context)
-
-
-def confirmpassword(request):
-
-    return render(request, 'confirmpassword.html')
+        else:
+            # Password does not match
+            messages.error(request, 'Password does not match. Please try again.')
+            return render(request, 'confirmpassword.html')
+    else:
+        return render(request, 'confirmpassword.html')
 
 
 from .models import User
@@ -1079,6 +1126,19 @@ def activate_account(request, uidb64, token):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
+        # Extract the timestamp from the token
+        try:
+            timestamp = int(token.split('-')[-1])
+            activation_time = datetime.fromtimestamp(timestamp, tz=timezone.utc)
+        except ValueError:
+            activation_time = None
+
+        # Check if the activation link has expired
+        if activation_time is not None:
+            time_elapsed = timezone.now() - activation_time
+            if time_elapsed > timedelta(days=30):
+                messages.error(request, 'Activation link has expired.')
+                return redirect('login')
         user.is_active = True
         user.save()
 
