@@ -883,14 +883,26 @@ def mydocuments(request):
 from django.shortcuts import get_object_or_404
 def delete_document(request, doc_id):
     if request.method == 'POST':
-        document = get_object_or_404(FileUpload, pk=doc_id)
-        document.is_deleted = True  # Soft delete the document
-        document.save()
-        #return JsonResponse({'message': 'Document deleted successfully'})
-        # Redirect to mydocuments view after deletion
-        return redirect('mydocuments')
+        try:
+            if 'confirm_delete' in request.POST:
+                document = get_object_or_404(FileUpload, pk=doc_id)
+                document.is_deleted = True  # Soft delete the document
+                document.save()
+                # Redirect to mydocuments view after deletion
+                messages.success(request, 'Document deleted successfully.')
+                return redirect('mydocuments')
+            else:
+                #return JsonResponse({'error': 'Confirmation not received'}, status=400)
+                messages.error(request, 'Confirmation not received. Document not deleted.')
+                return redirect('mydocuments')
+            
+        except Exception as e:
+            messages.error(request, f'An error occurred while deleting the document: {str(e)}')
+            return redirect('mydocuments')
     else:
-        return JsonResponse({'error': 'Method not allowed'}, status=405)
+        error_message = 'Method not allowed'
+        return render(request, 'error_template.html', {'error_message': error_message})
+        #return JsonResponse({'error': 'Method not allowed'}, status=405)
 
     # user = request.user 
     # with connection.cursor() as cursor:

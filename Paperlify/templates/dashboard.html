@@ -161,6 +161,23 @@
   color: var(--primary-blue);
 }
 
+  .re-document-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 100px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+  .document {
+    width: calc(33.33% - 20px);
+    margin-bottom: 20px; 
+  
+  }
+
+ 
+
 </style>
 
 
@@ -413,7 +430,7 @@ updateLibraryTitle();
       </section>
   </div>
 
-  <div class="document-container">
+  <div class="re-document-container">
     <!-- Document 1 -->
     {% for document in context.documents %}
     <div class="document">

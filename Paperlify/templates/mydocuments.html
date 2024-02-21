@@ -35,10 +35,11 @@
                 <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
-                    <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
+                    {% comment %} <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this document?');"><i class="fa fa-trash"></i> Delete</button>
-                    </form>
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this document?');"> Delete</button>
+                    </form> {% endcomment %}
+                    <button type="button" class="btn btn-danger deleteBtn" data-document-id="{{ document.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
                 </div>
             </div>
         </div>
@@ -64,10 +65,11 @@
                 <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
-                    <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
+                    {% comment %} <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this document?');"><i class="fa fa-trash"></i> Delete</button>
-                    </form>
+                    </form> {% endcomment %}
+                    <button type="button" class="btn btn-danger deleteBtn" data-document-id="{{ document.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
                 </div>
             </div>
         </div>
@@ -93,10 +95,11 @@
                 <p>{{ document.summarized_text|truncatewords:14 }}</p>
                 <div class="action-buttons">
                     <a href="{% url 'document_detail' document.slug %}" class="btn btn-primary">View More</a>
-                    <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
+                    {% comment %} <form action="{% url 'delete_document' document.id %}" method="POST" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this document?');"><i class="fa fa-trash"></i> Delete</button>
-                    </form>
+                    </form> {% endcomment %}
+                    <button type="button" class="btn btn-danger deleteBtn" data-document-id="{{ document.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
                 </div>
             </div>
         </div>
@@ -107,7 +110,36 @@
     {% endif %}
 
 </div>
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Delete</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">Are you sure you want to delete this file?</div>
+        <div class="modal-footer">
+          <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+          <form id="deleteForm" action="" method="POST">
+            {% csrf_token %}
+            <button type="submit" name="confirm_delete" class="btn btn-danger">Confirm</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
+
+    // Update modal form action when delete button is clicked
+    document.querySelectorAll('.deleteBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const documentId = btn.getAttribute('data-document-id');
+            const deleteForm = document.querySelector('#deleteForm');
+            deleteForm.action = `/delete_document/${documentId}/`;
+        });
+    });
     
     new Autocomplete('#autocomplete', {
         search: input =>{
