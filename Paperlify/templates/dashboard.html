@@ -30,20 +30,12 @@
 
 <div class="switch-box">
   <div class="toggle-container">
-  
-  {% comment %} <div class="btn-group btn-group-lg" role="group" aria-label="Basic radio toggle button group">
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-    <label class="btn btn-outline-primary" for="btnradio1"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</label>
-  
-    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-    <label class="btn btn-outline-primary" for="btnradio2"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</label> {% endcomment %}
     <form method="POST" action="{% url 'dashboard' %}">
       {% csrf_token %}
       <button type="submit" class="toggle-btn hugging-face {% if active_button == 'hugface' %}active{% endif %}" name="button" value="hugface"><i class="uil uil-smile icon fa-4x d-block"></i>Hugging Face</button>
       <button type="submit" class="toggle-btn nltk {% if active_button == 'nltk' %}active{% endif %}" name="button" value="nltk"><i class="uil uil-bolt icon fa-4x d-block"></i>NLTK Library</button>
     </form>
   </div>
-</div>
 </div>
 
 <style>
@@ -158,26 +150,34 @@
 
 .no-summary p {
   margin-bottom: 10px; 
-  color: var(--primary-blue);
 }
 
   .re-document-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: 100px;
+    margin: 140px;
     margin-top: 40px;
     margin-bottom: 40px;
   }
 
   .document {
-    width: calc(33.33% - 20px);
+    width: calc(50% - 30px);
     margin-bottom: 20px; 
   
   }
 
- 
+  /* Responsive Styles for Document */
+@media (max-width: 768px) {
+    .re-document-container {
+        margin: 20px;
+    }
 
+    .document {
+        width: 100%;
+        margin-right: 0;
+    }
+}
 </style>
 
 
@@ -456,8 +456,9 @@ updateLibraryTitle();
     {% endfor %}
 </div>
 
-
+{% if context.documents %}
 <div class="browse-button">
   <a href="{% url 'mydocuments' %}">Browse All Documents</a>
 </div> 
+{% endif %}
 {% endblock %}

@@ -667,8 +667,7 @@ margin-bottom: 10px;
     background-color: var(--color-white);
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
     width: calc(33.33% - 20px);
-    margin-bottom: 20px;
-    margin-left: 20px;
+    margin: 0 10px 20px;
     float: left;
     overflow: hidden;
   }
@@ -678,9 +677,7 @@ margin-bottom: 10px;
     backdrop-filter: blur(8px);
 }
   
-  .document:nth-child(3n) {
-    margin-right: 0;
-  }
+
   
   .document h2 {
     font-size: 1.25rem;
@@ -982,17 +979,18 @@ margin-bottom: 10px;
   /* Responsive Styles*/
   /* Small*/
   @media (max-width: 768px) {
+    .document-container {
+      margin: 0px;
+  }
+
     .document {
         width: 100%; 
-        margin-right: 0px; 
+        margin-left: 0px; 
     }
   
     .drag-area {
-        max-width: 80%;
-    }
-    .editor-box {
-      width: 80%;
-      margin: 20px auto;
+        max-width: 100%;
+        margin: 20px;
     }
 
     .back-button button {

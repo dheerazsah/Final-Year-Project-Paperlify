@@ -39,6 +39,9 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth.hashers import make_password
 from django.template.loader import render_to_string
 
+import smtplib
+from smtplib import SMTPConnectError, SMTPAuthenticationError
+
 
 #################################################################
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -302,12 +305,17 @@ def send_otp(request):
             else:
                 raise ValueError('Email not found!')
                 #return render(request, 'forgotpassword.html', {'user_not_found': True, 'error': 'Email not found!'})
+            
+        except (SMTPConnectError, SMTPAuthenticationError):
+            messages.error(request, 'Failed to send OTP. Please check your internet connection and try again.')
+            return render(request, 'forgotpassword.html', {'otp_sent': False})
+        
         except ValueError as ve:
             messages.error(request, f'{str(ve)} Please make sure you entered a valid email.')
             return render(request, 'forgotpassword.html', {'otp_sent': False})
-        # except Exception as e:
-        #     messages.error(request, f'Something went wrong: {str(e)}')
-        #     return render(request, 'forgotpassword.html', {'otp_sent': False})
+        except Exception as e:
+             messages.error(request, f'Something went wrong: {str(e)}')
+             return render(request, 'forgotpassword.html', {'otp_sent': False})
     else:
         return render(request, 'forgotpassword.html', {'otp_sent': False, 'otp_verified': False})
     
@@ -662,7 +670,7 @@ def summarize_text(request):
                 )
                     
             elif active_button == 'nltk':
-                
+                original_input_text = input_text
                 #Text Preprocessing 
                 input_text = sent_tokenize(input_text)
                 # Assuming input_text contains the tokenized sentences
@@ -749,7 +757,7 @@ def summarize_text(request):
                     file_info = FileUpload.objects.get(id=file_info_id)
 
                     # Update the existing record with summarized text
-                    file_info.extracted_text = input_text
+                    file_info.extracted_text = original_input_text
                     file_info.summarized_text = summary
                     file_info.save()
 

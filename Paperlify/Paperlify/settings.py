@@ -57,6 +57,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Set session expiration time in secs
+#SESSION_COOKIE_AGE = 15
+
 ROOT_URLCONF = 'Paperlify.urls'
 
 TEMPLATES = [
