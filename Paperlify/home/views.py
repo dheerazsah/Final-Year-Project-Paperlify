@@ -1017,8 +1017,7 @@ def profile(request):
                     # Check password complexity requirements
                     if (re.search("[A-Z]", new_password) and
                         re.search("[0-9]", new_password) and
-                        re.search("[!@#$%^&*]", new_password) and
-                        re.search("\s", new_password)):
+                        re.search("[!@#$%^&*]", new_password)):
                           
                         if new_password == confirm_password:
                             user.set_password(new_password)
