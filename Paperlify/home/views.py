@@ -250,8 +250,8 @@ def loginPage(request):
             
     return render(request, 'login.html')
 
-def error_404(request, expection):
-    return render(request, '4040.html')
+def custom_404(request, expection):
+    return render(request, '404.html', status=404)
 
 @not_logged_in
 def forgotpassword(request):
@@ -528,31 +528,6 @@ def upload_file(request):
                         messages.error(request, error_message)
                         print(f"Error processing doc/docx file: {str(e)}")
 
-                # elif uploadfile.name.endswith(('.doc')):
-                #     try:
-                #          # Initialize the COM library
-                #         pythoncom.CoInitialize()
-                        
-                #         # Create a new Word application
-                #         word_app = client.Dispatch("Word.Application")
-                #         word_app.Visible = False
-                        
-                #         # Open the document
-                #         doc_path = os.path.join(settings.MEDIA_ROOT, uploadfile.name)
-                #         doc = word_app.Documents.Open(doc_path)
-                        
-                #         # Extract text from the document
-                #         content = doc.Content.Text
-                        
-                #         # Close the document and Word application
-                #         doc.Close()
-                #         word_app.Quit()
-
-                    # except Exception as e:
-                    #     error_message = "Error processing the uploaded Word document."
-                    #     messages.error(request, error_message)
-                    #     print(f"Error processing doc file: {str(e)}")
-
                 elif uploadfile.name.endswith('.pdf'):
                     try:
                         content = ''
@@ -822,32 +797,10 @@ def summarize_text(request):
             error_message = "Please upload a file or enter text before summarizing."
             messages.error(request, error_message)
             print(f"Unexpected error: {str(e)}")
-
-        '''
-        except ValidationError as e:
-            error_message = "Validation error in the form submission."
-            messages.error(request, error_message)
-            print(f"Validation error: {str(e)}")
-        except Exception as e:
-            error_message = "Unexpected error in the form submission."
-            messages.error(request, error_message)
-            print(f"Unexpected error: {str(e)}")
-        '''
-            
-        # user_id = request.user.id
-        #  # Filter documents based on the user_id
-        # documents = FileUpload.objects.filter(user_id=user_id).order_by('-upload_time')[:3]
-        # context = {'documents': documents}
+        
 
     #return JsonResponse({'content': content, 'summary': summary})
     return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button, 'context': context})
-
-# def mydocuments(request):
-#     user_id = request.user.id
-#     # Filter documents based on the user_id and summarized_text__isnull=False
-#     context = {'documents': FileUpload.objects.filter(user_id=user_id, summarized_text__isnull=False).order_by('-created_at')}
-#     return render(request, 'mydocuments.html', context)
-
 
 from datetime import datetime, timedelta
 from django.db.models import Q

@@ -54,4 +54,5 @@ urlpatterns = [
     path('logout', views.logoutUser, name='logout'),
 ]
 
-handler404 = 'home.views.error_404'
+from django.conf.urls import handler404
+handler404 = 'home.views.custom_404'

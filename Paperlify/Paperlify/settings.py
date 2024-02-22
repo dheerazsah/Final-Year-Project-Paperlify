@@ -58,14 +58,14 @@ MIDDLEWARE = [
 ]
 
 # Set session expiration time in secs
-#SESSION_COOKIE_AGE = 15
+SESSION_COOKIE_AGE = 600
 
 ROOT_URLCONF = 'Paperlify.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')], #Manual Dhiraj
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], #Manual
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
