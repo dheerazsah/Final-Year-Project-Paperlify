@@ -104,7 +104,7 @@ def signupPage(request):
             return render(request, 'signup.html')
 
         #Password Complexity Requirements to check if the passowrd is complex
-        if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password) and re.search("\s", password)):
+        if not (re.search("[A-Z]", password) and re.search("[0-9]", password) and re.search("[!@#$%^&*]", password)):
             messages.error(request, 'Password must contain at least one uppercase letter, one symbol, and one number.')
             return render(request, 'signup.html')
         
@@ -357,7 +357,7 @@ def resetpassword(request):
             confirm_password = request.POST.get('confirm_password').strip()
 
             if new_password == confirm_password:
-                if not (re.search("[A-Z]", new_password) and re.search("[0-9]", new_password) and re.search("[!@#$%^&*]", new_password) and re.search("\s", new_password)):
+                if not (re.search("[A-Z]", new_password) and re.search("[0-9]", new_password) and re.search("[!@#$%^&*]", new_password)):
                     error = "Password must contain at least one uppercase letter, one symbol, and one number."
                     messages.error(request, error)
                     return render(request, 'resetpassword.html', {'otp_verified': True, 'error': error, 'email': email})
@@ -801,6 +801,7 @@ def summarize_text(request):
 
     #return JsonResponse({'content': content, 'summary': summary})
     return render(request, 'dashboard.html', {'content': content, 'summary': summary, 'active_button': active_button, 'context': context})
+
 
 from datetime import datetime, timedelta
 from django.db.models import Q
