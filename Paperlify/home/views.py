@@ -209,6 +209,12 @@ def signupPage(request):
     #Render the signup.html template if the request method is not POST
     return render(request, 'signup.html')
 
+from django.db import DatabaseError
+import logging
+
+# Setup logger
+logger = logging.getLogger(__name__)
+
 #@not_logged_in
 @never_cache
 def loginPage(request):
@@ -226,13 +232,15 @@ def loginPage(request):
                     user = authenticate(request, username=username, password=password)
                     if user is not None:
                         login(request, user)
-
-                        # Log the user's activity
-                        UserActivityLog.objects.create(
-                            user=user, 
-                            activity='login',
-                            ip_address=request.META.get('REMOTE_ADDR')
-                        )
+                        try:
+                            # Log the user's activity
+                            UserActivityLog.objects.create(
+                                user=user, 
+                                activity='login',
+                                ip_address=request.META.get('REMOTE_ADDR')
+                            )
+                        except Exception as e:
+                            logger.error(f"Error logging user activity: {e}")
 
                         return redirect('dashboard')
                     
@@ -246,6 +254,16 @@ def loginPage(request):
             
             except User.DoesNotExist:
                 messages.error(request, 'Username doesnot exist.')
+                return render(request, 'login.html')
+            
+            except DatabaseError as e:
+                logger.error(f"Database error during login: {e}")
+                messages.error(request, 'Service temporarily unavailable. Please try again later.')
+                return render(request, 'login.html')
+            
+            except Exception as e:
+                logger.error(f"Unexpected error during login: {e}")
+                messages.error(request, 'An unexpected error occurred. Please try again.')
                 return render(request, 'login.html')
             
     return render(request, 'login.html')
