@@ -612,8 +612,15 @@ def summarize_text(request):
     active_button = request.session.get('active_button', 'hugface')  
 
     if request.method == 'POST':
+        input_text = request.POST.get('input_text', '').strip()
+        word_count = len(input_text.split())
+
+        # Check if word count is more than 100 words
+        if word_count <= 100:
+            messages.error(request, "Please enter text with more than 100 words for summarization.")
+            return render(request, 'dashboard.html', {'context': context, 'active_button': active_button})
         try:
-            input_text = request.POST.get('input_text', '')
+            #input_text = request.POST.get('input_text', '')
             
 
             if active_button == 'hugface':

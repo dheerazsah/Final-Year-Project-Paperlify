@@ -218,7 +218,7 @@
   <form method="POST" action="{% url 'summarize_text' %}" id="summarizeForm">
   {% csrf_token %}
   <div class="summary-content">
-  <textarea name="input_text" rows="10" cols="80">{{ content }}</textarea>
+  <textarea name="input_text" rows="10" cols="80" readonly>{{ content }}</textarea>
   <input class="summarize-btn" type="submit" name="summarize" value="Summarize" onclick="summarizeText()">
   <div class="progress" style="margin-top: 20px;">
     <div id="summarize-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%; height: 20px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
