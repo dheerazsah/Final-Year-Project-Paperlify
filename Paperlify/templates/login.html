@@ -51,60 +51,53 @@
         <div class="right">
             <form action="" method="POST" class="login-form">
                 {% csrf_token %}
-
-            {% comment %} <div class="message-box">
+                {% if messages %}
                 {% for message in messages %}
-                    <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% if message.tags == 'error' %}
+                    <div class="alert alert-danger m-2 alert-dismissible fade show " role="alert" id="msg">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <!-- <div class="error-message">{{ message }}</div> -->
+                    {% elif message.tags == 'success' %}
+                    <div class="alert alert-success m-2 alert-dismissible fade show " role="alert" id="msg">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    {% elif message.tags == 'info' %}
+                    <div class="alert alert-info m-2 alert-dismissible fade show " role="alert" id="msg">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <!-- <div class="success-message">{{ message }}</div> -->
+                    {% endif %}
                 {% endfor %}
-            </div> {% endcomment %}
-
-            {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == 'error' %}
-                <div class="alert alert-danger m-2 alert-dismissible fade show " role="alert" id="msg">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <!-- <div class="error-message">{{ message }}</div> -->
-                {% elif message.tags == 'success' %}
-                <div class="alert alert-success m-2 alert-dismissible fade show " role="alert" id="msg">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-
-                {% elif message.tags == 'info' %}
-                <div class="alert alert-info m-2 alert-dismissible fade show " role="alert" id="msg">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <!-- <div class="success-message">{{ message }}</div> -->
                 {% endif %}
-            {% endfor %}
-            {% endif %}
 
-            
-                <section class="content">
-                    <h1>Login</h1>
-                </section>
-                <div class="input-container email">
-                    <label for="username">Username</label>
-                    <input id="username" name="username" placeholder="Enter your username" type="text" required>
-                </div>
-                <div class="input-container password">
-                    <label for="password">Password</label>
-                    <input id="password" name="password" placeholder="Must be atleast 6 characters" type="password" required>
-                    {% comment %} <i class="uil uil-eye-slash" id="togglePassword"></i> {% endcomment %}
-                    {% comment %} <i class="uil uil-eye"></i> {% endcomment %}
-                </div>
-                <div class="input-container" cta>
-                    <label class="checkbox-container">
-                        <input type="checkbox">
-                        <span class="checkmark"></span> Show Password
-                    </label>
-                    <p><a href="{% url 'forgotpassword' %}" class="hyper-link"><strong>Forgot Password?</strong></a></p>
-                </div>
-                <button class="login-btn" type="submit">Login</button>
-                <p>Don’t have an account yet? <a href="{% url 'signup' %}" class="hyper-link"><strong>Create New Account</strong></a></p>
+                
+                    <section class="content">
+                        <h1>Login</h1>
+                    </section>
+                    <div class="input-container email">
+                        <label for="username">Username</label>
+                        <input id="username" name="username" placeholder="Enter your username" type="text" required>
+                    </div>
+                    <div class="input-container password">
+                        <label for="password">Password</label>
+                        <input id="password" name="password" placeholder="Must be atleast 6 characters" type="password" required>
+                        {% comment %} <i class="uil uil-eye-slash" id="togglePassword"></i> {% endcomment %}
+                        {% comment %} <i class="uil uil-eye"></i> {% endcomment %}
+                    </div>
+                    <div class="input-container" cta>
+                        <label class="checkbox-container">
+                            <input type="checkbox">
+                            <span class="checkmark"></span> Show Password
+                        </label>
+                        <p><a href="{% url 'forgotpassword' %}" class="hyper-link"><strong>Forgot Password?</strong></a></p>
+                    </div>
+                    <button class="login-btn" type="submit">Login</button>
+                    <p>Don’t have an account yet? <a href="{% url 'signup' %}" class="hyper-link"><strong>Create New Account</strong></a></p>
             </form>
         </div>
     </div>

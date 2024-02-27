@@ -1,0 +1,39 @@
+Django Installation
+pip install django 
+
+Requirement Installations
+pip install pymysql
+pip install django_extensions
+pip install nltk
+pip install six
+pip install docx2txt
+pip install pypdf2
+pip install requests 
+
+Database
+paperlify.sql
+
+Run Project
+python manage.py makemigrations
+python manage.py migrate
+Run Server: python manage.py runserver
+
+ERD Diagram
+pip install pyparsing pydot
+python manage.py graph_models -a > erd.dot
+python manage.py graph_models --pydot -a -g -o erd.png
+
+
+
+
+Login Credentials 
+User
+Username: madan
+Password: Madan@123
+
+Django Admin
+Username: dhirajadmin
+Password: Dhiraj@123
+
+
+
